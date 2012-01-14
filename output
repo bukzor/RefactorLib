@@ -1,0 +1,154 @@
+eatPlainText '\n' 0 1
+eatComment '## This is an import\n' 1 22
+getCommentStartToken '##' 1 3
+getDirectiveStartToken '#' 22 23
+eatDirective '#from mylib import (\n\t\tmydecorator1, mydecorator2\n)\n' 22 74
+getDirectiveStartToken '#' 22 23
+eatSimpleExprDirective '#from mylib import (\n\t\tmydecorator1, mydecorator2\n)\n' 22 74
+getDirectiveStartToken '#' 22 23
+getExpression 'from mylib import (\n\t\tmydecorator1, mydecorator2\n)' 23 73
+getExpressionParts 'from mylib import (\n\t\tmydecorator1, mydecorator2\n)' 23 73
+getPyToken 'from' 23 27
+getWhiteSpace ' ' 27 28
+getPyToken 'mylib' 28 33
+getWhiteSpace ' ' 33 34
+getPyToken 'import' 34 40
+getWhiteSpace ' ' 40 41
+getCallArgString '(\n\t\tmydecorator1, mydecorator2\n)' 41 73
+getPyToken 'mydecorator1' 45 57
+getPyToken ',' 57 58
+getPyToken 'mydecorator2' 59 71
+eatPlainText '\n' 74 75
+eatComment '## Here are two decorators\n' 75 102
+getCommentStartToken '##' 75 77
+getDirectiveStartToken '#' 102 103
+eatDirective '#@mydecorator1\n#@mydecorator2\n#def myfunc(myarg="mystring"):\n' 102 163
+getDirectiveStartToken '#' 102 103
+getDirectiveStartToken '#' 102 103
+getExpression '@mydecorator1' 103 116
+getExpressionParts '@mydecorator1' 103 116
+getPyToken '@' 103 104
+getPyToken 'mydecorator1' 104 116
+getWhiteSpace '' 116 116
+getWhiteSpace '' 117 117
+getDirectiveStartToken '#' 117 118
+eatDirective '#@mydecorator2\n#def myfunc(myarg="mystring"):\n' 117 163
+getDirectiveStartToken '#' 117 118
+getDirectiveStartToken '#' 117 118
+getExpression '@mydecorator2' 118 131
+getExpressionParts '@mydecorator2' 118 131
+getPyToken '@' 118 119
+getPyToken 'mydecorator2' 119 131
+getWhiteSpace '' 131 131
+getWhiteSpace '' 132 132
+getDirectiveStartToken '#' 132 133
+eatDirective '#def myfunc(myarg="mystring"):\n' 132 163
+getDirectiveStartToken '#' 132 133
+getDirectiveStartToken '#' 132 133
+getWhiteSpace ' ' 136 137
+getIdentifier 'myfunc' 137 143
+getWhiteSpace '' 143 143
+getDefArgList '(myarg="mystring"' 143 160
+getIdentifier 'myarg' 144 149
+getPyToken '"mystring"' 150 160
+getExpression '' 162 162
+getExpressionParts '' 162 162
+eatPlainText '\t' 163 164
+eatComment '## "This is a docstring for myfunc"\n' 164 200
+getCommentStartToken '##' 164 166
+eatPlainText '\t' 200 201
+getDirectiveStartToken '#' 201 202
+getDirectiveStartToken '#' 201 202
+eatDirective '#set $myvar = $myarg.upper()\n' 201 230
+getDirectiveStartToken '#' 201 202
+getDirectiveStartToken '#' 201 202
+getWhiteSpace ' ' 205 206
+getExpression '$myvar ' 206 213
+getExpressionParts '$myvar ' 206 213
+getCheetahVar '$myvar' 206 212
+getCheetahVarStartToken '$' 206 207
+getSilentPlaceholderToken '' 207 207
+getCacheToken '' 207 207
+getCheetahVarBody 'myvar' 207 212
+getCheetahVarNameChunks 'myvar' 207 212
+getDottedName 'myvar' 207 212
+getIdentifier 'myvar' 207 212
+getWhiteSpace ' ' 212 213
+getPyToken '=' 213 214
+getAssignmentOperator '=' 213 214
+getExpression ' $myarg.upper()' 214 229
+getExpressionParts ' $myarg.upper()' 214 229
+getWhiteSpace ' ' 214 215
+getCheetahVar '$myarg.upper()' 215 229
+getCheetahVarStartToken '$' 215 216
+getSilentPlaceholderToken '' 216 216
+getCacheToken '' 216 216
+getCheetahVarBody 'myarg.upper()' 216 229
+getCheetahVarNameChunks 'myarg.upper()' 216 229
+getDottedName 'myarg.upper' 216 227
+getIdentifier 'myarg' 216 221
+getIdentifier 'upper' 222 227
+getCallArgString '()' 227 229
+eatPlainText '\t' 230 231
+getDirectiveStartToken '#' 231 232
+getDirectiveStartToken '#' 231 232
+eatDirective '#return $myvar\n' 231 246
+getDirectiveStartToken '#' 231 232
+eatSimpleExprDirective '#return $myvar\n' 231 246
+getDirectiveStartToken '#' 231 232
+getExpression 'return $myvar' 232 245
+getExpressionParts 'return $myvar' 232 245
+getPyToken 'return' 232 238
+getWhiteSpace ' ' 238 239
+getCheetahVar '$myvar' 239 245
+getCheetahVarStartToken '$' 239 240
+getSilentPlaceholderToken '' 240 240
+getCacheToken '' 240 240
+getCheetahVarBody 'myvar' 240 245
+getCheetahVarNameChunks 'myvar' 240 245
+getDottedName 'myvar' 240 245
+getIdentifier 'myvar' 240 245
+getDirectiveStartToken '#' 246 247
+eatDirective '#end def\n' 246 255
+getDirectiveStartToken '#' 246 247
+getDirectiveStartToken '#' 246 247
+getWhiteSpace ' ' 250 251
+getExpression 'def' 251 254
+getExpressionParts 'def' 251 254
+getPyToken 'def' 251 254
+getWhiteSpace '' 254 254
+eatPlainText '\n' 255 256
+eatPlaceholder '$myfunc()' 256 265
+getPlaceholder '$myfunc()' 256 265
+getCheetahVarStartToken '$' 256 257
+getSilentPlaceholderToken '' 257 257
+getCacheToken '' 257 257
+getCheetahVarNameChunks 'myfunc()' 257 265
+getDottedName 'myfunc' 257 263
+getIdentifier 'myfunc' 257 263
+getCallArgString '()' 263 265
+eatPlainText '\n\n' 265 267
+eatComment "## Here's a trailing comment\n" 267 296
+getCommentStartToken '##' 267 269
+eatPlainText '\n' 296 297
+<cheetah><PlainText>
+</PlainText><Comment><CommentStart>##</CommentStart> This is an import
+</Comment><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>from</Py><WhiteSpace> </WhiteSpace><Py>mylib</Py><WhiteSpace> </WhiteSpace><Py>import</Py><WhiteSpace> </WhiteSpace><CallArgString>(
+		<Py>mydecorator1</Py><Py>,</Py> <Py>mydecorator2</Py>
+)</CallArgString></ExpressionParts></Expression>
+</SimpleExprDirective></Directive><PlainText>
+</PlainText><Comment><CommentStart>##</CommentStart> Here are two decorators
+</Comment><Directive><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>@</Py><Py>mydecorator1<WhiteSpace></WhiteSpace></Py></ExpressionParts></Expression>
+<WhiteSpace></WhiteSpace><Directive><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>@</Py><Py>mydecorator2<WhiteSpace></WhiteSpace></Py></ExpressionParts></Expression>
+<WhiteSpace></WhiteSpace><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>myfunc<WhiteSpace></WhiteSpace></Identifier><DefArgList>(<Identifier>myarg</Identifier>=<Py>"mystring"</Py></DefArgList>):<Expression><ExpressionParts></ExpressionParts></Expression>
+</Directive></Directive></Directive><PlainText>	</PlainText><Comment><CommentStart>##</CommentStart> "This is a docstring for myfunc"
+</Comment><PlainText>	</PlainText><Directive><DirectiveStart>#</DirectiveStart>set<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><CheetahVar><CheetahVarStart>$<SilentPlaceholder><Cache></Cache></SilentPlaceholder></CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>myvar</Identifier></DottedName></CheetahVarNameChunks></CheetahVarBody></CheetahVar><WhiteSpace> </WhiteSpace></ExpressionParts></Expression><Py><AssignmentOperator>=</AssignmentOperator></Py><Expression><ExpressionParts><WhiteSpace> </WhiteSpace><CheetahVar><CheetahVarStart>$<SilentPlaceholder><Cache></Cache></SilentPlaceholder></CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>myarg</Identifier>.<Identifier>upper</Identifier></DottedName><CallArgString>()</CallArgString></CheetahVarNameChunks></CheetahVarBody></CheetahVar></ExpressionParts></Expression>
+</Directive><PlainText>	</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>return</Py><WhiteSpace> </WhiteSpace><CheetahVar><CheetahVarStart>$<SilentPlaceholder><Cache></Cache></SilentPlaceholder></CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>myvar</Identifier></DottedName></CheetahVarNameChunks></CheetahVarBody></CheetahVar></ExpressionParts></Expression>
+</SimpleExprDirective></Directive><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def<WhiteSpace></WhiteSpace></Py></ExpressionParts></Expression>
+</Directive><PlainText>
+</PlainText><Placeholder><Placeholder><CheetahVarStart>$<SilentPlaceholder><Cache></Cache></SilentPlaceholder></CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>myfunc</Identifier></DottedName><CallArgString>()</CallArgString></CheetahVarNameChunks></Placeholder></Placeholder><PlainText>
+
+</PlainText><Comment><CommentStart>##</CommentStart> Here's a trailing comment
+</Comment><PlainText>
+</PlainText></cheetah>
+OK
