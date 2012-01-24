@@ -1,3 +1,4 @@
+__version__ = '0.0.0-dev'
 
 if __file__[-1] in 'oc':
 	# fixup for .pyc and .pyo files
@@ -8,4 +9,4 @@ else:
 from os.path import realpath, dirname
 TOP = dirname(realpath(filename))
 
-__all__ = 'TOP',
+__all__ = ('TOP',)
