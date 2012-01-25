@@ -14,7 +14,6 @@ setuptools.setup(
 	platforms = 'any',
     test_suite = 'refactorlib.tests',
     license = 'BSD',
-	package_dir = { 'refactorlib': '' },
 
     # See http://pypi.python.org/pypi?%3Aaction==list_classifiers
     classifiers = [
