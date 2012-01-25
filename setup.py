@@ -15,6 +15,8 @@ setuptools.setup(
     test_suite = 'refactorlib.tests',
     license = 'BSD',
 
+	scripts = [ 'xmlfrom', 'xmlstrip' ],
+
     # See http://pypi.python.org/pypi?%3Aaction==list_classifiers
     classifiers = [
         'Development Status :: 1 - Planning',

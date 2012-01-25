@@ -1,3 +1,26 @@
+def parse(filename, filetype=None):
+	if not filetype:
+		filetype = detect_filetype(filename)
+
+	parser = get_parser(filetype)
+
+	return parser(open(filename).read())
+
+def detect_filetype(filename):
+	if filename.endswith('.tmpl'):
+		return 'cheetah'
+	elif filename.endswith('.py'):
+		return 'python'
+	else:
+		raise ValueError('Unsupported file type: %r' % filename)
+
+def get_parser(filetype):
+	if filetype == 'cheetah':
+		import cheetah.parse
+		return cheetah.parse.parse
+	elif filetype == 'python':
+		import python.parse
+		return python.parse.parse
 
 def dictnode_to_lxml(tree):
 	"""
