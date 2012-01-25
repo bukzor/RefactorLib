@@ -1,5 +1,5 @@
 
-def main():
+def test_can_make_round_trip():
 	from refactorlib import TOP
 	from os.path import join
 	from os import listdir
@@ -16,9 +16,8 @@ def main():
 		lxmlnode = parse(example)
 
 		from lxml.etree import tostring
-		print tostring(lxmlnode)
 		assert example == tostring(lxmlnode, method='text')
 		print 'OK'
 
 if __name__ == '__main__':
-	exit(main())
+	exit(test_can_make_round_trip())

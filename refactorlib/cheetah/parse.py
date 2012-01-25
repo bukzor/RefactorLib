@@ -46,7 +46,7 @@ def parse(cheetah_content):
 	compiler.compile()
 	data = compiler._parser.data
 
-	show_data(data, cheetah_content)
+	#show_data(data, cheetah_content)
 
 	dictnode = parser_data_to_dictnode(data, cheetah_content)
 
