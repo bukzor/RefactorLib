@@ -1,5 +1,5 @@
 
-def main():
+def test_can_make_round_trip():
 	from refactorlib import TOP
 	from os.path import join
 	from os import listdir
