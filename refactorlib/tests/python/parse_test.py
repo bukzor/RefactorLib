@@ -1,22 +1,14 @@
+from refactorlib.tests.util import parametrize, get_examples
 
-def test_can_make_round_trip():
-	from refactorlib import TOP
-	from os.path import join
-	from os import listdir
+@parametrize(get_examples('python'))
+def test_can_make_round_trip(example):
+	example = open(example).read()
 
-	examples = join(TOP, 'tests/examples/python')
+	from refactorlib.python.parse import parse
+	lxmlnode = parse(example)
 
-	for example in listdir(examples):
-		if not example.endswith('.py'):
-			continue
-
-		example = open(join(examples, example)).read()
-
-		from refactorlib.python.parse import parse
-		lxmlnode = parse(example)
-
-		from lxml.etree import tostring
-		assert example == tostring(lxmlnode, method='text')
+	from lxml.etree import tostring
+	assert example == tostring(lxmlnode, method='text')
 
 
 if __name__ == '__main__':
