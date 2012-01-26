@@ -17,7 +17,7 @@ def test_can_make_round_trip():
 
 		from lxml.etree import tostring
 		assert example == tostring(lxmlnode, method='text')
-		print 'OK'
+
 
 if __name__ == '__main__':
-	exit(main())
+	test_can_make_round_trip()

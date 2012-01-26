@@ -1,42 +1,25 @@
 
 def test_can_make_round_trip():
-	from refactorlib import TOP
-	from os.path import join
-	from os import listdir
+	from refactorlib.tests.util import get_examples
 
-	examples = join(TOP, 'tests/cheetah/examples')
-
-	for example in listdir(examples):
-		if not example.endswith('.tmpl'):
-			continue
-
-		example = open(join(examples, example)).read()
+	for example in get_examples('cheetah'):
+		text = open(example).read()
 
 		from refactorlib.cheetah.parse import parse
-		lxmlnode = parse(example)
+		lxmlnode = parse(text)
 
 		from lxml.etree import tostring
-		assert example == tostring(lxmlnode, method='text')
-		print 'OK'
-
+		assert text == tostring(lxmlnode, method='text')
 
 def test_matches_known_good_parsing():
-	from refactorlib import TOP
-	from os.path import join
-	from os import listdir
+	from refactorlib.tests.util import get_output
 
-	example_path = join(TOP, 'tests/cheetah/examples')
-	xml_path = join(TOP, 'tests/cheetah/parse_output')
-
-	for example in listdir(example_path):
-		if not example.endswith('.tmpl'):
-			continue
-
-		xml = open(join(xml_path, example[:-4] + 'xml')).read()
-		example = open(join(example_path, example)).read()
+	for example, xml in get_output(__file__, 'cheetah', 'xml'):
+		xml = open(xml).read()
+		text = open(example).read()
 
 		from refactorlib.cheetah.parse import parse
-		lxmlnode = parse(example)
+		lxmlnode = parse(text)
 
 		from lxml.etree import tostring
 		assert xml == tostring(lxmlnode)
