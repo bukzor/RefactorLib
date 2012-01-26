@@ -1,12 +1,14 @@
-__version__ = '0.0.a'
+__version__ = '0.1.a'
 
-if __file__[-1] in 'oc':
-	# fixup for .pyc and .pyo files
-	filename = __file__[:-1]
-else:
-	filename = __file__
+def module_dir(modulefile):
+	if modulefile[-1] in 'oc':
+		# fixup for .pyc and .pyo files
+		filename = modulefile[:-1]
+	else:
+		filename = modulefile
 
-from os.path import realpath, dirname
-TOP = dirname(realpath(filename))
+	from os.path import realpath, dirname
+	return dirname(realpath(filename))
 
-__all__ = ('TOP',)
+TOP = module_dir(__file__)
+__all__ = ('__version__', 'module_dir', 'TOP')
