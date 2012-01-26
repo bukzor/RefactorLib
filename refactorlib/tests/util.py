@@ -1,3 +1,6 @@
+"""
+A home for the 'yellow code' of testing.
+"""
 def get_examples(typename):
 	from refactorlib import TOP
 	from refactorlib.filetypes import FILETYPES
@@ -13,14 +16,13 @@ def get_examples(typename):
 			yield join(examples, example),
 
 def get_output(modulefile, typename, suffix):
-	from os.path import basename, join, exists
+	from os.path import basename, join
 	for example, in get_examples(typename):
 		path = modulefile.rsplit('_test.py',1)[0] + '_output'
 		fname = basename(example).rsplit('.',1)[0] + '.' + suffix
 		output = join(path, fname)
 
-		if exists(output):
-			yield example, output
+		yield example, output
 
 def parametrize(arglist):
 	arglist = tuple(arglist) # freeze any generators
