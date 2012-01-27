@@ -41,3 +41,24 @@ def output_suffix(suffix):
 		func.output_suffix = suffix
 		return func
 	return decorator
+
+def assert_same_content(old_file, new_content):
+	new_file = old_file+'.test_failure'
+	open(new_file,'w').write(new_content)
+
+	old_content = open(old_file).readlines()
+	new_content = open(new_file).readlines()
+
+	from difflib import ndiff as diff
+	diffs = ''.join(
+			line for line in diff(old_content, new_content)
+			if not line.startswith('  ') # Remove the similar lines.
+	)
+
+	if diffs:
+		diffs = 'Results differ:\n--- %s\n+++ %s\n%s' % (old_file, new_file, diffs)
+		raise AssertionError(diffs)
+	else:
+		from os import unlink
+		unlink(new_file)
+

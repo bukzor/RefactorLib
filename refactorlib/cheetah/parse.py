@@ -26,7 +26,10 @@ class InstrumentedParser(Parser):
 		self.data = []
 
 		# Add instrumentation to certain methods
-		dont_care = ('getc', 'getRowCol', 'getRowColLine', 'getLine')
+		dont_care = (
+				'getc', 'getRowCol', 'getRowColLine', 'getLine',
+				'getSilentPlaceholderToken', 'getCacheToken', 
+		)
 		from types import MethodType
 		for attr in dir(self):
 			if attr in dont_care:
@@ -46,12 +49,14 @@ def parse(cheetah_content):
 	compiler.compile()
 	data = compiler._parser.data
 
-	#show_data(data, cheetah_content)
+	data = nice_names(data)
 
+	#show_data(dedup(data), cheetah_content)
 	dictnode = parser_data_to_dictnode(data, cheetah_content)
 
 	from refactorlib.parse import dictnode_to_lxml
-	return dictnode_to_lxml(dictnode)
+	from refactorlib.cheetah.node import CheetahNode
+	return dictnode_to_lxml(dictnode, CheetahNode)
 
 
 def show_data(data, src):
@@ -59,19 +64,34 @@ def show_data(data, src):
 		start, end, method = datum
 		print method, repr(src[start:end]), start, end
 
+def nice_names(data):
+	result = []
+	for start, end, method in data:
+		result.append((start, end, method_to_tag(method)))
+	return result
+
 def parser_data_to_dictnode(data, src):
 	root = dict(name='cheetah', start=0, end=len(src)+1, text='', tail='', attrs={}, children=[])
 	stack = [root]
 
 	for datum in dedup(data):
-		start, end, method = datum
-		name = method_to_tag(method)
+		start, end, name = datum
 		dictnode = dict(name=name, start=start, end=end, text='', tail='', attrs={}, children=[])
 
 		parent = stack[-1]
 		while parent['end'] < end:
-			fixup_node_text(stack.pop(), src)
-			parent = stack[-1]
+			if parent['end'] <= start: 
+				# That's proper
+				fixup_node_text(stack.pop(), src)
+				parent = stack[-1]
+			else:
+				# That guy used backtracking! Remove him.
+				# This complements, but doesn't replace, the dedup() function,
+				# since backtracking functions won't necessarily fail this test
+				badguy = stack.pop()
+				parent = stack[-1]
+				parent['children'].remove(badguy)
+				#print 'removed: ', badguy
 
 		parent['children'].append(dictnode)
 		stack.append(dictnode)

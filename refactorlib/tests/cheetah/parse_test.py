@@ -1,4 +1,4 @@
-from refactorlib.tests.util import parametrize, get_examples, get_output
+from refactorlib.tests.util import parametrize, get_examples, get_output, assert_same_content
 
 @parametrize(get_examples('cheetah'))
 def test_can_make_round_trip(example):
@@ -12,11 +12,8 @@ def test_can_make_round_trip(example):
 
 @parametrize(get_output(__file__, 'cheetah', 'xml'))
 def test_matches_known_good_parsing(example, output):
-	text = open(example).read()
-	xml = open(output).read()
-
 	from refactorlib.cheetah.parse import parse
-	lxmlnode = parse(text)
+	example = open(example).read()
+	example = parse(example).tostring()
 
-	from lxml.etree import tostring
-	assert xml == tostring(lxmlnode)
+	assert_same_content(output, example)

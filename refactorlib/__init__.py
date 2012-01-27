@@ -1,4 +1,4 @@
-__version__ = '0.1.a'
+__version__ = '0.2.a'
 
 def module_dir(modulefile):
 	if modulefile[-1] in 'oc':

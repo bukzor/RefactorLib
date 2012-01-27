@@ -4,7 +4,7 @@ def parse(filename, filetype=None):
 
 	return filetype.parser(open(filename).read())
 
-def dictnode_to_lxml(tree):
+def dictnode_to_lxml(tree, element_factory=None):
 	"""
 	Input: A dictionary-based representation of a node tree.
 	Output: An lxml representation of the same.
@@ -16,7 +16,10 @@ def dictnode_to_lxml(tree):
 		attrs -- A dictionary of any extra attributes.
 		children -- An ordered list of more node-dictionaries.
 	"""
-	from lxml.etree import Element
+	if element_factory:
+		Element = element_factory
+	else:
+		from lxml.etree import Element
 
 	root = Element('ROOT')
 	stack = [ (tree,root) ]

@@ -15,6 +15,8 @@ setuptools.setup(
     test_suite = 'refactorlib.tests',
     license = 'BSD',
 
+	install_requires = [ 'lxml>=2.2' ], # We run with 2.2.4.0
+
 	scripts = [ 'xmlfrom', 'xmlstrip' ],
 
     # See http://pypi.python.org/pypi?%3Aaction==list_classifiers
