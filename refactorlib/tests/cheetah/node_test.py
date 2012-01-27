@@ -1,22 +1,69 @@
-def test_can_find_and_remove_calls():
-	from refactorlib.cheetah.parse import parse
+from refactorlib.cheetah.parse import parse
+
+def test_can_find_calls():
 	example = parse('''
-		#def foo()
-			x $foo() bar
-		#end def
+		foo $foo() bar
 	''')
 
 	calls = example.find_calls('foo')
 	assert len(calls) == 1
 	assert calls[0].totext() == '$foo()'
 
-	calls[0].remove_call()
+def test_can_remove_calls():
+	example = parse('''
+		foo $foo() bar
+		foo $foo(dotted.name) bar
+		foo $foo($cheetahvar) bar
+		foo $foo($cheetah.var) bar
+		foo $foo(x.upper() for x in mylist) bar
+	''')
 
-	assert example.totext() == '''
-		#def foo()
-			x  bar
-		#end def
-	'''
+	calls = example.find_calls('foo')
+	assert len(calls) == 5
+
+	for call in calls:
+		call.remove_call()
+
+	assert '''
+		foo  bar
+		foo $dotted.name bar
+		foo $cheetahvar bar
+		foo $cheetah.var bar
+		foo $(x.upper() for x in mylist) bar
+	''' == example.totext()
+
+def test_can_remove_multiline_calls():
+	example = parse('''
+		foo $foo(
+		) bar
+		foo $foo(
+			dotted.name
+		) bar
+		foo $foo(
+			$cheetahvar
+		) bar
+		foo $foo(
+			$cheetah.var
+		) bar
+		foo $foo(
+			x.upper() for x in mylist
+		) bar
+	''')
+
+	calls = example.find_calls('foo')
+	assert len(calls) == 5
+
+	for call in calls:
+		call.remove_call()
+
+	assert '''
+		foo  bar
+		foo $dotted.name bar
+		foo $cheetahvar bar
+		foo $cheetah.var bar
+		foo $(
+			x.upper() for x in mylist
+		) bar
+	''' == example.totext()
 
 	
-#TODO: this could use more exhoustive test cases

@@ -17,34 +17,39 @@ class CheetahPlaceholder(CheetahNodeBase):
 	This class represents a cheetah placeholder, such as: $FOO
 	"""
 	def remove_call(self):
-		args = one(self.xpath('./CheetahVarNameChunks/CallArgString'))
+		args_token = one(self.xpath('./CheetahVarNameChunks/CallArgString'))
+		args = args_token.getchildren()
 
-		if args.text == '()':
-			# no arguments.
-			assert args.getchildren() == [], args.getchildren()
+		
+		if not args: # no arguments.
+			assert args_token.text.strip('(\n\t )') == '', args_token.totext()
 			self.remove_self()
 			return
 
-		args = args.getchildren()
-
-		# remove the right paren
-		assert args[-1].tail == ')', args[-1].tostring()
-		args[-1].tail = ''
 
 		if len(args) == 1 and args[0].tag == 'CheetahVar':
 			#just one cheetah var
-			self.replace_self(args[0])
-		elif all(arg.tag == 'Py' and arg.tail == '' for arg in args):
+			arg = args[0]
+			self.replace_self(arg)
+			# remove the right paren
+			assert arg.tail.strip() == ')', repr(arg.tostring())
+			arg.tail = ''
+		elif (
+				# Python tokens without spaces
+				all(arg.tag == 'Py' for arg in args) and
+				all(arg.tail == '' for arg in args[:-1]) and
+				args[-1].tail.strip() == ')'
+		):
 			#just one Python identifier
 			#replace the call with just the args (keep the $)
 			namechunks = one(self.xpath('./CheetahVarNameChunks'))
 			namechunks.clear()
 			namechunks.extend(args)
+			args[-1].tail = ''
 		else:
 			#there's something more complicated here.
 			#just remove the method name (keep the $())
 			one(self.xpath('./CheetahVarNameChunks/DottedName')).remove_self()
-			args[-1].tail = ')' # Put it back!
 
 def one(mylist):
 	"""
