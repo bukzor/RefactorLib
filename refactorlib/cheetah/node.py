@@ -13,10 +13,21 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		)
 
 class CheetahPlaceholder(CheetahNodeBase):
+	"""
+	This class represents a cheetah placeholder, such as: $FOO
+	"""
 	def remove_call(self):
-		args = self.xpath('./CheetahVarNameChunks/CallArgString')
-		args = one(args).getchildren()
+		args = one(self.xpath('./CheetahVarNameChunks/CallArgString'))
 
+		if args.text == '()':
+			# no arguments.
+			assert args.getchildren() == [], args.getchildren()
+			self.remove_self()
+			return
+
+		args = args.getchildren()
+
+		# remove the right paren
 		assert args[-1].tail == ')', args[-1].tostring()
 		args[-1].tail = ''
 
