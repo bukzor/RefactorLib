@@ -1,6 +1,6 @@
 from refactorlib.tests.util import parametrize, get_examples, get_output
 
-@parametrize(get_examples('python'))
+@parametrize(get_examples)
 def test_can_make_round_trip(example):
 	example = open(example).read()
 
@@ -10,7 +10,7 @@ def test_can_make_round_trip(example):
 	from lxml.etree import tostring
 	assert example == tostring(lxmlnode, method='text')
 
-@parametrize(get_output(__file__, 'python', 'xml'))
+@parametrize(get_output('xml'))
 def test_matches_known_good_parsing(example, output):
 	text = open(example).read()
 	xml = open(output).read()

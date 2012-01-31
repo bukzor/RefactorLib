@@ -12,6 +12,9 @@ class CheetahNodeBase(RefactorLibNodeBase):
 			'[./CheetahVarNameChunks/DottedName="%s"]' % func_name
 		)
 
+	def find_decorator(self, dec_name):
+		pass
+
 class CheetahPlaceholder(CheetahNodeBase):
 	"""
 	This class represents a cheetah placeholder, such as: $FOO

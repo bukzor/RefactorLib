@@ -1,36 +1,59 @@
 """
 A home for the 'yellow code' of testing.
 """
-def get_examples(typename, top=None):
-	if top is None:
-		from refactorlib import TOP as top
-	from refactorlib.filetypes import FILETYPES
-	from os.path import join
+from os.path import join
+
+def example_dir(func):
+
+	modulefile = __import__(func.__module__, fromlist=True).__file__
+	dirname = modulefile.rsplit('_test',1)[0] + '_data'
+	return dirname
+
+def get_examples(func):
+
 	from os import listdir
+	from os.path import isfile
 
-	filetype = FILETYPES.get_filetype(typename)
-
-	examples = join(top, 'tests/%s/examples' % typename)
+	examples = example_dir(func)
+	examples_found = False
 
 	for example in listdir(examples):
-		if filetype.match(example):
-			yield join(examples, example),
+		if example.startswith('.'):
+			# Hidden file.
+			continue
 
-def get_output(modulefile, typename, suffix=None, top=None):
-	from os.path import basename, join
-	for example, in get_examples(typename, top=top):
-		path = modulefile.rsplit('_test.py',1)[0] + '_output'
-		fname = basename(example)
-		if suffix:
-			# Replace the suffix.
-			fname = fname.rsplit('.',1)[0] + '.' + suffix
-		output = join(path, fname)
+		example = join(examples, example)
+		if isfile(example):
+			yield example,
+			examples_found = True
+	
+	if not examples_found:
+		raise SystemError("No examples found in %r" % examples)
 
-		yield example, output
+def get_output(suffix=None):
+	def _get_output(func):
+		from os.path import split
+		for example, in get_examples(func):
 
-def parametrize(arglist):
-	arglist = tuple(arglist) # freeze any generators
+			dirname, filename = split(example)
+			output = join(dirname, func.__name__, filename)
+			if suffix: # Replace the suffix.
+				output = output.rsplit('.',1)[0] + '.' + suffix
+
+			yield example, output
+
+	# The silly optionally-called decorator pattern.
+	if callable(suffix):
+		func, suffix = suffix, None
+		return _get_output(func)
+	else:
+		return _get_output
+
+def parametrize(arg_finder):
 	def decorator(func):
+		arglist = arg_finder(func)
+		arglist = tuple(arglist) # freeze any generators
+
 		from py.test import mark
 		from inspect import getargspec
 		return mark.parametrize(getargspec(func).args, arglist)(func)
@@ -44,7 +67,16 @@ def output_suffix(suffix):
 
 def assert_same_content(old_file, new_content):
 	new_file = old_file+'.test_failure'
-	open(new_file,'w').write(new_content)
+	try:
+		open(new_file,'w').write(new_content)
+	except IOError, e:
+		if e.errno == 2: # No such file.
+			from os import makedirs
+			from os.path import dirname
+			makedirs(dirname(new_file))
+			open(new_file,'w').write(new_content)
+		else:
+			raise
 
 	old_content = open(old_file).readlines()
 	new_content = open(new_file).readlines()
