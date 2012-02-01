@@ -20,26 +20,40 @@ class InstrumentedMethod(object):
 
 
 class InstrumentedParser(Parser):
+	dont_care_methods = (
+			'getc', 'getRowCol', 'getRowColLine', 'getLine',
+			'getSilentPlaceholderToken', 'getCacheToken', 
+	)
 	def __init__(self, *args, **kwargs):
 		super(InstrumentedParser, self).__init__(*args, **kwargs)
 
 		self.data = []
 
 		# Add instrumentation to certain methods
-		dont_care = (
-				'getc', 'getRowCol', 'getRowColLine', 'getLine',
-				'getSilentPlaceholderToken', 'getCacheToken', 
-		)
-		from types import MethodType
 		for attr in dir(self):
-			if attr in dont_care:
-				continue
-			elif attr.startswith('eat') or attr.startswith('get'):
-				val = getattr(self, attr)
-				if isinstance(val, MethodType):
-					method = InstrumentedMethod(val, self)
-					setattr(self, attr, method)
+			val = getattr(self, attr)
+			method = self.instrument_method(val)
+			if method is not None:
+				setattr(self, attr, method)
 
+
+	def instrument_method(self, method):
+		from types import MethodType
+		if not isinstance(method, MethodType):
+			return
+		name = method.__name__
+		if name in self.dont_care_methods:
+			return
+		elif name.startswith('eat') or name.startswith('get'):
+			return InstrumentedMethod(method, self)
+
+	def _initDirectives(self):
+		super(InstrumentedParser, self)._initDirectives()
+
+		for key, val in self._directiveNamesAndParsers.items():
+			method = self.instrument_method(val)
+			if method is not None:
+				self._directiveNamesAndParsers[key] = method
 
 def parse(cheetah_content):
 	from Cheetah.Compiler import Compiler
