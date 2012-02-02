@@ -2,7 +2,7 @@
 cheetah-specific additions to the lxml element node class.
 """
 from lxml import etree
-from refactorlib.node import RefactorLibNodeBase
+from refactorlib.node import RefactorLibNodeBase, one
 
 class CheetahNodeBase(RefactorLibNodeBase):
 	def find_calls(self, func_name):
@@ -11,9 +11,12 @@ class CheetahNodeBase(RefactorLibNodeBase):
 			'[./CheetahVarNameChunks/CallArgString]'
 			'[./CheetahVarNameChunks/DottedName="%s"]' % func_name
 		)
-
-	def find_decorator(self, dec_name):
-		pass
+	
+	def find_decorators(self, dec_name):
+		return self.xpath(
+				'.//Decorator'
+				'[./Expression/ExpressionParts/Py[2]="%s"]' % dec_name
+		)
 
 class CheetahPlaceholder(CheetahNodeBase):
 	"""
@@ -54,12 +57,22 @@ class CheetahPlaceholder(CheetahNodeBase):
 			#just remove the method name (keep the $())
 			one(self.xpath('./CheetahVarNameChunks/DottedName')).remove_self()
 
-def one(mylist):
-	"""
-	assert that there's only one thing, and get it.
-	"""
-	assert len(mylist) == 1, tuple(item.tostring() for item in mylist)
-	return mylist[0]
+class CheetahDecorator(CheetahNodeBase):
+	def remove_self(self):
+		children = self.getchildren()
+		assert children[0].tag == 'DirectiveStart', children[0]
+		assert children[1].tag == 'Expression', children[1]
+
+		parent = self.getparent()
+		index = parent.index(self)
+
+		self.clear_indent()
+		parent.remove(self)
+
+		# put some contents back, if necessary
+		for child in children[-1:1:-1]:
+			parent.insert(index, child)
+
 
 class CheetahNodeLookup(etree.PythonElementClassLookup):
 	"""
@@ -69,6 +82,8 @@ class CheetahNodeLookup(etree.PythonElementClassLookup):
 	def lookup(self, document, element):
 		if element.tag == 'Placeholder':
 			return CheetahPlaceholder
+		elif element.tag == 'Decorator':
+			return CheetahDecorator
 		else:
 			return CheetahNodeBase
 

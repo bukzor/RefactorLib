@@ -37,4 +37,8 @@ def dictnode_to_lxml(tree, element_factory=None):
 
 	children = root.getchildren()
 	assert len( children ) == 1, children
-	return children[0]
+
+	# Get rid of the bogus root element.
+	newroot = children[0]
+	root.remove(newroot)
+	return newroot
