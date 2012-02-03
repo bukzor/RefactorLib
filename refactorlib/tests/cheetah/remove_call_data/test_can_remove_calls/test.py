@@ -2,9 +2,11 @@
 
 from refactorlib.parse import parse
 
-c = parse('foo.tmpl')
+c = parse('simple.tmpl')
 
-for decorator in c.find_decorators('foo'):
+import pudb; pudb.set_trace()
+
+for decorator in c.find_calls('foo'):
 	print decorator.tostring()
 	decorator.remove_self()
 

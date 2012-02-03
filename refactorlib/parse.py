@@ -21,7 +21,7 @@ def dictnode_to_lxml(tree, element_factory=None):
 	else:
 		from lxml.etree import Element
 
-	root = Element('ROOT')
+	root = None
 	stack = [ (tree,root) ]
 
 	while stack:
@@ -30,15 +30,13 @@ def dictnode_to_lxml(tree, element_factory=None):
 		lxmlnode = Element(node['name'], attrib=node['attrs'])
 		lxmlnode.text = node['text']
 		lxmlnode.tail = node['tail']
-		parent.append(lxmlnode)
+
+		if parent is None:
+			root = lxmlnode
+		else:
+			parent.append(lxmlnode)
 
 		for child in reversed(node['children']):
 			stack.append((child, lxmlnode))
 
-	children = root.getchildren()
-	assert len( children ) == 1, children
-
-	# Get rid of the bogus root element.
-	newroot = children[0]
-	root.remove(newroot)
-	return newroot
+	return root

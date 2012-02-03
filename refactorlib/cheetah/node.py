@@ -10,6 +10,10 @@ class CheetahNodeBase(RefactorLibNodeBase):
 			'.//Placeholder'
 			'[./CheetahVarNameChunks/CallArgString]'
 			'[./CheetahVarNameChunks/DottedName="%s"]' % func_name
+		) + self.xpath(
+			'.//CheetahVar'
+			'[./CheetahVarBody/CheetahVarNameChunks/CallArgString]'
+			'[./CheetahVarBody/CheetahVarNameChunks/DottedName="%s"]' % func_name
 		)
 	
 	def find_decorators(self, dec_name):
@@ -18,14 +22,13 @@ class CheetahNodeBase(RefactorLibNodeBase):
 				'[./Expression/ExpressionParts/Py[2]="%s"]' % dec_name
 		)
 
-class CheetahPlaceholder(CheetahNodeBase):
+class _CheetahVariable(CheetahNodeBase):
 	"""
 	This class represents a cheetah placeholder, such as: $FOO
 	"""
-	def remove_call(self):
-		args_token = one(self.xpath('./CheetahVarNameChunks/CallArgString'))
+	def _remove_call(self, args_body):
+		args_token = one(args_body.xpath('./CheetahVarNameChunks/CallArgString'))
 		args = args_token.getchildren()
-
 		
 		if not args: # no arguments.
 			assert args_token.text.strip('(\n\t )') == '', args_token.totext()
@@ -33,8 +36,16 @@ class CheetahPlaceholder(CheetahNodeBase):
 			return
 
 
-		if len(args) == 1 and args[0].tag == 'CheetahVar':
-			#just one cheetah var
+		if len(args) == 1 and (
+				args[0].tag == 'CheetahVar'
+				or (
+					args[0].tag == 'Py'
+					and len(args[0].text) >= 2
+					and args[0].text[0] == args[0].text[-1]
+					and args[0].text[0] in '"'"'"
+				)
+		):
+			#just one cheetah var / Python string
 			arg = args[0]
 			self.replace_self(arg)
 			# remove the right paren
@@ -46,16 +57,27 @@ class CheetahPlaceholder(CheetahNodeBase):
 				all(arg.tail == '' for arg in args[:-1]) and
 				args[-1].tail.strip() == ')'
 		):
-			#just one Python identifier
+			#just one Python variable.
 			#replace the call with just the args (keep the $)
-			namechunks = one(self.xpath('./CheetahVarNameChunks'))
+			namechunks = one(args_body.xpath('./CheetahVarNameChunks'))
 			namechunks.clear()
 			namechunks.extend(args)
 			args[-1].tail = ''
 		else:
 			#there's something more complicated here.
 			#just remove the method name (keep the $())
-			one(self.xpath('./CheetahVarNameChunks/DottedName')).remove_self()
+			one(args_body.xpath('./CheetahVarNameChunks/DottedName')).remove_self()
+	
+class CheetahPlaceholder(_CheetahVariable):
+	def remove_call(self):
+		args_body = self
+		super(CheetahPlaceholder, self)._remove_call(args_body)
+
+class CheetahVar(_CheetahVariable):
+	def remove_call(self):
+		args_body = one(self.xpath('./CheetahVarBody'))
+		super(CheetahVar, self)._remove_call(args_body)
+
 
 class CheetahDecorator(CheetahNodeBase):
 	def remove_self(self):
@@ -82,6 +104,8 @@ class CheetahNodeLookup(etree.PythonElementClassLookup):
 	def lookup(self, document, element):
 		if element.tag == 'Placeholder':
 			return CheetahPlaceholder
+		elif element.tag == 'CheetahVar':
+			return CheetahVar
 		elif element.tag == 'Decorator':
 			return CheetahDecorator
 		else:

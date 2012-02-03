@@ -65,6 +65,7 @@ def parse(cheetah_content):
 
 	#show_data(data, cheetah_content)
 	data = nice_names(data)
+	data = remove_empty(data)
 
 	dictnode = parser_data_to_dictnode(data, cheetah_content)
 
@@ -72,6 +73,11 @@ def parse(cheetah_content):
 	from refactorlib.cheetah.node import CheetahNode
 	return dictnode_to_lxml(dictnode, CheetahNode)
 
+def remove_empty(data):
+	for datum in data:
+		start, end, method = datum
+		if start != end:
+			yield datum
 
 def show_data(data, src):
 	for datum in data:
@@ -79,10 +85,8 @@ def show_data(data, src):
 		print method, repr(src[start:end]), start, end
 
 def nice_names(data):
-	result = []
 	for start, end, method in data:
-		result.append((start, end, method_to_tag(method)))
-	return result
+		yield start, end, method_to_tag(method)
 
 def parser_data_to_dictnode(data, src):
 	root = dict(name='cheetah', start=0, end=len(src)+1, text='', tail='', attrs={}, children=[])
@@ -139,6 +143,7 @@ def dedup(data):
 	# We want the *last* occurance of any repeated token
 	# since repeats indicate backtracking.
 	new_data = []
+	data = tuple(data)
 	for i, datum in enumerate(data):
 		if datum in data[i+1:]:
 			continue

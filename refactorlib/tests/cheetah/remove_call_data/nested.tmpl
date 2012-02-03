@@ -1,0 +1,12 @@
+
+$concat(
+	$_( "$BLERG $BAZ", BLERG=$foo('buz'), BAZ=$foo('quux') ),
+	$_( "$BLERG $BAZ", BLERG=$foo(
+				'buz'
+			), BAZ=$foo(
+				'quux'
+			),
+	),
+	$foo(bar),
+)
+
