@@ -15,7 +15,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
 			'[./CheetahVarBody/CheetahVarNameChunks/CallArgString]'
 			'[./CheetahVarBody/CheetahVarNameChunks/DottedName="%s"]' % func_name
 		)
-	
+
 	def find_decorators(self, dec_name):
 		return self.xpath(
 				'.//Decorator'
@@ -29,9 +29,9 @@ class _CheetahVariable(CheetahNodeBase):
 	def _remove_call(self, args_body):
 		args_token = one(args_body.xpath('./CheetahVarNameChunks/CallArgString'))
 		args = args_token.getchildren()
-		
+
 		if not args: # no arguments.
-			assert args_token.text.strip('(\n\t )') == '', args_token.totext()
+			assert args_token.totext().strip('(\n\t )') == '', args_token.totext()
 			self.remove_self()
 			return
 
@@ -48,9 +48,9 @@ class _CheetahVariable(CheetahNodeBase):
 			#just one cheetah var / Python string
 			arg = args[0]
 			self.replace_self(arg)
-			# remove the right paren
+			# replace the right paren with whatever followed the `self` token
 			assert arg.tail.strip() == ')', repr(arg.tostring())
-			arg.tail = ''
+			arg.tail = self.tail
 		elif (
 				# Python tokens without spaces
 				all(arg.tag == 'Py' for arg in args) and
@@ -62,12 +62,13 @@ class _CheetahVariable(CheetahNodeBase):
 			namechunks = one(args_body.xpath('./CheetahVarNameChunks'))
 			namechunks.clear()
 			namechunks.extend(args)
+			assert args[-1].tail.strip() == ')', repr(arg.tostring())
 			args[-1].tail = ''
 		else:
 			#there's something more complicated here.
 			#just remove the method name (keep the $())
 			one(args_body.xpath('./CheetahVarNameChunks/DottedName')).remove_self()
-	
+
 class CheetahPlaceholder(_CheetahVariable):
 	def remove_call(self):
 		args_body = self
