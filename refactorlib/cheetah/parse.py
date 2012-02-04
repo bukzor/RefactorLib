@@ -63,9 +63,10 @@ def parse(cheetah_content):
 	compiler.compile()
 	data = compiler._parser.data
 
-	#show_data(data, cheetah_content)
+	#data = show_data(data, cheetah_content)
 	data = nice_names(data)
 	data = remove_empty(data)
+	data = dedup(data)
 
 	dictnode = parser_data_to_dictnode(data, cheetah_content)
 
@@ -83,6 +84,7 @@ def show_data(data, src):
 	for datum in data:
 		start, end, method = datum
 		print method, repr(src[start:end]), start, end
+		yield datum
 
 def nice_names(data):
 	for start, end, method in data:
@@ -92,9 +94,10 @@ def parser_data_to_dictnode(data, src):
 	root = dict(name='cheetah', start=0, end=len(src)+1, text='', tail='', attrs={}, children=[])
 	stack = [root]
 
-	for datum in dedup(data):
+	for datum in data:
 		start, end, name = datum
 		dictnode = dict(name=name, start=start, end=end, text='', tail='', attrs={}, children=[])
+
 
 		parent = stack[-1]
 		while parent['end'] < end:
@@ -109,11 +112,10 @@ def parser_data_to_dictnode(data, src):
 				badguy = stack.pop()
 				parent = stack[-1]
 				parent['children'].remove(badguy)
-				#print 'removed: ', badguy
 
 		parent['children'].append(dictnode)
 		stack.append(dictnode)
-	
+
 	# clean up
 	while stack:
 		fixup_node_text(stack.pop(), src)
@@ -140,15 +142,40 @@ def fixup_node_text(dictnode, src):
 		my['text'] = src[my['start']:my['end']]
 
 def dedup(data):
-	# We want the *last* occurance of any repeated token
-	# since repeats indicate backtracking.
-	new_data = []
-	data = tuple(data)
-	for i, datum in enumerate(data):
-		if datum in data[i+1:]:
-			continue
-		else:
+	"""
+	Cheetah does a lot of backtracking.
+	We can fix it!
+	"""
+	new_data = [] # Can't yield. We need to look behind.
+	file_pointer = 0
+	for datum in data:
+		start, end, name = datum
+
+		if start > file_pointer: 
+			# New data.
+			file_pointer = start
 			new_data.append(datum)
+			continue
+
+		dup_index = None
+		for i, d in enumerate(reversed(new_data)):
+			if d == datum:
+				dup_index = -1 - i
+				break
+			elif d[0] < start:
+				break
+
+		if dup_index is None:
+			new_data.append(datum)
+		elif file_pointer == start:
+			# Dupe: This is a simple backtrack, take the latest parsing.
+			#print "Duped:", datum
+			del new_data[dup_index]
+			new_data.append(datum)
+		else:
+			# Dupe: We've advanced beyond this data, drop it.
+			#print "Dropped:", datum
+			pass
 	return new_data
 
 def method_to_tag(methodname):
