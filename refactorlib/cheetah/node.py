@@ -107,21 +107,50 @@ class CheetahDirective(CheetahNodeBase):
 			directive = directive.lstrip('#')
 		else:
 			raise NotImplementedError("Patches Are Welcome!")
-			directive = other.xpath('.//DirectiveStart')[0].tail.strip()
+			directive = other.name
 			var = other.xpath('.//CheetahVar')[0]
 		
-		self.xpath_one('.//DirectiveStart[1]').tail = directive
-		self.xpath_one('.//CheetahVar[1]').replace_self(var)
+		self.name = directive
+		self.var = var
 		
 		if self.is_multiline_directive:
 			# Multi-line form: Need to update the end directive.
-			end_expression = self.find_end_directive().xpath_one('./Expression[1]')
+			end_expression = self.get_end_directive().xpath_one('./EndDirective/Expression')
+			tail = end_expression.tail
 			end_expression.clear()
 			end_expression.text = directive
+			end_expression.tail = tail
 	
 	@property
 	def is_multiline_directive(self):
 		return not self.xpath('./EndDirective or ./SimpleExprDirective or .//text()=":"')
+	
+	def __get_name(self):
+		"The name of the directive. The word just after the first # sign."
+		return self.xpath_one('./*/DirectiveStart').tail
+
+	def __set_name(self, val):
+		self.xpath_one('./*/DirectiveStart').tail = val
+
+	name = property(__get_name, __set_name)
+
+
+	def __get_var(self):
+		try:
+			return self.xpath_one('./*/CheetahVar | ./*/Identifier')
+		except ValueError:
+			return None
+
+	def __set_var(self, var):
+		old_var = self.var
+		
+		if old_var is None:
+			self.append(var)
+		else:
+			var.tail = old_var.tail
+			old_var.replace_self(var)
+
+	var = property(__get_var, __set_var)
 
 	def get_end_directive(self):
 		"""

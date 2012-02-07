@@ -15,11 +15,11 @@ class RefactorLibNodeBase(etree.ElementBase):
 		parent = self.getparent()
 		parent.remove(self)
 	
-	def totext(self):
-		return etree.tostring(self, method='text')
+	def totext(self, with_tail=True):
+		return etree.tostring(self, method='text', with_tail=with_tail)
 
-	def tostring(self, method=None):
-		return etree.tostring(self, method=method)
+	def tostring(self, method=None, with_tail=True):
+		return etree.tostring(self, method=method, with_tail=with_tail)
 	
 	def following_text(self):
 		"""

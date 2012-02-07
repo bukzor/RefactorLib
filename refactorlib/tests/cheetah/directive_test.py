@@ -29,3 +29,21 @@ def test_find_end_directive(example, output):
 
 	new_output = '\n'.join(new_output)
 	assert_same_content(output, new_output)
+
+@parametrize(get_output)
+def test_replace_directive(example, output):
+	from refactorlib.parse import parse
+	lxmlnode = parse(example)
+
+	for directive in lxmlnode.xpath('//Directive'):
+		if directive.xpath('./EndDirective'):
+			# Don't mess with #end statements
+			continue
+
+		if directive.var is None:
+			directive.replace_directive('#{{{%s}}}' % directive.name)
+		else:
+			directive.replace_directive('#{{{%s}}} [%s]' % (directive.name, directive.var.totext(with_tail=False)))
+
+	new_output = lxmlnode.totext()
+	assert_same_content(output, new_output)

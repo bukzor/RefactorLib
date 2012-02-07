@@ -11,3 +11,10 @@ End: /cheetah/def[2]/Directive[2]
 Directive: /cheetah/def[2]/Directive[2]
 Single-line: #end def
 
+
+Directive: /cheetah/def[3]/Directive[1]
+End: /cheetah/def[3]/Directive[2]
+
+Directive: /cheetah/def[3]/Directive[2]
+Single-line: #end def foo1 blah blah blah
+
