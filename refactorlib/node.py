@@ -43,18 +43,27 @@ class RefactorLibNodeBase(etree.ElementBase):
 		attr = 'text' if indent.is_text else 'tail'
 		indent_owner = indent.getparent()
 		setattr(indent_owner, attr, indent.rstrip(' \t'))
+	
+	def xpath_one(self, xpath):
+		return one(self.xpath(xpath))
 
 def one(mylist):
 	"""
 	assert that there's only one thing, and get it.
 	"""
 	if len(mylist) != 1:
-		raise ValueError(repr(tuple(
-			item.tostring() 
-			if isinstance(item, etree.ElementBase)
-			else item
-			for item in mylist
-		)))
+		raise ValueError(
+				'Expected exactly one item. Got %i: %r'
+				% (
+					len(mylist),
+					list(
+						item.tostring() 
+						if isinstance(item, etree.ElementBase)
+						else item
+						for item in mylist
+					)
+				)
+		)
 
 	return mylist[0]
 

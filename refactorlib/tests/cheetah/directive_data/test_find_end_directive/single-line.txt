@@ -1,0 +1,11 @@
+Directive: /cheetah/Directive[1]
+Single-line: #def foo1: #return "foo1"
+
+
+Directive: /cheetah/Directive[1]/Def/Directive
+Single-line: #return "foo1"
+
+
+Directive: /cheetah/Directive[2]
+Single-line: #def foo2: foo2
+

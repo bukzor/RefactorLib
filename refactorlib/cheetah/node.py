@@ -96,6 +96,39 @@ class CheetahDecorator(CheetahNodeBase):
 		for child in children[-1:1:-1]:
 			parent.insert(index, child)
 
+class CheetahDirective(CheetahNodeBase):
+	def replace_directive(self, other):
+		if isinstance(other, basestring):
+			var = CheetahNode('CheetahVar')
+			try:
+				directive, var.text = other.split(None, 1)
+			except ValueError:
+				directive, var.text = other.strip(), ''
+			directive = directive.lstrip('#')
+		else:
+			raise NotImplementedError("Patches Are Welcome!")
+			directive = other.xpath('.//DirectiveStart')[0].tail.strip()
+			var = other.xpath('.//CheetahVar')[0]
+		
+		self.xpath_one('.//DirectiveStart[1]').tail = directive
+		self.xpath_one('.//CheetahVar[1]').replace_self(var)
+		
+		if self.is_multiline_directive:
+			# Multi-line form: Need to update the end directive.
+			end_expression = self.find_end_directive().xpath_one('./Expression[1]')
+			end_expression.clear()
+			end_expression.text = directive
+	
+	@property
+	def is_multiline_directive(self):
+		return not self.xpath('./EndDirective or ./SimpleExprDirective or .//text()=":"')
+
+	def get_end_directive(self):
+		"""
+		Returns the EndDirective node that logically matches this Directive.
+		"""
+		# Look at sibling Directives after this node, take first one that is an EndDirective.
+		return self.xpath_one('./following-sibling::Directive[./EndDirective][1]')
 
 class CheetahNodeLookup(etree.PythonElementClassLookup):
 	"""
@@ -107,6 +140,8 @@ class CheetahNodeLookup(etree.PythonElementClassLookup):
 			return CheetahPlaceholder
 		elif element.tag == 'CheetahVar':
 			return CheetahVar
+		elif element.tag == 'Directive':
+			return CheetahDirective
 		elif element.tag == 'Decorator':
 			return CheetahDecorator
 		else:

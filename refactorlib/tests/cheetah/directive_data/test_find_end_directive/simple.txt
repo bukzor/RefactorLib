@@ -1,0 +1,13 @@
+Directive: /cheetah/def[1]/Directive[1]
+End: /cheetah/def[1]/Directive[2]
+
+Directive: /cheetah/def[1]/Directive[2]
+Single-line: #end def foo1
+
+
+Directive: /cheetah/def[2]/Directive[1]
+End: /cheetah/def[2]/Directive[2]
+
+Directive: /cheetah/def[2]/Directive[2]
+Single-line: #end def
+

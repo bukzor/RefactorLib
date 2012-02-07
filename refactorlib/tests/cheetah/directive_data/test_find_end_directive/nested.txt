@@ -1,0 +1,20 @@
+Directive: /cheetah/def/Directive[1]
+End: /cheetah/def/Directive[2]
+
+Directive: /cheetah/def/def[1]/Directive[1]
+End: /cheetah/def/def[1]/Directive[2]
+
+Directive: /cheetah/def/def[1]/Directive[2]
+Single-line: #end def foo1
+
+
+Directive: /cheetah/def/def[2]/Directive[1]
+End: /cheetah/def/def[2]/Directive[2]
+
+Directive: /cheetah/def/def[2]/Directive[2]
+Single-line: #end def
+
+
+Directive: /cheetah/def/Directive[2]
+Single-line: #end def biggun
+

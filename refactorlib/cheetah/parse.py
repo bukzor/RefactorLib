@@ -1,5 +1,7 @@
 from Cheetah.Parser import Parser
 
+DEBUG = False
+
 class InstrumentedMethod(object):
 	def __init__(self, method, parent):
 		self.method = method
@@ -7,14 +9,13 @@ class InstrumentedMethod(object):
 
 	def __call__(self, *args, **kwargs):
 		# I want the data to be arranged in *call* order
-		mydata = []
-		self.parent.data.append(mydata)
-
 		start_pos = self.parent.pos()
-		result = self.method(*args, **kwargs)
-		end_pos = self.parent.pos()
+		name = self.method.__name__
 
-		mydata[:] = (start_pos, end_pos, self.method.__name__)
+		mydata = [start_pos, None, name]
+		self.parent.data.append(mydata)
+		result = self.method(*args, **kwargs) # Call the wrapped method.
+		mydata[1] = self.parent.pos()
 			
 		return result
 
@@ -28,6 +29,7 @@ class InstrumentedParser(Parser):
 		super(InstrumentedParser, self).__init__(*args, **kwargs)
 
 		self.data = []
+		self._openDirectivesDataStack = []
 
 		# Add instrumentation to certain methods
 		for attr in dir(self):
@@ -55,6 +57,39 @@ class InstrumentedParser(Parser):
 			if method is not None:
 				self._directiveNamesAndParsers[key] = method
 
+	def pushToOpenDirectivesStack(self, directiveName):
+		result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directiveName)
+
+		# This properly goes just before the previous eatDirective
+		for i, (start, end, name) in enumerate(reversed(self.data), 1):
+			if name == 'eatDirective':
+				break
+
+		index = len(self.data) - i
+		self._openDirectivesDataStack.append((index, start))
+
+		return result
+
+	def popFromOpenDirectivesStack(self, directiveName):
+		result = super(InstrumentedParser, self).popFromOpenDirectivesStack(directiveName)
+
+		directive_index, mystart = self._openDirectivesDataStack.pop()
+		myend = self.pos()
+
+		# Have to check for children that started before eatDirective (e.g. decorators)
+		myindex = directive_index
+		for i, (start, end, name) in enumerate(reversed(self.data[:directive_index]), 1):
+			if start <= mystart and mystart < end < myend:
+				mystart = min(start, mystart)
+				myindex = directive_index - i
+
+		data = [mystart, myend, directiveName]
+		self.data.insert(myindex, data)
+		
+
+		return result
+
+
 def parse(cheetah_content):
 	from Cheetah.Compiler import Compiler
 	# This is very screwy, but so is cheetah. Appologies.
@@ -63,7 +98,8 @@ def parse(cheetah_content):
 	compiler.compile()
 	data = compiler._parser.data
 
-	#data = show_data(data, cheetah_content)
+	if DEBUG:
+		data = show_data(data, cheetah_content)
 	data = nice_names(data)
 	data = remove_empty(data)
 	data = dedup(data)
@@ -112,6 +148,8 @@ def parser_data_to_dictnode(data, src):
 				badguy = stack.pop()
 				parent = stack[-1]
 				parent['children'].remove(badguy)
+				if DEBUG:
+					print 'Removed bad:', badguy
 
 		parent['children'].append(dictnode)
 		stack.append(dictnode)
@@ -169,12 +207,14 @@ def dedup(data):
 			new_data.append(datum)
 		elif file_pointer == start:
 			# Dupe: This is a simple backtrack, take the latest parsing.
-			#print "Duped:", datum
+			if DEBUG:
+				print "Duped:", datum
 			del new_data[dup_index]
 			new_data.append(datum)
 		else:
 			# Dupe: We've advanced beyond this data, drop it.
-			#print "Dropped:", datum
+			if DEBUG:
+				print "Dropped:", datum
 			pass
 	return new_data
 
