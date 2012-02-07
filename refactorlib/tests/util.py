@@ -4,10 +4,11 @@ A home for the 'yellow code' of testing.
 from os.path import join
 
 def example_dir(func):
+	from os.path import relpath
 
 	modulefile = __import__(func.__module__, fromlist=True).__file__
 	dirname = modulefile.rsplit('_test',1)[0] + '_data'
-	return dirname
+	return relpath(dirname)
 
 def get_examples(func):
 
