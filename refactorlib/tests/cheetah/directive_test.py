@@ -47,3 +47,33 @@ def test_replace_directive(example, output):
 
 	new_output = lxmlnode.totext()
 	assert_same_content(output, new_output)
+
+@parametrize(get_output('txt'))
+def test_get_enclosing_blocks(example, output):
+	text = open(example).read()
+
+	from refactorlib.cheetah.parse import parse
+	lxmlnode = parse(text)
+	tree = lxmlnode.getroottree()
+
+	unique_contexts = {}
+	for directive in lxmlnode.xpath('//Directive'):
+		context = tuple(
+				tree.getpath(block) for block in directive.get_enclosing_blocks()
+		)
+
+		if context and context not in unique_contexts:
+			unique_contexts[context] = directive
+	
+	new_output = []
+	for context, directive in sorted(unique_contexts.items()):
+		new_output.append(
+			'Directive: %s' % tree.getpath(directive)
+		)
+		for c in context:
+			new_output.append('  ' + c)
+		new_output.append('')
+	
+	new_output = '\n'.join(new_output)
+	assert_same_content(output, new_output)
+

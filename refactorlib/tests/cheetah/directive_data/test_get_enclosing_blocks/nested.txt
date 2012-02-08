@@ -1,0 +1,10 @@
+Directive: /cheetah/def/Directive[1]
+  /cheetah/def/Directive[1]
+
+Directive: /cheetah/def/def[1]/Directive[1]
+  /cheetah/def/Directive[1]
+  /cheetah/def/def[1]/Directive[1]
+
+Directive: /cheetah/def/def[2]/Directive[1]
+  /cheetah/def/Directive[1]
+  /cheetah/def/def[2]/Directive[1]

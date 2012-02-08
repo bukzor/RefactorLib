@@ -22,6 +22,35 @@ class CheetahNodeBase(RefactorLibNodeBase):
 				'[./Expression/ExpressionParts/Py[2]="%s"]' % dec_name
 		)
 
+	def get_enclosing_blocks(self):
+		"""
+		Get the nodes representing the blocks that enclose this node.
+		"""
+		return self.xpath(
+				# Grab directives that are our direct ancestor.
+				'./ancestor::Directive'
+				'|' # OR:
+				# Look at all ancestors.
+				'./ancestor::*'
+				# Its last child element should be an EndDirective.
+				'[./*[last()][self::Directive]/*[1][self::EndDirective]]'
+				# Grab the first child. Require that it's a directive
+				'/*[1][self::Directive]'
+		)
+
+	def is_in_context(self, directive_string):
+		directive_name, var = directive_string.split(None, 1)
+		directive_name = directive_name.lstrip('#')
+
+		for directive in self.get_enclosing_blocks():
+			if (
+					directive.name == directive_name and
+					directive.var.totext(with_tail=False) == var
+			):
+				return True
+		else:
+			return False
+
 class _CheetahVariable(CheetahNodeBase):
 	"""
 	This class represents a cheetah placeholder, such as: $FOO
