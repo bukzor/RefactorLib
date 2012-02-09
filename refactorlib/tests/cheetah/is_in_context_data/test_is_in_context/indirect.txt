@@ -1,0 +1,11 @@
+Placeholder: $funcB()
+    #def MyFunc True
+    #block MyBlock True
+
+Placeholder: $funcA()
+    #def MyFunc False
+    #block MyBlock True
+
+Placeholder: $MyFunc()
+    #def MyFunc False
+    #block MyBlock True

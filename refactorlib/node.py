@@ -47,6 +47,13 @@ class RefactorLibNodeBase(etree.ElementBase):
 	def xpath_one(self, xpath):
 		return one(self.xpath(xpath))
 
+	def __nonzero__(self):
+		"""
+		Nodes should always test True.
+		This is forward-compatible with the newest lxml version.
+		"""
+		return True
+
 def one(mylist):
 	"""
 	assert that there's only one thing, and get it.

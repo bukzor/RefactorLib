@@ -1,0 +1,7 @@
+Placeholder: $funcB()
+    #def MyFunc True
+    #block MyBlock False
+
+Placeholder: $funcA()
+    #def MyFunc False
+    #block MyBlock True

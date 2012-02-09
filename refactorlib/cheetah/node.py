@@ -26,6 +26,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		"""
 		Get the nodes representing the blocks that enclose this node.
 		"""
+		# TODO: unit test, with decorators
 		return self.xpath(
 				# Grab directives that are our direct ancestor.
 				'./ancestor::Directive'
@@ -36,18 +37,35 @@ class CheetahNodeBase(RefactorLibNodeBase):
 				'[./*[last()][self::Directive]/*[1][self::EndDirective]]'
 				# Grab the first child. Require that it's a directive
 				'/*[1][self::Directive]'
+				# Use the first directive that's not a Decorator.
+				'/descendant-or-self::Directive[not(./Decorator)]'
 		)
 
 	def is_in_context(self, directive_string):
-		directive_name, var = directive_string.split(None, 1)
+		try:
+			directive_name, var = directive_string.split(None, 1)
+		except ValueError:
+			directive_name, var = directive_string.strip(), None
+
 		directive_name = directive_name.lstrip('#')
+		root = self.getroottree().getroot()
 
 		for directive in self.get_enclosing_blocks():
 			if (
+					# TODO: create a Directive and simply compare
 					directive.name == directive_name and
-					directive.var.totext(with_tail=False) == var
+					(
+						directive.var is None and var is None or
+						directive.var.totext(with_tail=False) == var
+					)
 			):
 				return True
+
+			if directive.name == 'def':
+				func = directive.var.totext(with_tail=False)
+				for call in root.find_calls(func):
+					if call.is_in_context(directive_string):
+						return True
 		else:
 			return False
 
@@ -156,13 +174,12 @@ class CheetahDirective(CheetahNodeBase):
 	
 	def __get_name(self):
 		"The name of the directive. The word just after the first # sign."
-		return self.xpath_one('./*/DirectiveStart').tail
+		return self.xpath_one('./*/*[1][self::DirectiveStart]').tail
 
 	def __set_name(self, val):
-		self.xpath_one('./*/DirectiveStart').tail = val
+		self.xpath_one('./*/*[1][self::DirectiveStart]').tail = val
 
 	name = property(__get_name, __set_name)
-
 
 	def __get_var(self):
 		try:

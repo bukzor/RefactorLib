@@ -19,6 +19,22 @@ class InstrumentedMethod(object):
 			
 		return result
 
+class AnyString(str):
+	'Represents "any string".'
+	def startswith(self, other):
+		return True
+	def __eq__(self, other):
+		return True
+
+from collections import defaultdict
+class AutoDict(defaultdict):
+	"Like defaultdict, but auto-populates for .get() as well."
+	no_default = []
+	def get(self, key, default=no_default):
+		if default is self.no_default:
+			return self[key]
+		else:
+			return super(AutoDict, self).get(key, default)
 
 class InstrumentedParser(Parser):
 	dont_care_methods = (
@@ -56,6 +72,12 @@ class InstrumentedParser(Parser):
 			method = self.instrument_method(val)
 			if method is not None:
 				self._directiveNamesAndParsers[key] = method
+
+		# We need unrecognized directives to be seen as macros
+		self._directiveNamesAndParsers[AnyString()] = self.eatMacroCall
+		self._directiveNamesAndParsers = AutoDict(lambda: self.eatMacroCall, self._directiveNamesAndParsers)
+		fake_macro = lambda **kwargs: ''
+		self._macros = AutoDict(lambda: fake_macro, self._macros)
 
 	def pushToOpenDirectivesStack(self, directiveName):
 		result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directiveName)
