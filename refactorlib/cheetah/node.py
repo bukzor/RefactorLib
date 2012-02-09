@@ -17,10 +17,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		)
 
 	def find_decorators(self, dec_name):
-		return self.xpath(
-				'.//Decorator'
-				'[./Expression/ExpressionParts/Py[2]="%s"]' % dec_name
-		)
+		return self.xpath( './/Decorator[./Expression="%s"]' % dec_name )
 
 	def get_enclosing_blocks(self):
 		"""
@@ -40,6 +37,20 @@ class CheetahNodeBase(RefactorLibNodeBase):
 				# Use the first directive that's not a Decorator.
 				'/descendant-or-self::Directive[not(./Decorator)]'
 		)
+	
+	def add_comment(self, comment):
+		# TODO: unit test
+		text = self.preceding_text()
+		while '\n' not in text:
+			text = text.getparent().preceding_text()
+		parent = text.getparent()
+		attr = 'text' if text.is_text else 'tail'
+		text = text.replace(
+				'\n',
+				'\n%s\n' % comment,
+				1
+		)
+		setattr(parent, attr, text)
 
 	def is_in_context(self, directive_string):
 		try:
