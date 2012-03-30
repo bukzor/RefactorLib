@@ -114,8 +114,10 @@ class InstrumentedParser(Parser):
 
 def parse(cheetah_content):
 	from Cheetah.Compiler import Compiler
-	# This is very screwy, but so is cheetah. Appologies.
+	# This is very screwy, but so is cheetah. Apologies.
 	compiler = Compiler(cheetah_content)
+	# Cheetah does source-code munging, before parsing...
+	cheetah_content = compiler._parser._src
 	compiler._parser = InstrumentedParser(cheetah_content, compiler=compiler)
 	compiler.compile()
 	data = compiler._parser.data
