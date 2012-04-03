@@ -44,6 +44,21 @@ class RefactorLibNodeBase(etree.ElementBase):
 		indent_owner = indent.getparent()
 		setattr(indent_owner, attr, indent.rstrip(' \t'))
 	
+	def find_indent_textnode(self):
+		"""
+		Find and return the raw text node that includes the indentation for
+		this node. Other, non-whitespace charcters may be included.
+		"""
+		text = self.preceding_text()
+		while '\n' not in text:
+			prev = text.getparent().preceding_text()
+			if prev.endswith('\n'):
+				break
+			else:
+				text = prev
+
+		return text
+	
 	def xpath_one(self, xpath):
 		return one(self.xpath(xpath))
 

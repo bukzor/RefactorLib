@@ -38,19 +38,30 @@ class CheetahNodeBase(RefactorLibNodeBase):
 				'/descendant-or-self::Directive[not(./Decorator)]'
 		)
 	
-	def add_comment(self, comment):
-		# TODO: unit test
-		text = self.preceding_text()
-		while '\n' not in text:
-			text = text.getparent().preceding_text()
+	def add_comment(self, comment_text):
+		text = self.find_indent_textnode()
+		indent = '\n' + text.rsplit('\n', 1)[-1]
 		parent = text.getparent()
-		attr = 'text' if text.is_text else 'tail'
-		text = text.replace(
-				'\n',
-				'\n%s\n' % comment,
-				1
-		)
-		setattr(parent, attr, text)
+		comment = self.make_comment(comment_text)
+
+
+		if text.is_text:
+			parent.insert(0, comment)
+			comment.tail = indent
+		else: # text.is_tail
+			parent.addnext(comment)
+			# lxml.etree.Element.addnext munges tail portions together
+			parent.tail, comment.tail = comment.tail, indent
+		
+	
+	def make_comment(self, comment_text):
+		comment = CheetahNode('Comment')
+		comment_start = CheetahNode('CommentStart')
+		comment_start.text = '##'
+		comment_start.tail = ' ' + comment_text
+
+		comment.append(comment_start)
+		return comment
 
 	def is_in_context(self, directive_string):
 		try:
