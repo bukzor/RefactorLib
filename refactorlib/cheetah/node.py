@@ -91,19 +91,35 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		else:
 			return False
 
-class _CheetahVariable(CheetahNodeBase):
+class CheetahVariable(CheetahNodeBase):
 	"""
 	This class represents a cheetah placeholder, such as: $FOO
 	"""
-	def _remove_call(self, args_body):
-		args_token = one(args_body.xpath('./CheetahVarNameChunks/CallArgString'))
-		args = args_token.getchildren()
+	@property
+	def args_body(self):
+		raise NotImplemented("args_body must be implemented by a subclass")
+
+	@property
+	def name(self):
+		return one(self.args_body.xpath('./CheetahVarNameChunks/DottedName'))
+
+	@property
+	def args_container(self):
+		return one(self.args_body.xpath('./CheetahVarNameChunks/CallArgString'))
+
+	@property
+	def args(self):
+		return self.args_container.getchildren()
+
+	def remove_call(self):
+		args_body = self.args_body
+		args_container = one(args_body.xpath('./CheetahVarNameChunks/CallArgString'))
+		args = self.args
 
 		if not args: # no arguments.
-			assert args_token.totext().strip('(\n\t )') == '', args_token.totext()
+			assert args_container.totext().strip('(\n\t )') == '', args_container.totext()
 			self.remove_self()
 			return
-
 
 		if len(args) == 1 and (
 				args[0].tag == 'CheetahVar'
@@ -127,27 +143,25 @@ class _CheetahVariable(CheetahNodeBase):
 				args[-1].tail.strip() == ')'
 		):
 			#just one Python variable.
-			#replace the call with just the args (keep the $)
+			#replace the call with just the arg (keep the $)
 			namechunks = one(args_body.xpath('./CheetahVarNameChunks'))
 			namechunks.clear()
 			namechunks.extend(args)
-			assert args[-1].tail.strip() == ')', repr(arg.tostring())
 			args[-1].tail = ''
 		else:
 			#there's something more complicated here.
 			#just remove the method name (keep the $())
-			one(args_body.xpath('./CheetahVarNameChunks/DottedName')).remove_self()
+			self.name.remove_self()
 
-class CheetahPlaceholder(_CheetahVariable):
-	def remove_call(self):
-		args_body = self
-		super(CheetahPlaceholder, self)._remove_call(args_body)
+class CheetahPlaceholder(CheetahVariable):
+	@property
+	def args_body(self):
+		return self
 
-class CheetahVar(_CheetahVariable):
-	def remove_call(self):
-		args_body = one(self.xpath('./CheetahVarBody'))
-		super(CheetahVar, self)._remove_call(args_body)
-
+class CheetahVar(CheetahVariable):
+	@property
+	def args_body(self):
+		return one(self.xpath('./CheetahVarBody'))
 
 class CheetahDecorator(CheetahNodeBase):
 	def remove_self(self):
