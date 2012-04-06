@@ -1,0 +1,3 @@
+<cheetah><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>unicode</Py><WhiteSpace> </WhiteSpace><Py>utf8</Py></ExpressionParts></Expression>
+</SimpleExprDirective></Directive><PlainText>I like this wavy thing: ≈
+</PlainText></cheetah>
