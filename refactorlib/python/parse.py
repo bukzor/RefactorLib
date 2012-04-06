@@ -1,8 +1,9 @@
 
-def parse(python_contents):
+def parse(python_contents, encoding=None):
 	"""
 	Given some python contents, as a string, return the lxml representation.
 	"""
+	#TODO: implement encoding
 	lib2to3_python = lib2to3_parse(python_contents)
 	dictnode_python = lib2to3_to_dictnode(lib2to3_python)
 

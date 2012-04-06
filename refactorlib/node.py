@@ -15,11 +15,15 @@ class RefactorLibNodeBase(etree.ElementBase):
 		parent = self.getparent()
 		parent.remove(self)
 	
-	def totext(self, with_tail=True):
-		return etree.tostring(self, method='text', with_tail=with_tail)
+	def totext(self, encoding=None, with_tail=True, **kwargs):
+		if encoding is None:
+			encoding = self.getroottree().getroot().encoding
+		return etree.tostring(self, encoding=encoding, method='text', with_tail=with_tail, **kwargs)
 
-	def tostring(self, method=None, with_tail=True):
-		return etree.tostring(self, method=method, with_tail=with_tail)
+	def tostring(self, encoding=None, method=None, with_tail=True, **kwargs):
+		if encoding is None:
+			encoding = self.getroottree().getroot().encoding
+		return etree.tostring(self, encoding=encoding, method=method, with_tail=with_tail, **kwargs)
 	
 	def following_text(self):
 		"""
@@ -88,5 +92,11 @@ def one(mylist):
 		)
 
 	return mylist[0]
+
+parser_lookup = etree.ElementDefaultClassLookup(element=RefactorLibNodeBase)
+parser = etree.XMLParser()
+parser.set_element_class_lookup(parser_lookup)
+
+RefactorLibNode = parser.makeelement
 
 __all__ = ('RefactorLibNodeBase',)

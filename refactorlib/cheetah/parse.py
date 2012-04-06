@@ -68,6 +68,12 @@ class InstrumentedParser(Parser):
 	def _initDirectives(self):
 		super(InstrumentedParser, self)._initDirectives()
 
+		# Cheetah supports #unicode directives, but doesn't implement it in the
+		# parser, so I have to...
+		self._directiveNamesAndParsers['unicode'] = None
+		self._simpleExprDirectives.append('unicode')
+		self._compiler.addUnicode = lambda expr: None
+
 		for key, val in self._directiveNamesAndParsers.items():
 			method = self.instrument_method(val)
 			if method is not None:
@@ -111,13 +117,31 @@ class InstrumentedParser(Parser):
 
 		return result
 
+def detect_encoding(source):
+	from Cheetah.Parser import unicodeDirectiveRE, encodingDirectiveRE
+	unicodeMatch = unicodeDirectiveRE.search(source)
+	if unicodeMatch:
+		return unicodeMatch.group(1)
+	encodingMatch = encodingDirectiveRE.search(source)
+	if encodingMatch:
+		return encodingMatch.group(1)
+	
+	# We didn't find anything.
+	return None
 
-def parse(cheetah_content):
+def parse(cheetah_content, encoding=None):
+	# TODO: port/generalize this behavior to python as well
+	if encoding is None:
+		encoding = detect_encoding(cheetah_content)
+	if encoding:
+		cheetah_content = unicode(cheetah_content, encoding)
+	else:
+		# I don't see why encoding=None is different from not specifying the encoding.
+		cheetah_content = unicode(cheetah_content)
+
 	from Cheetah.Compiler import Compiler
 	# This is very screwy, but so is cheetah. Apologies.
-	compiler = Compiler(cheetah_content)
-	# Cheetah does source-code munging, before parsing...
-	cheetah_content = compiler._parser._src
+	compiler = Compiler()
 	compiler._parser = InstrumentedParser(cheetah_content, compiler=compiler)
 	compiler.compile()
 	data = compiler._parser.data
@@ -132,7 +156,9 @@ def parse(cheetah_content):
 
 	from refactorlib.parse import dictnode_to_lxml
 	from refactorlib.cheetah.node import CheetahNode
-	return dictnode_to_lxml(dictnode, CheetahNode)
+	root = dictnode_to_lxml(dictnode, CheetahNode)
+	root.encoding = encoding
+	return root
 
 def remove_empty(data):
 	for datum in data:
