@@ -2,15 +2,42 @@ from Cheetah.Parser import Parser
 
 DEBUG = False
 
+class InstrumentedEnclosureList(list):
+	def __init__(self, *args, **kwargs):
+		self.parent = kwargs.pop('parent')
+		if args == (None,):
+			args = ()
+		super(InstrumentedEnclosureList, self).__init__(*args, **kwargs)
+		self.__data = {}
+	
+	def append(self, enclosure):
+		name, start_pos = enclosure
+		mydata = [start_pos, None, name]
+		self.parent.data.append(mydata)
+		self.__data[enclosure] = mydata
+		return super(InstrumentedEnclosureList, self).append(enclosure)
+
+	def pop(self):
+		enclosure = super(InstrumentedEnclosureList, self).pop()
+		mydata = self.__data[enclosure]
+		# Unfortunately, cheetah pops the enclosure *before* advancing its position
+		mydata[1] = self.parent.pos() + 1
+		return enclosure
+
+
 class InstrumentedMethod(object):
-	def __init__(self, method, parent):
+	def __init__(self, method, parent, **args):
 		self.method = method
 		self.parent = parent
+		self.args = args
 
 	def __call__(self, *args, **kwargs):
 		# I want the data to be arranged in *call* order
 		start_pos = self.parent.pos()
 		name = self.method.__name__
+
+		for arg, cls in self.args.items():
+			kwargs[arg] = cls(kwargs.get(arg), parent=self.parent)
 
 		mydata = [start_pos, None, name]
 		self.parent.data.append(mydata)
@@ -62,6 +89,9 @@ class InstrumentedParser(Parser):
 		name = method.__name__
 		if name in self.dont_care_methods:
 			return
+		elif name == 'getExpressionParts':
+			# 'getExpression' also has an enclosure argument, but it doesn't seem to be important
+			return InstrumentedMethod(method, self, enclosures=InstrumentedEnclosureList)
 		elif name.startswith('eat') or name.startswith('get'):
 			return InstrumentedMethod(method, self)
 
@@ -269,6 +299,13 @@ def dedup(data):
 	return new_data
 
 def method_to_tag(methodname):
+	if methodname == '[':
+		return 'SquareBracket'
+	elif methodname == '{':
+		return 'CurlyBrace'
+	elif methodname == '(':
+		return 'Paren'
+
 	if methodname.startswith('eat') or methodname.startswith('get'):
 		tagname = methodname[3:]
 	else:
