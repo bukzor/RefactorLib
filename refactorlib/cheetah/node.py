@@ -91,6 +91,33 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		else:
 			return False
 
+def call(method, arguments):
+	"""
+	return an lxml node representing a call to a method, with arguments.
+	`method` is a string
+	`arguments` is an lxml node
+	"""
+	call = CheetahNode('Placeholder')
+
+	varstart = CheetahNode('CheetahVarStart')
+	varstart.text = '$'
+	call.append(varstart)
+
+	namechunks = CheetahNode('CheetahVarNameChunks')
+
+	name = CheetahNode('DottedName')
+	name.text = method
+	namechunks.append(name)
+
+	argstring = CheetahNode('CallArgsString')
+	argstring.text = '('
+	argstring.append(arguments)
+	arguments.tail += ')'
+	namechunks.append(argstring)
+
+	call.append(namechunks)
+	return call
+
 class CheetahVariable(CheetahNodeBase):
 	"""
 	This class represents a cheetah placeholder, such as: $FOO

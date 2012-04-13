@@ -3,19 +3,24 @@ from Cheetah.Parser import Parser
 DEBUG = False
 
 class InstrumentedEnclosureList(list):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, iterable=None, **kwargs):
 		self.parent = kwargs.pop('parent')
-		if args == (None,):
-			args = ()
-		super(InstrumentedEnclosureList, self).__init__(*args, **kwargs)
 		self.__data = {}
+		if iterable is None:
+			iterable = ()
+		for enclosure in iterable:
+			self.notify_parent(enclosure)
+		super(InstrumentedEnclosureList, self).__init__(iterable, **kwargs)
 	
 	def append(self, enclosure):
+		self.notify_parent(enclosure)
+		return super(InstrumentedEnclosureList, self).append(enclosure)
+	
+	def notify_parent(self, enclosure):
 		name, start_pos = enclosure
 		mydata = [start_pos, None, name]
 		self.parent.data.append(mydata)
 		self.__data[enclosure] = mydata
-		return super(InstrumentedEnclosureList, self).append(enclosure)
 
 	def pop(self):
 		enclosure = super(InstrumentedEnclosureList, self).pop()
@@ -187,7 +192,6 @@ def parse(cheetah_content, encoding=None):
 	from refactorlib.parse import dictnode_to_lxml
 	from refactorlib.cheetah.node import CheetahNode
 	root = dictnode_to_lxml(dictnode, CheetahNode)
-	root.encoding = encoding
 	return root
 
 def remove_empty(data):

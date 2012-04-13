@@ -4,6 +4,11 @@ Some basic additions to the lxml element node class.
 from lxml import etree
 
 class RefactorLibNodeBase(etree.ElementBase):
+	@property
+	def encoding(self):
+		# My encoding is the encoding of my root, if any
+		return self.getroottree().docinfo.encoding
+
 	def remove_call(self):
 		raise NotImplementedError('remove_call')
 
@@ -17,12 +22,12 @@ class RefactorLibNodeBase(etree.ElementBase):
 	
 	def totext(self, encoding=None, with_tail=True, **kwargs):
 		if encoding is None:
-			encoding = self.getroottree().getroot().encoding
+			encoding = self.encoding
 		return etree.tostring(self, encoding=encoding, method='text', with_tail=with_tail, **kwargs)
 
 	def tostring(self, encoding=None, method=None, with_tail=True, **kwargs):
 		if encoding is None:
-			encoding = self.getroottree().getroot().encoding
+			encoding = self.encoding
 		return etree.tostring(self, encoding=encoding, method=method, with_tail=with_tail, **kwargs)
 	
 	def following_text(self):

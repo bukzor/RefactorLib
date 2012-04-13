@@ -33,7 +33,6 @@ def dictnode_to_lxml(tree, element_factory=None):
 
 		if parent is None:
 			root = lxmlnode
-			root.encoding = None
 		else:
 			parent.append(lxmlnode)
 
