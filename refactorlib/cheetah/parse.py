@@ -19,8 +19,19 @@ class InstrumentedEnclosureList(list):
 	def notify_parent(self, enclosure):
 		name, start_pos = enclosure
 		mydata = [start_pos, None, name]
-		self.parent.data.append(mydata)
 		self.__data[enclosure] = mydata
+
+		# Check for backtracking
+		index = -1
+		datalen = len(self.parent.data)
+		while datalen > -index and self.parent.data[index][0] > start_pos:
+			index -= 1
+		index += 1
+
+		if index == 0:
+			self.parent.data.append(mydata)
+		else:
+			self.parent.data.insert(index, mydata)
 
 	def pop(self):
 		enclosure = super(InstrumentedEnclosureList, self).pop()
