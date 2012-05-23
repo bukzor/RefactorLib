@@ -11,6 +11,6 @@
 <WhiteSpace>		</WhiteSpace>)</Paren>
 ]</SquareBracket></ExpressionParts></Expression>
 </Set></Directive><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart>(<Expression><Paren>(<ExpressionParts><Py>"foo"</Py>)</ExpressionParts></Paren></Expression></Placeholder><PlainText>
+</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><Paren>(<Expression><ExpressionParts><Py>"foo"</Py>)</ExpressionParts></Expression></Paren></Placeholder><PlainText>
 
 </PlainText></cheetah>

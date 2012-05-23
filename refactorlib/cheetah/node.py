@@ -112,8 +112,8 @@ def call(method, arguments):
 	argstring = CheetahNode('CallArgsString')
 	argstring.text = '('
 	argstring.append(arguments)
-	arguments.tail += ')'
 	namechunks.append(argstring)
+	arguments.tail, namechunks.tail = ')', arguments.tail
 
 	call.append(namechunks)
 	return call
@@ -128,7 +128,7 @@ class CheetahVariable(CheetahNodeBase):
 
 	@property
 	def name(self):
-		return one(self.args_body.xpath('./CheetahVarNameChunks/DottedName'))
+		return one(self.args_body.xpath('./CheetahVarNameChunks/DottedName[1]'))
 
 	@property
 	def args_container(self):
