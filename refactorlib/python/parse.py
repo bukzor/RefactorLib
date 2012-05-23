@@ -1,9 +1,27 @@
+# regex taken from inducer/pudb's detect_encoding
+import re
+pythonEncodingDirectiveRE = re.compile("^\s*#.*coding[:=]\s*([-\w.]+)")
+
+def detect_encoding(source):
+	encodingMatch = pythonEncodingDirectiveRE.search(source)
+	if encodingMatch:
+		return encodingMatch.group(1)
+
+	# We didn't find anything.
+	return None
 
 def parse(python_contents, encoding=None):
 	"""
 	Given some python contents, as a string, return the lxml representation.
 	"""
-	#TODO: implement encoding
+	if encoding is None:
+		encoding = detect_encoding(python_contents)
+	if encoding:
+		python_contents = unicode(python_contents, encoding)
+	else:
+		# I don't see why encoding=None is different from not specifying the encoding.
+		python_contents = unicode(python_contents)
+
 	lib2to3_python = lib2to3_parse(python_contents)
 	dictnode_python = lib2to3_to_dictnode(lib2to3_python)
 

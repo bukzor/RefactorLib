@@ -165,7 +165,6 @@ def detect_encoding(source):
 	return None
 
 def parse(cheetah_content, encoding=None):
-	# TODO: port/generalize this behavior to python as well
 	if encoding is None:
 		encoding = detect_encoding(cheetah_content)
 	if encoding:
