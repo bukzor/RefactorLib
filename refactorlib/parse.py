@@ -2,7 +2,20 @@ def parse(filename, filetype=None, encoding=None):
 	from filetypes import FILETYPES
 	filetype = FILETYPES.detect_filetype(filename, filetype)
 
-	return filetype.parser(open(filename).read(), encoding=encoding)
+	source = open(filename).read()
+
+	# If no encoding was explicitly specified, see if we can parse
+	# it out from the contents of the file.
+	if encoding is None:
+		encoding = filetype.encoding_detector(source)
+
+	if encoding:
+		source = unicode(source, encoding)
+	else:
+		# I don't see why encoding=None is different from not specifying the encoding.
+		source = unicode(source)
+
+	return filetype.parser(source)
 
 def dictnode_to_lxml(tree, element_factory=None):
 	"""
