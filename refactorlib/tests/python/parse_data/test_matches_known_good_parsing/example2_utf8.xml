@@ -1,0 +1,6 @@
+<file_input><simple_stmt><expr_stmt># -*- coding: utf-8 -*-
+
+# Some unicode strings
+<NAME>x</NAME> <EQUAL>=</EQUAL> <STRING>u'I am a unicode string'</STRING></expr_stmt><NEWLINE>
+</NEWLINE></simple_stmt><simple_stmt><expr_stmt><NAME>y</NAME> <EQUAL>=</EQUAL> <STRING>u'I have wæird chàrs'</STRING></expr_stmt><NEWLINE>
+</NEWLINE></simple_stmt><ENDMARKER></ENDMARKER></file_input>

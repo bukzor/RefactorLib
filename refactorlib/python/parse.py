@@ -1,9 +1,23 @@
+# regex taken from inducer/pudb's detect_encoding
+import re
+pythonEncodingDirectiveRE = re.compile("^\s*#.*coding[:=]\s*([-\w.]+)")
 
-def parse(python_contents, encoding=None):
+def detect_encoding(source):
+	# According to the PEP0263, the encoding directive must appear on one of the first two lines of the file
+	top_lines = source.split('\n', 2)[:2]
+
+	for line in top_lines:
+		encodingMatch = pythonEncodingDirectiveRE.search(line)
+		if encodingMatch:
+			return encodingMatch.group(1)
+
+	# We didn't find anything.
+	return None
+
+def parse(python_contents):
 	"""
 	Given some python contents, as a string, return the lxml representation.
 	"""
-	#TODO: implement encoding
 	lib2to3_python = lib2to3_parse(python_contents)
 	dictnode_python = lib2to3_to_dictnode(lib2to3_python)
 

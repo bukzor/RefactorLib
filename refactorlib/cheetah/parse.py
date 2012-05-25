@@ -175,15 +175,7 @@ def detect_encoding(source):
 	# We didn't find anything.
 	return None
 
-def parse(cheetah_content, encoding=None):
-	# TODO: port/generalize this behavior to python as well
-	if encoding is None:
-		encoding = detect_encoding(cheetah_content)
-	if encoding:
-		cheetah_content = unicode(cheetah_content, encoding)
-	else:
-		# I don't see why encoding=None is different from not specifying the encoding.
-		cheetah_content = unicode(cheetah_content)
+def parse(cheetah_content):
 
 	from Cheetah.Compiler import Compiler
 	# This is very screwy, but so is cheetah. Apologies.
