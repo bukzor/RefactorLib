@@ -175,7 +175,7 @@ def detect_encoding(source):
 	# We didn't find anything.
 	return None
 
-def parse(cheetah_content):
+def parse(cheetah_content, encoding=None):
 
 	from Cheetah.Compiler import Compiler
 	# This is very screwy, but so is cheetah. Apologies.
@@ -193,8 +193,8 @@ def parse(cheetah_content):
 	dictnode = parser_data_to_dictnode(data, cheetah_content)
 
 	from refactorlib.parse import dictnode_to_lxml
-	from refactorlib.cheetah.node import CheetahNode
-	root = dictnode_to_lxml(dictnode, CheetahNode)
+	from refactorlib.cheetah.node import node_lookup
+	root = dictnode_to_lxml(dictnode, node_lookup, encoding)
 	return root
 
 def remove_empty(data):

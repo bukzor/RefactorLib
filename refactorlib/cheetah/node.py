@@ -55,8 +55,8 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		
 	
 	def make_comment(self, comment_text):
-		comment = CheetahNode('Comment')
-		comment_start = CheetahNode('CommentStart')
+		comment = self.makeelement('Comment')
+		comment_start = self.makeelement('CommentStart')
 		comment_start.text = '##'
 		comment_start.tail = ' ' + comment_text
 
@@ -91,25 +91,25 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		else:
 			return False
 
-def call(method, arguments):
+def call(method, arguments, makeelement):
 	"""
 	return an lxml node representing a call to a method, with arguments.
 	`method` is a string
 	`arguments` is an lxml node
 	"""
-	call = CheetahNode('Placeholder')
+	call = makeelement('Placeholder')
 
-	varstart = CheetahNode('CheetahVarStart')
+	varstart = makeelement('CheetahVarStart')
 	varstart.text = '$'
 	call.append(varstart)
 
-	namechunks = CheetahNode('CheetahVarNameChunks')
+	namechunks = makeelement('CheetahVarNameChunks')
 
-	name = CheetahNode('DottedName')
+	name = makeelement('DottedName')
 	name.text = method
 	namechunks.append(name)
 
-	argstring = CheetahNode('CallArgsString')
+	argstring = makeelement('CallArgsString')
 	argstring.text = '('
 	argstring.append(arguments)
 	namechunks.append(argstring)
@@ -209,7 +209,7 @@ class CheetahDecorator(CheetahNodeBase):
 class CheetahDirective(CheetahNodeBase):
 	def replace_directive(self, other):
 		if isinstance(other, basestring):
-			var = CheetahNode('CheetahVar')
+			var = self.makeelement('CheetahVar')
 			try:
 				directive, var.text = other.split(None, 1)
 			except ValueError:
@@ -268,7 +268,7 @@ class CheetahDirective(CheetahNodeBase):
 		# Look at sibling Directives after this node, take first one that is an EndDirective.
 		return self.xpath_one('./following-sibling::Directive[./EndDirective][1]')
 
-class CheetahNodeLookup(etree.PythonElementClassLookup):
+class NodeLookup(etree.PythonElementClassLookup):
 	"""
 	Specify how to assign Python classes to lxml objects.
 	see: http://lxml.de/element_classes.html#tree-based-element-class-lookup-in-python
@@ -285,9 +285,7 @@ class CheetahNodeLookup(etree.PythonElementClassLookup):
 		else:
 			return CheetahNodeBase
 
-CHEETAH_PARSER = etree.XMLParser()
-CHEETAH_PARSER.set_element_class_lookup(CheetahNodeLookup())
-
-CheetahNode = CHEETAH_PARSER.makeelement
+node_lookup = NodeLookup()
+del NodeLookup  # This is a singleton class.
 
 __all__ = ('CheetahNode',)

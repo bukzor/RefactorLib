@@ -98,10 +98,6 @@ def one(mylist):
 
 	return mylist[0]
 
-parser_lookup = etree.ElementDefaultClassLookup(element=RefactorLibNodeBase)
-parser = etree.XMLParser()
-parser.set_element_class_lookup(parser_lookup)
-
-RefactorLibNode = parser.makeelement
+node_lookup = etree.ElementDefaultClassLookup(element=RefactorLibNodeBase)
 
 __all__ = ('RefactorLibNodeBase',)

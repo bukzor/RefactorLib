@@ -15,9 +15,9 @@ def parse(filename, filetype=None, encoding=None):
 		# I don't see why encoding=None is different from not specifying the encoding.
 		source = unicode(source)
 
-	return filetype.parser(source)
+	return filetype.parser(source, encoding)
 
-def dictnode_to_lxml(tree, element_factory=None):
+def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
 	"""
 	Input: A dictionary-based representation of a node tree.
 	Output: An lxml representation of the same.
@@ -29,10 +29,13 @@ def dictnode_to_lxml(tree, element_factory=None):
 		attrs -- A dictionary of any extra attributes.
 		children -- An ordered list of more node-dictionaries.
 	"""
-	if element_factory:
-		Element = element_factory
-	else:
-		from node import RefactorLibNode as Element
+	if not node_lookup:
+		from node import node_lookup
+
+	from lxml.etree import XMLParser
+	lxml_parser_object = XMLParser(encoding=encoding)
+	lxml_parser_object.set_element_class_lookup(node_lookup)
+	Element = lxml_parser_object.makeelement
 
 	root = None
 	stack = [ (tree,root) ]
@@ -40,14 +43,21 @@ def dictnode_to_lxml(tree, element_factory=None):
 	while stack:
 		node, parent = stack.pop()
 
-		lxmlnode = Element(node['name'], attrib=node['attrs'])
-		lxmlnode.text = node['text']
-		lxmlnode.tail = node['tail']
 
 		if parent is None:
+			# We use this roundabout method becuase the encoding is always set
+			# to 'UTF8' if we use parser.makeelement()
+			lxml_parser_object.feed('<trash></trash>')
+			lxmlnode = lxml_parser_object.close()
+			lxmlnode.tag = node['name']
+			lxmlnode.attrib.update(node['attrs'])
 			root = lxmlnode
 		else:
+			lxmlnode = Element(node['name'], attrib=node['attrs'])
 			parent.append(lxmlnode)
+
+		lxmlnode.text = node['text']
+		lxmlnode.tail = node['tail']
 
 		for child in reversed(node['children']):
 			stack.append((child, lxmlnode))

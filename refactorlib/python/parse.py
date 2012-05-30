@@ -14,15 +14,15 @@ def detect_encoding(source):
 	# We didn't find anything.
 	return None
 
-def parse(python_contents):
+def parse(python_contents, encoding):
 	"""
-	Given some python contents, as a string, return the lxml representation.
+	Given some python contents, as a unicode string, return the lxml representation.
 	"""
 	lib2to3_python = lib2to3_parse(python_contents)
 	dictnode_python = lib2to3_to_dictnode(lib2to3_python)
 
 	from refactorlib.parse import dictnode_to_lxml
-	return dictnode_to_lxml(dictnode_python)
+	return dictnode_to_lxml(dictnode_python, encoding=encoding)
 
 def lib2to3_parse(python_contents):
 	from lib2to3 import pygram, pytree

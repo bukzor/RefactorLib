@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='CP850'?>
+<file_input><simple_stmt><print_stmt># vim:encoding=CP850:
+
+# German: fuel oil recoil absorber
+# jqvwxy missing, but all non-ASCII letters in one word
+# See: http://www.cl.cam.ac.uk/~mgk25/ucs/examples/quickbrown.txt
+
+# These should be equivalent:
+<NAME>print</NAME> <STRING>'HeizîlrÅcksto·abdÑmpfung'</STRING></print_stmt><NEWLINE>
+</NEWLINE></simple_stmt><simple_stmt><print_stmt><NAME>print</NAME><power> <STRING>u'HeizîlrÅcksto·abdÑmpfung'</STRING><trailer><DOT>.</DOT><NAME>encode</NAME></trailer><trailer><LPAR>(</LPAR><STRING>'cp850'</STRING><RPAR>)</RPAR></trailer></power></print_stmt><NEWLINE>
+</NEWLINE></simple_stmt><ENDMARKER></ENDMARKER></file_input>
