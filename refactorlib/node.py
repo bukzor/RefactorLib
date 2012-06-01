@@ -78,12 +78,14 @@ class RefactorLibNodeBase(etree.ElementBase):
 		"""
 		return True
 
+class ExactlyOneError(ValueError): pass
+
 def one(mylist):
 	"""
 	assert that there's only one thing, and get it.
 	"""
 	if len(mylist) != 1:
-		raise ValueError(
+		raise ExactlyOneError(
 				'Expected exactly one item. Got %i: %r'
 				% (
 					len(mylist),
