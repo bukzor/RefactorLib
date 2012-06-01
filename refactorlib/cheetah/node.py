@@ -91,32 +91,32 @@ class CheetahNodeBase(RefactorLibNodeBase):
 		else:
 			return False
 
-def call(method, arguments, makeelement):
-	"""
-	return an lxml node representing a call to a method, with arguments.
-	`method` is a string
-	`arguments` is an lxml node
-	"""
-	call = makeelement('Placeholder')
+	def call(self, method, arguments):
+		"""
+		return an lxml node representing a call to a method, with arguments.
+		`method` is a string
+		`arguments` is an lxml node
+		"""
+		call = self.makeelement('Placeholder')
 
-	varstart = makeelement('CheetahVarStart')
-	varstart.text = '$'
-	call.append(varstart)
+		varstart = self.makeelement('CheetahVarStart')
+		varstart.text = '$'
+		call.append(varstart)
 
-	namechunks = makeelement('CheetahVarNameChunks')
+		namechunks = self.makeelement('CheetahVarNameChunks')
 
-	name = makeelement('DottedName')
-	name.text = method
-	namechunks.append(name)
+		name = self.makeelement('DottedName')
+		name.text = method
+		namechunks.append(name)
 
-	argstring = makeelement('CallArgsString')
-	argstring.text = '('
-	argstring.append(arguments)
-	namechunks.append(argstring)
-	arguments.tail, namechunks.tail = ')', arguments.tail
+		argstring = self.makeelement('CallArgsString')
+		argstring.text = '('
+		argstring.append(arguments)
+		namechunks.append(argstring)
+		arguments.tail, namechunks.tail = ')', arguments.tail
 
-	call.append(namechunks)
-	return call
+		call.append(namechunks)
+		return call
 
 class CheetahVariable(CheetahNodeBase):
 	"""
