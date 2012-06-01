@@ -62,7 +62,7 @@ class InstrumentedMethod(object):
 			
 		return result
 
-class AnyString(str):
+class AnyString(unicode):
 	'Represents "any string".'
 	def startswith(self, other):
 		return True

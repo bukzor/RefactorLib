@@ -1,0 +1,6 @@
+<cheetah><PlainText>
+</PlainText><Directive><MacroCall><DirectiveStart>#</DirectiveStart><Identifier>inline_script</Identifier>
+	var j = 'foobar';
+<DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace>inline_script
+</MacroCall></Directive><PlainText>
+</PlainText></cheetah>
