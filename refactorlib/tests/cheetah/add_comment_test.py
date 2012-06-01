@@ -6,7 +6,7 @@ def test_can_add_comments():
 	"""
 	example = parse('''
 		#def foo
-			$esc(
+			Escaped thing: $esc(
 				$_('My translated string.')
 			)
 		#end def
@@ -31,7 +31,7 @@ def test_can_add_comments():
 			## 1 esc
 			## 2 esc
 			## 3 esc
-			$esc(
+			Escaped thing: $esc(
 				## 1 _
 				## 2 _
 				## 3 _

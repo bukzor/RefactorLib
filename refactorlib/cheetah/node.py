@@ -40,18 +40,27 @@ class CheetahNodeBase(RefactorLibNodeBase):
 	
 	def add_comment(self, comment_text):
 		text = self.find_indent_textnode()
-		indent = '\n' + text.rsplit('\n', 1)[-1]
+		try:
+			before, after = text.rsplit('\n', 1)
+			before += '\n'
+		except ValueError:
+			before, after = '', text
+		# Now the comment would be flush to the left-hand margin.
+		indent = after.replace(after.lstrip(), '')  # Get just the whitespace.
+		before += indent
+		after = '\n' + after
+
 		parent = text.getparent()
 		comment = self.make_comment(comment_text)
 
-
 		if text.is_text:
+			parent.text = before
 			parent.insert(0, comment)
-			comment.tail = indent
+			comment.tail = after
+			pass
 		else: # text.is_tail
 			parent.addnext(comment)
-			# lxml.etree.Element.addnext munges tail portions together
-			parent.tail, comment.tail = comment.tail, indent
+			parent.tail, comment.tail = before, after
 		
 	
 	def make_comment(self, comment_text):
