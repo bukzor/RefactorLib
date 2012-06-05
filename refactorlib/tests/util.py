@@ -79,6 +79,10 @@ def assert_same_content(old_file, new_content):
 		else:
 			raise
 
+	assert_same_file_content(old_file, new_file)
+
+
+def assert_same_file_content(old_file, new_file):
 	old_content = open(old_file).readlines()
 	new_content = open(new_file).readlines()
 
