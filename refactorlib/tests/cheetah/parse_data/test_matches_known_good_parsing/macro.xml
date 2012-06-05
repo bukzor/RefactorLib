@@ -1,6 +1,6 @@
 <cheetah><PlainText>
-</PlainText><Directive><MacroCall><DirectiveStart>#</DirectiveStart><Identifier>inline_script</Identifier>
-	var j = 'foobar';
-<DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace>inline_script
-</MacroCall></Directive><PlainText>
+</PlainText><inline_script><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart>inline_script
+</SimpleIndentingDirective></Directive><PlainText>	var j = 'foobar';
+</PlainText><Directive><EndDirective><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>inline_script</Py></ExpressionParts></Expression>
+</EndDirective></Directive></inline_script><PlainText>
 </PlainText></cheetah>

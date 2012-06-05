@@ -79,6 +79,10 @@ class AutoDict(defaultdict):
 		else:
 			return super(AutoDict, self).get(key, default)
 
+def trivial(*args, **kwargs):
+	"""The function that does nothing"""
+	pass
+
 class InstrumentedParser(Parser):
 	dont_care_methods = (
 			'getc', 'getRowCol', 'getRowColLine', 'getLine',
@@ -118,7 +122,7 @@ class InstrumentedParser(Parser):
 		# parser, so I have to...
 		self._directiveNamesAndParsers['unicode'] = None
 		self._simpleExprDirectives.append('unicode')
-		self._compiler.addUnicode = lambda expr: None
+		self._compiler.addUnicode = trivial
 
 		for key, val in self._directiveNamesAndParsers.items():
 			method = self.instrument_method(val)
@@ -128,8 +132,24 @@ class InstrumentedParser(Parser):
 		# We need unrecognized directives to be seen as macros
 		self._directiveNamesAndParsers[AnyString()] = self.eatMacroCall
 		self._directiveNamesAndParsers = AutoDict(lambda: self.eatMacroCall, self._directiveNamesAndParsers)
-		fake_macro = lambda **kwargs: ''
-		self._macros = AutoDict(lambda: fake_macro, self._macros)
+		self._closeableDirectives = set(self._closeableDirectives)
+
+	def eatMacroCall(self):
+		# Pay no attention to that man behind the curtain.
+		del self.data[-1]
+
+		# Get the macro name.
+		startPos = self.pos()
+		self.getDirectiveStartToken()
+		directiveName = self.matchDirectiveName()
+		self.setPos(startPos)
+
+		# Make this macro a fully valid directive.
+		self._closeableDirectives.add(directiveName)
+		self._endDirectiveNamesAndHandlers[directiveName] = trivial
+
+		# Go parse it!
+		self.eatSimpleIndentingDirective(directiveName, callback=trivial)
 
 	def pushToOpenDirectivesStack(self, directiveName):
 		result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directiveName)

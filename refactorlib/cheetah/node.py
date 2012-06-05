@@ -243,13 +243,19 @@ class CheetahDirective(CheetahNodeBase):
 	@property
 	def is_multiline_directive(self):
 		return not self.xpath('./EndDirective or ./SimpleExprDirective or .//text()=":"')
-	
+
+	@property
+	def DirectiveStart(self):
+		return self.xpath_one('./*/*[1][self::DirectiveStart]')
+
 	def __get_name(self):
 		"The name of the directive. The word just after the first # sign."
-		return self.xpath_one('./*/*[1][self::DirectiveStart]').tail
+		return self.DirectiveStart.tail.rstrip()
 
 	def __set_name(self, val):
-		self.xpath_one('./*/*[1][self::DirectiveStart]').tail = val
+		dstart = self.DirectiveStart
+		padding = dstart.tail.replace(dstart.tail.rstrip(), '')
+		dstart.tail = val + padding
 
 	name = property(__get_name, __set_name)
 
