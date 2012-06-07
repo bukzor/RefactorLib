@@ -63,5 +63,6 @@ class FileTypes(object):
 FILETYPES = FileTypes()
 FILETYPES.register('cheetah', 'tmpl')
 FILETYPES.register('python', 'py')
+FILETYPES.register('javascript', 'js')
 
 __all__ = ('FILETYPES',)

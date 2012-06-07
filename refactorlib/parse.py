@@ -50,10 +50,10 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
 			lxml_parser_object.feed('<trash></trash>')
 			lxmlnode = lxml_parser_object.close()
 			lxmlnode.tag = node['name']
-			lxmlnode.attrib.update(node['attrs'])
+			lxmlnode.attrib.update(node.get('attrs', {}))
 			root = lxmlnode
 		else:
-			lxmlnode = Element(node['name'], attrib=node['attrs'])
+			lxmlnode = Element(node['name'], attrib=node.get('attrs', {}))
 			parent.append(lxmlnode)
 
 		lxmlnode.text = node['text']
