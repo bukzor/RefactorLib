@@ -1,0 +1,1 @@
+<Program><VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="a">a=(<BinaryExpression operator="+"><Literal value="1">1</Literal>)+<BinaryExpression operator="+"><Literal value="None">null</Literal>+<Literal value="b">"b"</Literal></BinaryExpression></BinaryExpression></Identifier></VariableDeclarator></VariableDeclaration>;</Program>

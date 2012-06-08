@@ -28,7 +28,7 @@ class FileType(object):
 	@LazyProperty
 	def encoding_detector(self):
 		module = __import__('refactorlib.%s.parse' % self.name, fromlist=[None])
-		return getattr(module, 'detect_encoding')
+		return getattr(module, 'detect_encoding', lambda filename:None)
 
 
 class FileTypes(object):
