@@ -123,6 +123,9 @@ class InstrumentedParser(Parser):
 		self._directiveNamesAndParsers['unicode'] = None
 		self._simpleExprDirectives.append('unicode')
 		self._compiler.addUnicode = trivial
+		# Multiple macros causes a indentation underflow error, eventually.
+		# TODO: this isn't really the right way to fix this.
+		self._compiler.dedent = trivial
 
 		for key, val in self._directiveNamesAndParsers.items():
 			method = self.instrument_method(val)

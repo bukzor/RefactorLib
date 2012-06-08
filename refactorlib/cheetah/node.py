@@ -95,7 +95,12 @@ class CheetahNodeBase(RefactorLibNodeBase):
 			if directive.name == 'def':
 				func = directive.var.totext(with_tail=False)
 				for call in root.find_calls(func):
-					if call.is_in_context(directive_string):
+					if directive in call.get_enclosing_blocks():
+						# Don't try to analyze recursion
+						# TODO: handle loops: f() -> g() -> h() -> f()
+						# TODO: add unit test for this case.
+						continue
+					elif call.is_in_context(directive_string):
 						return True
 		else:
 			return False
