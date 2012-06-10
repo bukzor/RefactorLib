@@ -87,8 +87,9 @@ def assert_same_file_content(old_file, new_file):
 	new_content = open(new_file).readlines()
 
 	from difflib import ndiff as diff
-	diffs = ''.join(
-			line for line in diff(old_content, new_content)
+	diffs = '\n'.join(
+			line.rstrip('\n')
+			for line in diff(old_content, new_content)
 			if not line.startswith('  ') # Remove the similar lines.
 	)
 

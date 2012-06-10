@@ -5,7 +5,6 @@ from refactorlib.parse import parse
 def test_can_make_round_trip(example):
 	text = open(example).read()
 	example = parse(example)
-	# This is an artifact of smjs and its poor IO support
 	assert text == example.totext()
 
 @parametrize(get_output('xml'))

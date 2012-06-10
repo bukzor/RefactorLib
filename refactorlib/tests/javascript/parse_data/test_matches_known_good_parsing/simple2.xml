@@ -1,20 +1,20 @@
 <Program>// From: http://technotip.com/165/fibonacci-series-javascript/
-<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="var1">var1 = <Literal value="0">0</Literal></Identifier></VariableDeclarator></VariableDeclaration>;
-<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="var2">var2 = <Literal value="1">1</Literal></Identifier></VariableDeclarator></VariableDeclaration>;
+<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="var1">var1 = <Literal type="int" value="0">0</Literal></Identifier></VariableDeclarator></VariableDeclaration>;
+<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="var2">var2 = <Literal type="int" value="1">1</Literal></Identifier></VariableDeclarator></VariableDeclaration>;
 <VariableDeclaration kind="var">var <VariableDeclarator init="None"><Identifier name="var3">var3</Identifier></VariableDeclarator></VariableDeclaration>;
 
-<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="num">num = <CallExpression><Identifier name="prompt">prompt</Identifier>(<Literal value="Enter the limit to generate fibonacci no">"Enter the limit to generate fibonacci no"</Literal>,<Literal value="0">0</Literal>)</CallExpression></Identifier></VariableDeclarator></VariableDeclaration>;
+<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="num">num = <CallExpression><Identifier name="prompt">prompt</Identifier>(<Literal type="unicode" value="Enter the limit to generate fibonacci no">"Enter the limit to generate fibonacci no"</Literal>,<Literal type="int" value="0">0</Literal>)</CallExpression></Identifier></VariableDeclarator></VariableDeclaration>;
 
-<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var1">var1</Identifier>+<Literal value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;
-<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var2">var2</Identifier>+<Literal value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;
+<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var1">var1</Identifier>+<Literal type="unicode" value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;
+<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var2">var2</Identifier>+<Literal type="unicode" value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;
 
-<ForStatement>for(<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="i">i=<Literal value="3">3</Literal></Identifier></VariableDeclarator></VariableDeclaration>; <BinaryExpression operator="&lt;="><Identifier name="i">i</Identifier> &lt;= <Identifier name="num">num</Identifier></BinaryExpression>;<UpdateExpression operator="++" prefix="False"><Identifier name="i">i</Identifier>++</UpdateExpression>)
+<ForStatement>for(<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="i">i=<Literal type="int" value="3">3</Literal></Identifier></VariableDeclarator></VariableDeclaration>; <BinaryExpression operator="&lt;="><Identifier name="i">i</Identifier> &lt;= <Identifier name="num">num</Identifier></BinaryExpression>;<UpdateExpression operator="++" prefix="False"><Identifier name="i">i</Identifier>++</UpdateExpression>)
 <BlockStatement>{
 	<ExpressionStatement><AssignmentExpression operator="="><Identifier name="var3">var3</Identifier> = <BinaryExpression operator="+"><Identifier name="var1">var1</Identifier> + <Identifier name="var2">var2</Identifier></BinaryExpression></AssignmentExpression></ExpressionStatement>;
 	<ExpressionStatement><AssignmentExpression operator="="><Identifier name="var1">var1</Identifier> = <Identifier name="var2">var2</Identifier></AssignmentExpression></ExpressionStatement>;
 	<ExpressionStatement><AssignmentExpression operator="="><Identifier name="var2">var2</Identifier> = <Identifier name="var3">var3</Identifier></AssignmentExpression></ExpressionStatement>;
 
-	<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var3">var3</Identifier>+<Literal value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;</BlockStatement></ForStatement>
+	<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var3">var3</Identifier>+<Literal type="unicode" value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;</BlockStatement></ForStatement>
 }
 
 // fooo

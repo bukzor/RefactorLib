@@ -1,0 +1,3 @@
+<Program><VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x = <Literal type="int" value="1">1</Literal></Identifier></VariableDeclarator></VariableDeclaration>;
+<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x = <Literal type="int" value="2">2</Literal></Identifier></VariableDeclarator></VariableDeclaration>;
+</Program>
