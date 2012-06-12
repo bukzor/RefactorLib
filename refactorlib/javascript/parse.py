@@ -16,12 +16,13 @@ def smjs_parse(javascript_contents):
 	from refactorlib import TOP
 	from os.path import join
 	from subprocess import Popen, PIPE
-	from json import loads
+	from simplejson import loads
+	from simplejson.ordered_dict import OrderedDict
 	tokenizer_script = join(TOP, 'javascript/tokenize.js')
 
 	smjs = Popen(['smjs', tokenizer_script], stdin=PIPE, stdout=PIPE)
 	json = smjs.communicate(javascript_contents)[0]
-	tree = loads(json)
+	tree = loads(json, object_pairs_hook=OrderedDict)
 
 	try:
 		last_newline = javascript_contents.rindex('\n')
@@ -83,10 +84,6 @@ class DictNode(dict):
 	__slots__ = ()
 	def __str__(self):
 		return '%s(%s-%s)' % (self['name'], self['start'], self['end'])
-	@staticmethod
-	def document_order(self):
-		assert self['start'] <= self['end'], "Negative-width node"
-		return (self['start'], -self['end'], self['index'])
 
 def smjs_to_dictnode(javascript_contents, tree):
 	"""
@@ -123,7 +120,8 @@ def smjs_to_dictnode(javascript_contents, tree):
 			#elif isinstance(val, (int,unicode,type(None))):
 			elif isinstance(val, unicode):
 				attrs[attr] = val
-			elif isinstance(val, (bool, NoneType)):
+			elif isinstance(val, (bool, NoneType, str)):
+				# TODO: figure out what happens with non-ascii data.
 				attrs[attr] = unicode(val)
 			else: # Should never happen
 				import pudb; pudb.set_trace()
@@ -138,70 +136,77 @@ def smjs_to_dictnode(javascript_contents, tree):
 		stack.extend(reversed(zip(children, dictnode['children'])))
 	return root_dictnode
 
-def flatten_tree(dictnode):
-	index = 0
-	result = []
-	stack = [dictnode]
-	while stack:
-		dictnode = stack.pop()
-		if DEBUG: print dictnode
-		dictnode['index'] = index
-		result.append(dictnode)
-		stack.extend(reversed(dictnode.get('children', ())))
-		index += 1
-	return result
+def fix_parentage(node, parent):
+	"""We fix nodes whose children overlap their boundaries by widening the parent"""
+	orig_parent = prev_parent = parent
+	while parent is not None and node['start'] >= parent['end']:
+		prev_parent, parent = parent, parent['parent']
 
-def fix_overlap(node, parent):
-	"""We fix nodes with overlapping boundaries by widening the parent"""
-	while parent is not None and node['end'] > parent['end']:
-		if DEBUG: print '    Widening %s: %s -> %s' % (parent, parent['end'], node['end'])
-		parent['end'] = node['end']
-		parent = parent['parent']
+	if parent is orig_parent:
+		return False
+	else:
+		# This node needs re-parenting.
+		if DEBUG: print '  Re-parenting %s: old:%s  new:%s' % (node, node['parent'], parent)
+		orig_parent['children'].remove(node)
+		index = parent['children'].index(prev_parent)
+		parent['children'].insert(index+1, node)
+		node['parent'] = parent
+		return True
 
+def fix_overlap(node, parent, index):
+	"""
+	This function only modifies the input `node`, but will sometimes re-parent the node, when necessary.
+	The node will only be moved "further" in the tree, in depth-first order.
+	Returns True if the node was reparented.
+	"""
+	assert not node['end'] <= parent['start'], "Node ends before parent: %s-%s" % (parent, node)
+	if node['start'] < parent['start']:
+		if DEBUG: print '    node starts too soon %s: %s ->' % (parent, node),
+		node['start'] = parent['start']
+		if DEBUG: print node
+	if fix_parentage(node, parent):
+		return True
+	if node['end'] > parent['end']:
+		if DEBUG: print '    node ends too late %s: %s ->' % (parent, node),
+		node['end'] = parent['end']
+		if DEBUG: print node
+	if index >= 1:
+		prev_node = parent['children'][index-1]
+		if prev_node['start'] >= node['start']:
+			if DEBUG: print '    node starts before previous sibling %s-%s: %s ->' % (parent, prev_node, node),
+			node['start'] = prev_node['end']
+			if DEBUG: print node
+	try:
+		next_node = parent['children'][index+1]
+	except IndexError:
+		pass
+	else:
+		if node['start'] >= next_node['start']:
+			# That node will fix itself.
+			pass
+		elif node['end'] > next_node['start']:
+			if DEBUG: print '    node ends after next sibling starts %s-%s: %s ->' % (parent, next_node, node),
+			node['end'] = next_node['start']
+			if DEBUG: print node
+
+	assert node['start'] <= node['end'], "Negative-width node: %s" % node
 
 def fixup_hierarchy(tree):
-	flattened = flatten_tree(tree)
+	# We traverse the tree in a depth-first manner, taking care not to take
+	# copies of the 'children' lists, nor iterate directly over them.
+	stack = [(tree,0)]
+	while stack:
+		parent, index = stack.pop()
+		try:
+			node = parent['children'][index]
+		except IndexError:
+			continue
 
-	# First fix any pre-existing issues with overlapping boundaries.
-	for node in flattened:
-		fix_overlap(node, node['parent'])
-
-	# 'parents' is a stack of tree depth.  The last element is the current parent
-	# node we're appending children to
-	parents = []
-	roots = []
-	for node in sorted(flattened, key=DictNode.document_order):
-		if DEBUG: print node['index'], node
-		# Discard parents until the parent contains our new node
-		while parents:
-			parent = parents[-1]
-			if node['start'] >= parent['end']:
-				parents.pop()
-			else:
-				# We now know that parent.start <= node.start <= node.end <= parent.end
-				# We've found the best parent for this node.
-				if parent is not node['parent']:
-					# This node needs re-parenting.
-					if DEBUG: print '  Re-parenting %s: old:%s  new:%s' % (node, node['parent'], parent)
-					parent['children'].append(node)
-					node['parent']['children'].remove(node)
-					node['parent'] = parent
-
-				# Ensure we didn't cause new overlap errors.
-				if node['end'] > parent['end']:
-					raise ValueError("Overlap:\n\t%s\n\t%s" % (node, parent))
-
-				break
+		if DEBUG: print node
+		if fix_overlap(node, parent, index):
+			# That node got repositioned further down the depth-first order. Retry.
+			stack.append((parent, index))
 		else:
-			roots.append(node)
-
-		parents.append(node)
-
-	# Make sure all the children are in document order.
-	for node in flattened:
-		node['children'] = sorted(node['children'], key=DictNode.document_order)
-
-	assert len(roots) == 1
-	return roots[0]
-
-
+			stack.append((parent, index+1))
+			stack.append((node, 0))
+	return tree
