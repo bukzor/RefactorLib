@@ -1,0 +1,2 @@
+<Program><TryStatement finalizer="None">try</TryStatement> <BlockStatement>{</BlockStatement>} <CatchClause guard="None">catch</CatchClause>(<Identifier name="error">error</Identifier>) <BlockStatement>{</BlockStatement>}
+</Program>

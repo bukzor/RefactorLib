@@ -138,9 +138,9 @@ def smjs_to_dictnode(javascript_contents, tree):
 
 def fix_parentage(node, parent):
 	"""We fix nodes whose children overlap their boundaries by widening the parent"""
-	orig_parent = prev_parent = parent
+	orig_parent = parent
 	while parent is not None and node['start'] >= parent['end']:
-		prev_parent, parent = parent, parent['parent']
+		parent = parent['parent']
 
 	if parent is orig_parent:
 		return False
@@ -148,8 +148,12 @@ def fix_parentage(node, parent):
 		# This node needs re-parenting.
 		if DEBUG: print '  Re-parenting %s: old:%s  new:%s' % (node, node['parent'], parent)
 		orig_parent['children'].remove(node)
-		index = parent['children'].index(prev_parent)
-		parent['children'].insert(index+1, node)
+		for index, sibling in enumerate(parent['children']):
+			if (sibling['start'], sibling['end']) > (node['start'], node['end']):
+				parent['children'].insert(index, node)
+				break
+		else:
+			parent['children'].append(node)
 		node['parent'] = parent
 		return True
 
