@@ -1,0 +1,2 @@
+<Program><VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x = </Identifier><ObjectExpression>{ <Property kind="init"><Literal type="str" value="a">"a"</Literal>: <Literal type="str" value="b">"b"</Literal></Property> }</ObjectExpression></VariableDeclarator></VariableDeclaration>;
+</Program>

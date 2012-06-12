@@ -105,19 +105,18 @@ def smjs_to_dictnode(javascript_contents, tree):
 		for attr, val in node.items():
 			if attr in ('loc', 'type'):
 				continue
+			elif isinstance(val, list):
+				children.extend(val)
+			elif isinstance(val, dict) and 'loc' in val:
+				if val.get('loc'):
+					children.append(val)
+				else:
+					attrs[val['type']] = val['name']
 			elif attr == 'value':
 				attrs[attr] = unicode(val)
 				# We would normally lose this type information, as lxml
 				# wants everything to be a string.
 				attrs['type'] = type(val).__name__
-			elif isinstance(val, list):
-				children.extend(val)
-			elif isinstance(val, dict):
-				if val.get('loc'):
-					children.append(val)
-				else:
-					attrs[val['type']] = val['name']
-			#elif isinstance(val, (int,unicode,type(None))):
 			elif isinstance(val, unicode):
 				attrs[attr] = val
 			elif isinstance(val, (bool, NoneType, str)):
