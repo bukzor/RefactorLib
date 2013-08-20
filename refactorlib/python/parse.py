@@ -59,8 +59,12 @@ def lib2to3_to_dictnode(tree):
 
 		if hasattr(node, '_prefix') and node._prefix:
 			if prev_node is parent:
-				assert parent['text'] == '', parent
-				prev_node['text'] = node._prefix
+				if parent is root:
+					assert node_text == '', node_text
+					node_text = node._prefix
+				else:
+					assert parent['text'] == '', parent
+					prev_node['text'] = node._prefix
 			else:
 				prev_node['tail'] = node._prefix
 
