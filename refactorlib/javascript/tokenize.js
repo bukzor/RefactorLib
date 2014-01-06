@@ -9,6 +9,6 @@
  *****************************************************************************/
 var doc = '';
 while ( (line = readline()) !== null ) {
-	doc += line + '\n';
+    doc += line + '\n';
 }
 putstr(JSON.stringify(Reflect.parse(doc)));

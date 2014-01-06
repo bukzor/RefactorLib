@@ -1,7 +1,7 @@
 <cheetah><PlainText>
 </PlainText><Comment><CommentStart>##</CommentStart> This is an import
 </Comment><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>from</Py><WhiteSpace> </WhiteSpace><Py>mylib</Py><WhiteSpace> </WhiteSpace><Py>import</Py><WhiteSpace> </WhiteSpace><CallArgString>(
-		<Py>mydecorator1</Py><Py>,</Py> <Py>mydecorator2</Py>
+        <Py>mydecorator1</Py><Py>,</Py> <Py>mydecorator2</Py>
 )</CallArgString></ExpressionParts></Expression>
 </SimpleExprDirective></Directive><PlainText>
 </PlainText><Comment><CommentStart>##</CommentStart> Here are two decorators

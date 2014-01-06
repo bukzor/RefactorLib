@@ -10,11 +10,11 @@
 
 <ForStatement>for(<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="i">i=</Identifier><Literal type="int" value="3">3</Literal></VariableDeclarator></VariableDeclaration>; <BinaryExpression operator="&lt;="><Identifier name="i">i</Identifier> &lt;= <Identifier name="num">num</Identifier></BinaryExpression>;<UpdateExpression operator="++" prefix="False"><Identifier name="i">i</Identifier>++</UpdateExpression>)
 <BlockStatement>{
-	<ExpressionStatement><AssignmentExpression operator="="><Identifier name="var3">var3</Identifier> = <BinaryExpression operator="+"><Identifier name="var1">var1</Identifier> + <Identifier name="var2">var2</Identifier></BinaryExpression></AssignmentExpression></ExpressionStatement>;
-	<ExpressionStatement><AssignmentExpression operator="="><Identifier name="var1">var1</Identifier> = <Identifier name="var2">var2</Identifier></AssignmentExpression></ExpressionStatement>;
-	<ExpressionStatement><AssignmentExpression operator="="><Identifier name="var2">var2</Identifier> = <Identifier name="var3">var3</Identifier></AssignmentExpression></ExpressionStatement>;
+    <ExpressionStatement><AssignmentExpression operator="="><Identifier name="var3">var3</Identifier> = <BinaryExpression operator="+"><Identifier name="var1">var1</Identifier> + <Identifier name="var2">var2</Identifier></BinaryExpression></AssignmentExpression></ExpressionStatement>;
+    <ExpressionStatement><AssignmentExpression operator="="><Identifier name="var1">var1</Identifier> = <Identifier name="var2">var2</Identifier></AssignmentExpression></ExpressionStatement>;
+    <ExpressionStatement><AssignmentExpression operator="="><Identifier name="var2">var2</Identifier> = <Identifier name="var3">var3</Identifier></AssignmentExpression></ExpressionStatement>;
 
-	<ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var3">var3</Identifier>+<Literal type="str" value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;</BlockStatement></ForStatement>
+    <ExpressionStatement><CallExpression><MemberExpression Identifier="write" computed="False"><Identifier name="document">document</Identifier>.write</MemberExpression>(<BinaryExpression operator="+"><Identifier name="var3">var3</Identifier>+<Literal type="str" value="&lt;br /&gt;">"&lt;br /&gt;"</Literal></BinaryExpression>)</CallExpression></ExpressionStatement>;</BlockStatement></ForStatement>
 }
 
 // fooo

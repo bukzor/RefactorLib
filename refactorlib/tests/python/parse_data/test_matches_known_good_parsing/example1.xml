@@ -1,7 +1,7 @@
 <file_input><simple_stmt><import_from>
 # This is an import
 <NAME>from</NAME> <NAME>mylib</NAME> <NAME>import</NAME> <LPAR>(</LPAR><import_as_names>
-		<NAME>mydecorator1</NAME><COMMA>,</COMMA> <NAME>mydecorator2</NAME>
+        <NAME>mydecorator1</NAME><COMMA>,</COMMA> <NAME>mydecorator2</NAME>
 </import_as_names><RPAR>)</RPAR></import_from><NEWLINE>
 </NEWLINE></simple_stmt><decorated><decorators><decorator>
 # Here are two decorators
