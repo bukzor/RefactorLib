@@ -1,7 +1,9 @@
 from refactorlib.tests.util import parametrize, get_output, assert_same_content
-from refactorlib.cheetah.parse import parse
+from . import pytestmark
 
 def test_can_find_calls():
+	from refactorlib.cheetah.parse import parse
+
 	example = parse('''
 		foo $foo() bar
 	''')
@@ -12,6 +14,7 @@ def test_can_find_calls():
 
 @parametrize(get_output)
 def test_can_remove_calls(example, output):
+	from refactorlib.cheetah.parse import parse
 	example = open(example).read()
 	example = parse(example)
 
