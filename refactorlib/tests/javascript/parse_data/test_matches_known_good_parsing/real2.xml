@@ -1,5 +1,5 @@
 <Program>function <FunctionDeclaration Identifier="x" expression="False" generator="False">x() <BlockStatement>{
-	<ExpressionStatement><MemberExpression computed="True"><Identifier name="c">c</Identifier>[<Identifier name="y">y</Identifier>]</MemberExpression></ExpressionStatement>;</BlockStatement>
+    <ExpressionStatement><MemberExpression computed="True"><Identifier name="c">c</Identifier>[<Identifier name="y">y</Identifier>]</MemberExpression></ExpressionStatement>;</BlockStatement>
 }</FunctionDeclaration>
 <VariableDeclaration kind="var">var <VariableDeclarator init="None"><Identifier name="a">a</Identifier></VariableDeclarator>, <VariableDeclarator><Identifier name="b">b=</Identifier><Literal type="int" value="2">2</Literal></VariableDeclarator><VariableDeclarator><Identifier name="c">, c = new </Identifier><NewExpression><Identifier name="Array">Array</Identifier></NewExpression></VariableDeclarator></VariableDeclaration>;
 </Program>

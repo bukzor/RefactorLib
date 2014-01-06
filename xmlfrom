@@ -6,12 +6,12 @@ A script to convert from any refactorlib-supported format to xml.
 from sys import argv, stdout
 
 def main(filename):
-	from refactorlib.parse import parse
-	from lxml.etree import tostring
+    from refactorlib.parse import parse
+    from lxml.etree import tostring
 
-	stdout.write(tostring(parse(filename)))
-	
+    stdout.write(tostring(parse(filename)))
+
 
 if __name__ == '__main__':
-	# TODO: argparse. enable explicit filetype.
-	exit(main(argv[1]))
+    # TODO: argparse. enable explicit filetype.
+    exit(main(argv[1]))

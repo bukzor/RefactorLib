@@ -1,1 +1,5 @@
-../remove_call_data/simple.tmpl
+        foo $foo() bar
+        foo $foo(dotted.name) bar
+        foo $foo($cheetahvar) bar
+        foo $foo($cheetah.var) bar
+        foo $foo(x.upper() for x in mylist) bar

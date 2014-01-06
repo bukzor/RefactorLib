@@ -5,10 +5,10 @@
  * to do it correctly...
  * 
  * Reference:
- *		https://developer.mozilla.org/en/SpiderMonkey/Shell_global_objects
+ *      https://developer.mozilla.org/en/SpiderMonkey/Shell_global_objects
  *****************************************************************************/
 var doc = '';
 while ( (line = readline()) !== null ) {
-	doc += line + '\n';
+    doc += line + '\n';
 }
 putstr(JSON.stringify(Reflect.parse(doc)));

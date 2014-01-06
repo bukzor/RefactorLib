@@ -1,1 +1,13 @@
-../remove_call_data/nested2.tmpl
+
+$bar($foo(buz))
+$bar($foo($buz))
+$bar($foo(
+    buz
+))
+$bar($foo(
+    $buz
+))
+$bar(
+    $foo($buz)
+)
+
