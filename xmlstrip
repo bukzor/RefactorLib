@@ -7,13 +7,13 @@ This is the inverse operation of `xmlfrom`.
 from sys import argv, stdout
 
 def main(filename):
-	from lxml.etree import XML, tostring
+    from lxml.etree import XML, tostring
 
-	xml = XML(open(filename).read())
-	stdout.write(tostring(xml, method='text'))
-	
+    xml = XML(open(filename).read())
+    stdout.write(tostring(xml, method='text'))
+    
 
 if __name__ == '__main__':
-	# TODO: argparse. enable explicit filetype.
-	exit(main(argv[1]))
+    # TODO: argparse. enable explicit filetype.
+    exit(main(argv[1]))
 
