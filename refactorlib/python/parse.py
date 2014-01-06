@@ -3,6 +3,9 @@ import re
 pythonEncodingDirectiveRE = re.compile("^\s*#.*coding[:=]\s*([-\w.]+)")
 
 def detect_encoding(source):
+	"""
+	Given some python contents as a byte string, return the name of the encoding, or else None.
+	"""
 	# According to the PEP0263, the encoding directive must appear on one of the first two lines of the file
 	top_lines = source.split('\n', 2)[:2]
 
@@ -16,7 +19,7 @@ def detect_encoding(source):
 
 def parse(python_contents, encoding):
 	"""
-	Given some python contents, as a unicode string, return the lxml representation.
+	Given some python contents as a unicode string, return the lxml representation.
 	"""
 	lib2to3_python = lib2to3_parse(python_contents)
 	dictnode_python = lib2to3_to_dictnode(lib2to3_python)
