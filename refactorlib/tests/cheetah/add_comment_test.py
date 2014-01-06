@@ -1,9 +1,11 @@
-from refactorlib.cheetah.parse import parse
+from . import pytestmark
 
 def test_can_add_comments():
 	"""
 	It's often useful to simply add comment to code, automatically.
 	"""
+	from refactorlib.cheetah.parse import parse
+
 	example = parse('''
 		#def foo
 			Escaped thing: $esc(

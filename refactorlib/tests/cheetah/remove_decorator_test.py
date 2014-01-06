@@ -1,5 +1,7 @@
 from refactorlib.tests.util import parametrize, get_output, assert_same_content
 
+from . import pytestmark
+
 @parametrize(get_output)
 def test_remove_foo(example, output):
 	from refactorlib.cheetah.parse import parse

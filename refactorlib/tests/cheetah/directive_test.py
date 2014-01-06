@@ -1,5 +1,7 @@
 from refactorlib.tests.util import parametrize, get_output, assert_same_content
 
+from . import pytestmark
+
 @parametrize(get_output('txt'))
 def test_find_end_directive(example, output):
 	text = open(example).read()
