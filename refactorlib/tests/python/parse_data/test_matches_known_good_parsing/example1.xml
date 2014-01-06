@@ -8,9 +8,9 @@
 <AT>@</AT><NAME>mydecorator1</NAME><NEWLINE>
 </NEWLINE></decorator><decorator><AT>@</AT><NAME>mydecorator2</NAME><NEWLINE>
 </NEWLINE></decorator></decorators><funcdef><NAME>def</NAME> <NAME>myfunc</NAME><parameters><LPAR>(</LPAR><typedargslist><NAME>myarg</NAME><EQUAL>=</EQUAL><STRING>"mystring"</STRING></typedargslist><RPAR>)</RPAR></parameters><COLON>:</COLON><suite><NEWLINE>
-</NEWLINE><INDENT>	</INDENT><simple_stmt><STRING>"This is a docstring for myfunc"</STRING><NEWLINE>
-</NEWLINE></simple_stmt><simple_stmt><expr_stmt>	<NAME>myvar</NAME> <EQUAL>=</EQUAL><power> <NAME>myarg</NAME><trailer><DOT>.</DOT><NAME>upper</NAME></trailer><trailer><LPAR>(</LPAR><RPAR>)</RPAR></trailer></power></expr_stmt><NEWLINE>
-</NEWLINE></simple_stmt><simple_stmt><return_stmt>	<NAME>return</NAME> <NAME>myvar</NAME></return_stmt><NEWLINE>
+</NEWLINE><INDENT>    </INDENT><simple_stmt><STRING>"This is a docstring for myfunc"</STRING><NEWLINE>
+</NEWLINE></simple_stmt><simple_stmt><expr_stmt>    <NAME>myvar</NAME> <EQUAL>=</EQUAL><power> <NAME>myarg</NAME><trailer><DOT>.</DOT><NAME>upper</NAME></trailer><trailer><LPAR>(</LPAR><RPAR>)</RPAR></trailer></power></expr_stmt><NEWLINE>
+</NEWLINE></simple_stmt><simple_stmt><return_stmt>    <NAME>return</NAME> <NAME>myvar</NAME></return_stmt><NEWLINE>
 </NEWLINE>
 # Here's a trailing comment
 

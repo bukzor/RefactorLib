@@ -1,4 +1,4 @@
-<cheetah><PlainText>		foo </PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
+<cheetah><PlainText>        foo </PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
         )</CallArgString></CheetahVarNameChunks></Placeholder><PlainText> bar
         foo </PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
             <Py>dotted</Py><Py>.</Py><Py>name</Py>
