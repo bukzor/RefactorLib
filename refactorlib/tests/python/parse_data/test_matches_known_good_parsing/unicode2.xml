@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='cp1251'?>
+<file_input><simple_stmt><print_stmt># vim:fileencoding=cp1251:
+
+# See: http://www.cl.cam.ac.uk/~mgk25/ucs/examples/quickbrown.txt
+
+# These should be entirely equivalent:
+<NAME>print</NAME> <STRING>u'''
+В чащах юга жил бы цитрус? Да, но фальшивый экземпляр!
+(= Would a citrus live in the bushes of south? Yes, but only a fake one!)
+
+Съешь же ещё этих мягких французских булок да выпей чаю
+(= Eat some more of these fresh French loafs and have some tea) 
+'''</STRING></print_stmt><NEWLINE>
+</NEWLINE></simple_stmt><simple_stmt><print_stmt>
+<NAME>print</NAME><power> <STRING>'''
+В чащах юга жил бы цитрус? Да, но фальшивый экземпляр!
+(= Would a citrus live in the bushes of south? Yes, but only a fake one!)
+
+Съешь же ещё этих мягких французских булок да выпей чаю
+(= Eat some more of these fresh French loafs and have some tea) 
+'''</STRING><trailer><DOT>.</DOT><NAME>decode</NAME></trailer><trailer><LPAR>(</LPAR><STRING>'cp1251'</STRING><RPAR>)</RPAR></trailer></power></print_stmt><NEWLINE>
+</NEWLINE></simple_stmt><ENDMARKER></ENDMARKER></file_input>

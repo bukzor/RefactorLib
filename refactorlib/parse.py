@@ -32,7 +32,7 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
     if not node_lookup:
         from node import node_lookup
 
-    from lxml.etree import XMLParser
+    from lxml.etree import XMLParser, fromstring
     lxml_parser_object = XMLParser(encoding=encoding)
     lxml_parser_object.set_element_class_lookup(node_lookup)
     Element = lxml_parser_object.makeelement
@@ -43,12 +43,10 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
     while stack:
         node, parent = stack.pop()
 
-
         if parent is None:
             # We use this roundabout method becuase the encoding is always set
             # to 'UTF8' if we use parser.makeelement()
-            lxml_parser_object.feed('<trash></trash>')
-            lxmlnode = lxml_parser_object.close()
+            lxmlnode = fromstring('<trash></trash>', parser=lxml_parser_object)
             lxmlnode.tag = node['name']
             lxmlnode.attrib.update(node.get('attrs', {}))
             root = lxmlnode

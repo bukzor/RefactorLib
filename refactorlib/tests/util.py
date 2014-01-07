@@ -95,8 +95,9 @@ def assert_same_file_content(old_file, new_file):
 
     if diffs:
         diffs = 'Results differ:\n--- %s\n+++ %s\n%s' % (old_file, new_file, diffs)
+        # py.test derps on non-utf8 bytes, so I force unicode here.
+        diffs = diffs.decode('UTF-8', 'replace')
         raise AssertionError(diffs)
     else:
         from os import unlink
         unlink(new_file)
-
