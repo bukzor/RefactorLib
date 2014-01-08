@@ -16,7 +16,12 @@ def main():
         cmdclass={'test': PyTest},
         license='BSD',
 
+        tests_require=['pytest'],
         install_requires=['lxml>=2.2'], # We run with 2.2.4.0
+        extras_require={
+            'javascript': ['simplejson'],
+            'cheetah': ['cheetah'],
+        },
 
         entry_points = {
                 'console_scripts': [
@@ -41,37 +46,21 @@ def main():
         ],
     )
 
-from setuptools.command.test import test
-class PyTest(test):
-    """
-    Hook up py.test to `setup.py test`
-    see: http://pytest.org/latest/goodpractises.html
-    """
-    def get_pytest(self):
-        try:
-            import pytest
-            return pytest
-        except ImportError:
-            from os import environ
-            if 'VIRTUAL_ENV' in environ:
-                # We run with 2.2.1
-                import subprocess
-                errno = subprocess.call(['pip', 'install', 'pytest>=2.2'])
-                if errno: raise SystemExit(errno)
-                import pytest
-                return pytest
-            else:
-                raise
 
-    def run(self):
-        pytest = self.get_pytest()
+# Stolen directly from the docs:
+#  http://pytest.org/latest/goodpractises.html#integration-with-setuptools-test-commands
+from setuptools.command.test import test as TestCommand
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+    def run_tests(self):
+        #import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.test_args)
+        exit(errno)
 
-        # remove commandline args so that pytest doesn't get confused
-        from sys import argv
-        del argv[:]
-
-        print 'Run `py.test` for more control over testing.'
-        raise SystemExit(pytest.cmdline.main())
 
 if __name__ == '__main__':
     main()

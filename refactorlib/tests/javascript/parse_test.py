@@ -8,9 +8,20 @@ def smjs_missing():
     p.communicate()
     return p.returncode
 
-import pytest
-pytestmark = pytest.mark.skipif(smjs_missing(), reason='smjs not found')
+def simplejson_missing():
+    try:
+        import simplejson
+        simplejson = simplejson
+    except ImportError:
+        return True
+    else:
+        return False
 
+import pytest
+pytestmark = [
+        pytest.mark.skipif(smjs_missing(), reason='smjs not found'),
+        pytest.mark.skipif(simplejson_missing(), reason='simplejson not found'),
+]
 
 @parametrize(get_examples)
 def test_can_make_round_trip(example):
