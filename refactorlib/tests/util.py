@@ -3,6 +3,8 @@ A home for the 'yellow code' of testing.
 """
 from os.path import join
 
+FAILURE_SUFFIX = '.test_failure'
+
 def example_dir(func):
     from os.path import relpath
 
@@ -22,6 +24,9 @@ def get_examples(func):
         if example.startswith('.'):
             # Hidden file.
             continue
+        elif example.endswith(FAILURE_SUFFIX):
+            # Left over from previous test failure.
+            continue
 
         example = join(examples, example)
         if isfile(example):
@@ -31,13 +36,16 @@ def get_examples(func):
     if not examples_found:
         raise SystemError("No examples found in %r" % examples)
 
-def get_output(suffix=None):
-    def _get_output(func):
+def get_output(suffix=None, func=None):
+    def _get_output(_func):
+        if func is not None:
+            _func = func
+
         from os.path import split
-        for example, in get_examples(func):
+        for example, in get_examples(_func):
 
             dirname, filename = split(example)
-            output = join(dirname, func.__name__, filename)
+            output = join(dirname, _func.__name__, filename)
             if suffix: # Replace the suffix.
                 output = output.rsplit('.',1)[0] + '.' + suffix
 
@@ -66,8 +74,8 @@ def output_suffix(suffix):
         return func
     return decorator
 
-def assert_same_content(old_file, new_content):
-    new_file = old_file+'.test_failure'
+def assert_same_content(old_file, new_content, extra_suffix=''):
+    new_file = ''.join((old_file, extra_suffix, FAILURE_SUFFIX))
     try:
         open(new_file,'w').write(new_content)
     except IOError, e:
@@ -86,18 +94,28 @@ def assert_same_file_content(old_file, new_file):
     old_content = open(old_file).readlines()
     new_content = open(new_file).readlines()
 
-    from difflib import ndiff as diff
-    diffs = '\n'.join(
-            line.rstrip('\n')
-            for line in diff(old_content, new_content)
-            if not line.startswith('  ') # Remove the similar lines.
-    )
+    diffs = diff(old_content, new_content)
 
     if diffs:
         diffs = 'Results differ:\n--- %s\n+++ %s\n%s' % (old_file, new_file, diffs)
-        # py.test derps on non-utf8 bytes, so I force unicode here.
+        # py.test derps on non-utf8 bytes, so I force unicode like so:
         diffs = diffs.decode('UTF-8', 'replace')
         raise AssertionError(diffs)
     else:
         from os import unlink
         unlink(new_file)
+
+def diff(old_content, new_content, n=3):
+    """similar to difflib.ndiff, but supports limited context lines"""
+    from difflib import ndiff as diff
+    diffdata = tuple(diff(old_content, new_content))
+    difflines = set()
+    for lineno, line in enumerate(diffdata):
+        if not line.startswith('  '):  # Ignore the similar lines.
+            difflines.update(range(lineno-n, lineno+n+1))
+
+    return '\n'.join(
+            line.rstrip('\n')
+            for lineno, line in enumerate(diffdata)
+            if lineno in difflines
+    )

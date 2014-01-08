@@ -18,7 +18,12 @@ def main():
 
         install_requires=['lxml>=2.2'], # We run with 2.2.4.0
 
-        scripts=['xmlfrom', 'xmlstrip'],
+        entry_points = {
+                'console_scripts': [
+                    'xmlfrom = refactorlib.cli.xmlfrom:cli',
+                    'xmlstrip = refactorlib.cli.xmlstrip:cli',
+                ],
+        },
 
         # See http://pypi.python.org/pypi?%3Aaction==list_classifiers
         classifiers=[
