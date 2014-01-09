@@ -8,4 +8,4 @@ install:
   - "pip install -e .[javascript,cheetah]"
   - "npm install reflect"
 # command to run tests
-script: py.test -rs
+script: py.test -rsx --runxfail

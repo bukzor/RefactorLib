@@ -26,7 +26,7 @@ def which(cmd):
     Return a string path to the command on success.
     Return None on failure.
     """
-    p = Popen(('/usr/bin/which', 'node'), stdout=PIPE)
+    p = Popen(('/usr/bin/which', cmd), stdout=PIPE)
     stdout, _ = p.communicate()
     if p.returncode == 0:
         return stdout.strip()

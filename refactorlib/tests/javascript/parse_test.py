@@ -13,14 +13,13 @@ def simplejson_missing():
 def check_missing():
     from refactorlib.javascript.parse import find_nodejs
     if find_nodejs() is None:
-        return pytest.mark.skipif(True, reason='nodejs not found')
+        return pytest.mark.xfail(reason='nodejs not found')
     elif simplejson_missing():
-        return pytest.mark.skipif(True, reason='simplejson not found')
+        return pytest.mark.xfail(reason='simplejson not found')
     else:
-        return pytest.mark.skipif(False, reason='nothing missing')
+        return pytest.mark.noop
 
 import pytest
-# I'd like to use multiple skipif marks here, but the messages get mixed up.
 pytestmark = check_missing()
 
 @parametrize(get_examples)
