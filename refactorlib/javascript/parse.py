@@ -10,7 +10,7 @@ def parse(javascript_contents, encoding='ascii'):
         * https://npmjs.org/package/reflect
     """
     reflectjs_javascript = reflectjs_parse(javascript_contents)
-    dictnode_javascript = reflectjs_to_dictnode(javascript_contents, reflectjs_javascript)
+    dictnode_javascript = reflectjs_to_dictnode(reflectjs_javascript)
     dictnode_javascript = calculate_text(javascript_contents, dictnode_javascript)
 
     from refactorlib.parse import dictnode_to_lxml
@@ -52,43 +52,19 @@ def reflectjs_parse(javascript_contents):
 
 def calculate_text(contents, tree):
     """
-    We do a pre+post order traversal of the tree to calculate the text and tail
+    We do a pre-order traversal of the tree to calculate the text and tail
     of each node
     """
-    pre, post = 'pre', 'post'
-    index = 0
-    prev_node = DictNode(name='ROOT', start=0, end=-1)
-    stack = [(tree, post), (tree, pre)]
+    # We *could* jam this into the dictnode function, but this is simpler.
+    stack = [tree]
     while stack:
-        node, time = stack.pop()
-        if time is pre:
-            nextindex = node['start']
-            if prev_node is node['parent']:
-                # First child.
-                target = 'text'
-            else:
-                # Finish up previous sibling
-                target = 'tail'
-    
-            for child in reversed(node['children']):
-                stack.extend( ((child, post), (child, pre)) )
-        elif time is post:
-            nextindex = node['end']
-            if prev_node is node:
-                # Node has no children.
-                target = 'text'
-            else:
-                # Finish up after last child.
-                target = 'tail'
+        node = stack.pop()
+        from refactorlib.cheetah.parse import fixup_node_text
+        fixup_node_text(node, contents)
+        stack.extend(reversed(node['children']))
 
-        prev_node[target] = contents[index:nextindex]
         if DEBUG:
-            print '%-4s %s' % (time, node)
-            print '     %s.%s = %r' % (prev_node, target, prev_node[target])
-
-        # Get ready for next iteration
-        index = nextindex
-        prev_node = node
+            print node
 
     # The top-level node cannot have a tail
     assert not tree.get('tail')
@@ -100,7 +76,7 @@ class DictNode(dict):
     def __str__(self):
         return '%s(%s-%s)' % (self['name'], self['start'], self['end'])
 
-def reflectjs_to_dictnode(javascript_contents, tree):
+def reflectjs_to_dictnode(tree):
     """
     Transform a reflectjs structure into a dictnode, as defined by dictnode_to_lxml.
     This is not a complete transformation. In particular, the nodes have no
@@ -110,7 +86,6 @@ def reflectjs_to_dictnode(javascript_contents, tree):
 
     root_dictnode = DictNode(parent=None)
     stack = [(tree, root_dictnode)]
-    lines = [len(line)+1 for line in javascript_contents.split('\n')]
 
     while stack:
         node, dictnode = stack.pop()
