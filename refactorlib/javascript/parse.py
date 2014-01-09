@@ -46,10 +46,7 @@ def reflectjs_parse(javascript_contents):
         last_newline = 0
 
     # reflectjs is sometimes neglectful of leading/trailing whitespace.
-    tree['loc']['start']['line'] = 1
-    tree['loc']['start']['column'] = 0
-    tree['loc']['end']['line'] = javascript_contents.count('\n') + 1
-    tree['loc']['end']['column'] = len(javascript_contents) - last_newline
+    tree['range'] = [0, len(javascript_contents)]
 
     return tree
 
@@ -117,11 +114,12 @@ def reflectjs_to_dictnode(javascript_contents, tree):
 
     while stack:
         node, dictnode = stack.pop()
-            
+
         children = []
         attrs = {}
         for attr, val in node.items():
             if attr in ('loc', 'type', 'range'):
+                # These are handled more directly, below.
                 continue
             elif isinstance(val, list):
                 children.extend(val)
@@ -145,8 +143,8 @@ def reflectjs_to_dictnode(javascript_contents, tree):
 
         dictnode.update(dict(
             name=node['type'],
-            start=sum(lines[:node['loc']['start']['line']-1]) + node['loc']['start']['column'],
-            end=sum(lines[:node['loc']['end']['line']-1]) + node['loc']['end']['column'],
+            start=node['range'][0],
+            end=node['range'][1],
             children=[DictNode(parent=dictnode) for child in children],
             attrs=attrs,
         ))
