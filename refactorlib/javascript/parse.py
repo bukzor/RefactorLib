@@ -1,3 +1,5 @@
+from refactorlib.util import static
+
 DEBUG = False
 
 def parse(javascript_contents, encoding='ascii'):
@@ -12,16 +14,28 @@ def parse(javascript_contents, encoding='ascii'):
     from refactorlib.parse import dictnode_to_lxml
     return dictnode_to_lxml(dictnode_javascript, encoding=encoding)
 
+
+@static(found=False)
+def find_nodejs():
+    if find_nodejs.found is False:
+        from refactorlib.util import which
+        nodejs = which('nodejs')
+        if nodejs is None:
+            nodejs = which('node')
+        find_nodejs.found = nodejs
+    return find_nodejs.found
+
+
 def smjs_parse(javascript_contents):
     from refactorlib import TOP
+    from refactorlib.util import Popen, PIPE
     from os.path import join
-    from subprocess import Popen, PIPE
     from simplejson import loads
     from simplejson.ordered_dict import OrderedDict
     tokenizer_script = join(TOP, 'javascript/tokenize.js')
 
-    smjs = Popen(['node', tokenizer_script], stdin=PIPE, stdout=PIPE)
-    json = smjs.communicate(javascript_contents)[0]
+    smjs = Popen([find_nodejs(), tokenizer_script], stdin=PIPE, stdout=PIPE)
+    json = smjs.check_output(javascript_contents)
     tree = loads(json, object_pairs_hook=OrderedDict)
 
     try:

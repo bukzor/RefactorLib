@@ -1,13 +1,6 @@
 from refactorlib.tests.util import parametrize, get_examples, get_output, assert_same_content
 from refactorlib.parse import parse
 
-def nodejs_missing():
-    """returns 0 if nodejs is found on the unix $PATH"""
-    from subprocess import Popen, PIPE
-    p = Popen(('/usr/bin/which', 'node'), stdout=PIPE)
-    p.communicate()
-    return p.returncode
-
 def simplejson_missing():
     try:
         import simplejson
@@ -18,7 +11,8 @@ def simplejson_missing():
         return False
 
 def check_missing():
-    if nodejs_missing():
+    from refactorlib.javascript.parse import find_nodejs
+    if find_nodejs() is None:
         return pytest.mark.skipif(True, reason='nodejs not found')
     elif simplejson_missing():
         return pytest.mark.skipif(True, reason='simplejson not found')
