@@ -1,10 +1,10 @@
 from refactorlib.tests.util import parametrize, get_examples, get_output, assert_same_content
 from refactorlib.parse import parse
 
-def smjs_missing():
-    """returns 0 if smjs is found on the unix $PATH"""
+def nodejs_missing():
+    """returns 0 if nodejs is found on the unix $PATH"""
     from subprocess import Popen, PIPE
-    p = Popen(('/usr/bin/which', 'smjs'), stdout=PIPE)
+    p = Popen(('/usr/bin/which', 'node'), stdout=PIPE)
     p.communicate()
     return p.returncode
 
@@ -17,11 +17,17 @@ def simplejson_missing():
     else:
         return False
 
+def check_missing():
+    if nodejs_missing():
+        return pytest.mark.skipif(True, reason='nodejs not found')
+    elif simplejson_missing():
+        return pytest.mark.skipif(True, reason='simplejson not found')
+    else:
+        return pytest.mark.skipif(False, reason='nothing missing')
+
 import pytest
-pytestmark = [
-        pytest.mark.skipif(smjs_missing(), reason='smjs not found'),
-        pytest.mark.skipif(simplejson_missing(), reason='simplejson not found'),
-]
+# I'd like to use multiple skipif marks here, but the messages get mixed up.
+pytestmark = check_missing()
 
 @parametrize(get_examples)
 def test_can_make_round_trip(example):

@@ -20,7 +20,7 @@ def smjs_parse(javascript_contents):
     from simplejson.ordered_dict import OrderedDict
     tokenizer_script = join(TOP, 'javascript/tokenize.js')
 
-    smjs = Popen(['smjs', tokenizer_script], stdin=PIPE, stdout=PIPE)
+    smjs = Popen(['node', tokenizer_script], stdin=PIPE, stdout=PIPE)
     json = smjs.communicate(javascript_contents)[0]
     tree = loads(json, object_pairs_hook=OrderedDict)
 
@@ -29,7 +29,9 @@ def smjs_parse(javascript_contents):
     except ValueError:
         last_newline = 0
 
-    # smjs is sometimes negelectful of trailing whitespace.
+    # smjs is sometimes negelectful of leading/trailing whitespace.
+    tree['loc']['start']['line'] = 1
+    tree['loc']['start']['column'] = 0
     tree['loc']['end']['line'] = javascript_contents.count('\n') + 1
     tree['loc']['end']['column'] = len(javascript_contents) - last_newline
 
@@ -103,7 +105,7 @@ def smjs_to_dictnode(javascript_contents, tree):
         children = []
         attrs = {}
         for attr, val in node.items():
-            if attr in ('loc', 'type'):
+            if attr in ('loc', 'type', 'range'):
                 continue
             elif isinstance(val, list):
                 children.extend(val)

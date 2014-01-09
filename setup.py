@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+"""The installer script."""
 
 def main():
+    """Our entry point."""
     from refactorlib import __version__
     import setuptools
     setuptools.setup(
@@ -21,9 +23,11 @@ def main():
         extras_require={
             'javascript': ['simplejson'],
             'cheetah': ['cheetah'],
+            # Things I personally use to develop this package.
+            'dev': ['pudb', 'pylint'],
         },
 
-        entry_points = {
+        entry_points={
                 'console_scripts': [
                     'xmlfrom = refactorlib.cli.xmlfrom:cli',
                     'xmlstrip = refactorlib.cli.xmlstrip:cli',
@@ -47,10 +51,13 @@ def main():
     )
 
 
-# Stolen directly from the docs:
-#  http://pytest.org/latest/goodpractises.html#integration-with-setuptools-test-commands
 from setuptools.command.test import test as TestCommand
 class PyTest(TestCommand):
+    """
+    Integrate `setup.py test` with py.test
+    Stolen directly from the docs:
+     http://pytest.org/latest/goodpractises.html#integration-with-setuptools-test-commands
+    """
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = []

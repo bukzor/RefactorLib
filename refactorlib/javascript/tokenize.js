@@ -1,14 +1,19 @@
 /******************************************************************************
- * This script was developed using the SpiderMonkey shell (smjs), version 185
+ * This script was developed using the nodejs, version 0.10.24
  *
- * Input will always be interpreted as ending with newline. I don't see any way
- * to do it correctly...
- * 
- * Reference:
+ * References:
  *      https://developer.mozilla.org/en/SpiderMonkey/Shell_global_objects
+ *      https://npmjs.org/package/reflect
  *****************************************************************************/
+var Reflect = require('reflect');
 var doc = '';
-while ( (line = readline()) !== null ) {
-    doc += line + '\n';
-}
-putstr(JSON.stringify(Reflect.parse(doc)));
+
+process.stdin.resume();
+process.stdin.on('data', function(chunk) {
+    doc += chunk;
+});
+
+process.stdin.on('end', function() {
+    process.stdout.write(JSON.stringify(Reflect.parse(doc)));
+    process.stdin.pause()
+});
