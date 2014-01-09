@@ -11,7 +11,6 @@ def parse(javascript_contents, encoding='ascii'):
     """
     reflectjs_javascript = reflectjs_parse(javascript_contents)
     dictnode_javascript = reflectjs_to_dictnode(javascript_contents, reflectjs_javascript)
-    dictnode_javascript = fixup_hierarchy(dictnode_javascript)
     dictnode_javascript = calculate_text(javascript_contents, dictnode_javascript)
 
     from refactorlib.parse import dictnode_to_lxml
@@ -153,82 +152,3 @@ def reflectjs_to_dictnode(javascript_contents, tree):
         ))
         stack.extend(reversed(zip(children, dictnode['children'])))
     return root_dictnode
-
-def fix_parentage(node, parent):
-    """We fix nodes whose children overlap their boundaries by widening the parent"""
-    orig_parent = parent
-    while parent is not None and node['start'] >= parent['end']:
-        parent = parent['parent']
-
-    if parent is orig_parent:
-        return False
-    else:
-        # This node needs re-parenting.
-        if DEBUG: print '  Re-parenting %s: old:%s  new:%s' % (node, node['parent'], parent)
-        orig_parent['children'].remove(node)
-        for index, sibling in enumerate(parent['children']):
-            if (sibling['start'], sibling['end']) > (node['start'], node['end']):
-                parent['children'].insert(index, node)
-                break
-        else:
-            parent['children'].append(node)
-        node['parent'] = parent
-        return True
-
-def fix_overlap(node, parent, index):
-    """
-    This function only modifies the input `node`, but will sometimes re-parent the node, when necessary.
-    The node will only be moved "further" in the tree, in depth-first order.
-    Returns True if the node was reparented.
-    """
-    assert not node['end'] <= parent['start'], "Node ends before parent: %s-%s" % (parent, node)
-    if node['start'] < parent['start']:
-        if DEBUG: print '    node starts too soon %s: %s ->' % (parent, node),
-        node['start'] = parent['start']
-        if DEBUG: print node
-    if fix_parentage(node, parent):
-        return True
-    if node['end'] > parent['end']:
-        if DEBUG: print '    node ends too late %s: %s ->' % (parent, node),
-        node['end'] = parent['end']
-        if DEBUG: print node
-    if index >= 1:
-        prev_node = parent['children'][index-1]
-        if prev_node['start'] >= node['start']:
-            if DEBUG: print '    node starts before previous sibling %s-%s: %s ->' % (parent, prev_node, node),
-            node['start'] = prev_node['end']
-            if DEBUG: print node
-    try:
-        next_node = parent['children'][index+1]
-    except IndexError:
-        pass
-    else:
-        if node['start'] >= next_node['start']:
-            # That node will fix itself.
-            pass
-        elif node['end'] > next_node['start']:
-            if DEBUG: print '    node ends after next sibling starts %s-%s: %s ->' % (parent, next_node, node),
-            node['end'] = next_node['start']
-            if DEBUG: print node
-
-    assert node['start'] <= node['end'], "Negative-width node: %s" % node
-
-def fixup_hierarchy(tree):
-    # We traverse the tree in a depth-first manner, taking care not to take
-    # copies of the 'children' lists, nor iterate directly over them.
-    stack = [(tree,0)]
-    while stack:
-        parent, index = stack.pop()
-        try:
-            node = parent['children'][index]
-        except IndexError:
-            continue
-
-        if DEBUG: print node
-        if fix_overlap(node, parent, index):
-            # That node got repositioned further down the depth-first order. Retry.
-            stack.append((parent, index))
-        else:
-            stack.append((parent, index+1))
-            stack.append((node, 0))
-    return tree
