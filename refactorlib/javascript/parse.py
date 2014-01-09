@@ -5,9 +5,12 @@ DEBUG = False
 def parse(javascript_contents, encoding='ascii'):
     """
     Given some javascript contents, as a unicode string, return the lxml representation.
+    "reflectjs" below refers to the Mozilla Reflect protocol:
+        * https://developer.mozilla.org/en-US/docs/SpiderMonkey/Parser_API
+        * https://npmjs.org/package/reflect
     """
-    smjs_javascript = smjs_parse(javascript_contents)
-    dictnode_javascript = smjs_to_dictnode(javascript_contents, smjs_javascript)
+    reflectjs_javascript = reflectjs_parse(javascript_contents)
+    dictnode_javascript = reflectjs_to_dictnode(javascript_contents, reflectjs_javascript)
     dictnode_javascript = fixup_hierarchy(dictnode_javascript)
     dictnode_javascript = calculate_text(javascript_contents, dictnode_javascript)
 
@@ -26,16 +29,16 @@ def find_nodejs():
     return find_nodejs.found
 
 
-def smjs_parse(javascript_contents):
+def reflectjs_parse(javascript_contents):
     from refactorlib import TOP
     from refactorlib.util import Popen, PIPE
     from os.path import join
     from simplejson import loads
     from simplejson.ordered_dict import OrderedDict
-    tokenizer_script = join(TOP, 'javascript/tokenize.js')
+    reflectjs_script = join(TOP, 'javascript/reflectjs.js')
 
-    smjs = Popen([find_nodejs(), tokenizer_script], stdin=PIPE, stdout=PIPE)
-    json = smjs.check_output(javascript_contents)
+    reflectjs = Popen([find_nodejs(), reflectjs_script], stdin=PIPE, stdout=PIPE)
+    json = reflectjs.check_output(javascript_contents)
     tree = loads(json, object_pairs_hook=OrderedDict)
 
     try:
@@ -43,7 +46,7 @@ def smjs_parse(javascript_contents):
     except ValueError:
         last_newline = 0
 
-    # smjs is sometimes negelectful of leading/trailing whitespace.
+    # reflectjs is sometimes neglectful of leading/trailing whitespace.
     tree['loc']['start']['line'] = 1
     tree['loc']['start']['column'] = 0
     tree['loc']['end']['line'] = javascript_contents.count('\n') + 1
@@ -101,9 +104,9 @@ class DictNode(dict):
     def __str__(self):
         return '%s(%s-%s)' % (self['name'], self['start'], self['end'])
 
-def smjs_to_dictnode(javascript_contents, tree):
+def reflectjs_to_dictnode(javascript_contents, tree):
     """
-    Transform a smjs structure into a dictnode, as defined by dictnode_to_lxml.
+    Transform a reflectjs structure into a dictnode, as defined by dictnode_to_lxml.
     This is not a complete transformation. In particular, the nodes have no
     text or tail, and may have some overlap issues.
     """

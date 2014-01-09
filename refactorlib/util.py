@@ -26,7 +26,6 @@ def which(cmd):
     Return a string path to the command on success.
     Return None on failure.
     """
-    from subprocess import Popen, PIPE
     p = Popen(('/usr/bin/which', 'node'), stdout=PIPE)
     stdout, _ = p.communicate()
     if p.returncode == 0:
