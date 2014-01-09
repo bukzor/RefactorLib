@@ -9,9 +9,10 @@ def parse(javascript_contents, encoding='ascii'):
         * https://developer.mozilla.org/en-US/docs/SpiderMonkey/Parser_API
         * https://npmjs.org/package/reflect
     """
+    from refactorlib.dictnode import set_tree_text
     reflectjs_javascript = reflectjs_parse(javascript_contents)
     dictnode_javascript = reflectjs_to_dictnode(reflectjs_javascript)
-    dictnode_javascript = calculate_text(javascript_contents, dictnode_javascript)
+    dictnode_javascript = set_tree_text(dictnode_javascript, javascript_contents)
 
     from refactorlib.parse import dictnode_to_lxml
     return dictnode_to_lxml(dictnode_javascript, encoding=encoding)
@@ -50,31 +51,6 @@ def reflectjs_parse(javascript_contents):
 
     return tree
 
-def calculate_text(contents, tree):
-    """
-    We do a pre-order traversal of the tree to calculate the text and tail
-    of each node
-    """
-    # We *could* jam this into the dictnode function, but this is simpler.
-    stack = [tree]
-    while stack:
-        node = stack.pop()
-        from refactorlib.cheetah.parse import fixup_node_text
-        fixup_node_text(node, contents)
-        stack.extend(reversed(node['children']))
-
-        if DEBUG:
-            print node
-
-    # The top-level node cannot have a tail
-    assert not tree.get('tail')
-    tree['tail'] = None
-    return tree
-
-class DictNode(dict):
-    __slots__ = ()
-    def __str__(self):
-        return '%s(%s-%s)' % (self['name'], self['start'], self['end'])
 
 def reflectjs_to_dictnode(tree):
     """
@@ -82,6 +58,7 @@ def reflectjs_to_dictnode(tree):
     This is not a complete transformation. In particular, the nodes have no
     text or tail, and may have some overlap issues.
     """
+    from refactorlib.dictnode import DictNode
     from types import NoneType
 
     root_dictnode = DictNode(parent=None)
