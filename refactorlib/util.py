@@ -58,5 +58,5 @@ class Popen(_Popen):
         retcode = self.poll()
         if retcode:
             cmd = self.args
-            raise CalledProcessError(retcode, cmd, output=output)
+            raise CalledProcessError(retcode, cmd)
         return output
