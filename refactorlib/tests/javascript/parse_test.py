@@ -1,13 +1,6 @@
 from refactorlib.tests.util import parametrize, get_examples, get_output, assert_same_content
 from refactorlib.parse import parse
 
-def smjs_missing():
-    """returns 0 if smjs is found on the unix $PATH"""
-    from subprocess import Popen, PIPE
-    p = Popen(('/usr/bin/which', 'smjs'), stdout=PIPE)
-    p.communicate()
-    return p.returncode
-
 def simplejson_missing():
     try:
         import simplejson
@@ -17,11 +10,17 @@ def simplejson_missing():
     else:
         return False
 
+def check_missing():
+    from refactorlib.javascript.parse import find_nodejs
+    if find_nodejs() is None:
+        return pytest.mark.xfail(reason='nodejs not found')
+    elif simplejson_missing():
+        return pytest.mark.xfail(reason='simplejson not found')
+    else:
+        return pytest.mark.noop
+
 import pytest
-pytestmark = [
-        pytest.mark.skipif(smjs_missing(), reason='smjs not found'),
-        pytest.mark.skipif(simplejson_missing(), reason='simplejson not found'),
-]
+pytestmark = check_missing()
 
 @parametrize(get_examples)
 def test_can_make_round_trip(example):

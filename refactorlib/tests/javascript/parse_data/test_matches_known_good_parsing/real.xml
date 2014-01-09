@@ -1,4 +1,4 @@
-<Program><VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x = </Identifier><Literal type="int" value="1">1</Literal></VariableDeclarator></VariableDeclaration>;
-<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x</Identifier></VariableDeclarator></VariableDeclaration> = <Literal type="int" value="2">2</Literal>;
-function <FunctionDeclaration Identifier="f" expression="False" generator="False">f() <BlockStatement>{</BlockStatement> }</FunctionDeclaration>
+<Program><VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x</Identifier> = <Literal raw="1" type="int" value="1">1</Literal></VariableDeclarator>;</VariableDeclaration>
+<VariableDeclaration kind="var">var <VariableDeclarator><Identifier name="x">x</Identifier> = <Literal raw="2" type="int" value="2">2</Literal></VariableDeclarator>;</VariableDeclaration>
+<FunctionDeclaration>function <Identifier name="f">f</Identifier>() <BlockStatement>{ }</BlockStatement></FunctionDeclaration>
 </Program>

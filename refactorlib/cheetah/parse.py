@@ -1,3 +1,4 @@
+from refactorlib.dictnode import set_node_text
 from Cheetah.Parser import Parser
 
 DEBUG = False
@@ -249,7 +250,7 @@ def parser_data_to_dictnode(data, src):
         while parent['end'] < end:
             if parent['end'] <= start: 
                 # That's proper
-                fixup_node_text(stack.pop(), src)
+                set_node_text(stack.pop(), src)
                 parent = stack[-1]
             else:
                 # That guy used backtracking! Remove him.
@@ -266,28 +267,9 @@ def parser_data_to_dictnode(data, src):
 
     # clean up
     while stack:
-        fixup_node_text(stack.pop(), src)
+        set_node_text(stack.pop(), src)
 
     return root
-
-def fixup_node_text(dictnode, src):
-    my = dictnode
-    if my['children']:
-        # my text is between my start and the first child's start
-        child = my['children'][0]
-        my['text'] = src[my['start']:child['start']]
-
-        # each child's tail is between their end and the next child's start
-        for next_child in my['children'][1:]:
-            child['tail'] = src[child['end']:next_child['start']]
-            child = next_child # The old next is the new current
-
-        # except the last child's tail is between its end and my end
-        child = my['children'][-1]
-        child['tail'] = src[child['end']:my['end']]
-    else:
-        # If if I have no children, my text is just between my start and end
-        my['text'] = src[my['start']:my['end']]
 
 def dedup(data):
     """

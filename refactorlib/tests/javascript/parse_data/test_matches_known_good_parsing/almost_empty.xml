@@ -1,7 +1,6 @@
-<Program><VariableDeclaration kind="var">var <VariableDeclarator init="None"><Identifier name="empty">empty</Identifier></VariableDeclarator></VariableDeclaration>;
+<Program><VariableDeclaration kind="var">var <VariableDeclarator init="None"><Identifier name="empty">empty</Identifier></VariableDeclarator>;</VariableDeclaration>
 // This javascript intentionally left blank.
 
 
 
-/*EOF*/
-</Program>
+/*EOF*/</Program>
