@@ -1,8 +1,9 @@
-def parse(filename, filetype=None, encoding=None):
+def parse(filename, filetype=None, encoding=None, source=None):
     from filetypes import FILETYPES
     filetype = FILETYPES.detect_filetype(filename, filetype)
 
-    source = open(filename).read()
+    if source is None:
+        source = open(filename).read()
 
     # If no encoding was explicitly specified, see if we can parse
     # it out from the contents of the file.
