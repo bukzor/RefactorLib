@@ -21,66 +21,81 @@ def parse(python_contents, encoding):
     """
     Given some python contents as a unicode string, return the lxml representation.
     """
-    lib2to3_python = lib2to3_parse(python_contents)
-    dictnode_python = lib2to3_to_dictnode(lib2to3_python)
+    import ast
+    ast_python = ast.parse(python_contents)
+    dictnode_python = ast_to_dictnode(ast_python)
+    return dictnode_python
 
     from refactorlib.parse import dictnode_to_lxml
     return dictnode_to_lxml(dictnode_python, encoding=encoding)
 
-def lib2to3_parse(python_contents):
-    from lib2to3 import pygram, pytree
-    from lib2to3.pgen2 import driver
 
-    drv = driver.Driver(pygram.python_grammar, pytree.convert)
-    tree = drv.parse_string(python_contents, True)
-    return tree
-
-def lib2to3_to_dictnode(tree):
+def iter_fields(node):
     """
-    Transform a lib2to3 structure into a dictnode, as defined by dictnode_to_lxml.
+    Yield a tuple of ``(fieldname, value)`` for each field in ``node._fields``
+    that is present on *node*.
     """
-    from lib2to3.pygram import python_grammar
-    from lib2to3.pgen2.token import tok_name
+    for field in node._fields:
+        try:
+            yield field, getattr(node, field)
+        except AttributeError:
+            pass
 
-    code2name = tok_name.copy()
-    del code2name[256]
-    code2name.update( python_grammar.number2symbol )
 
-    root  = dict(name='ROOT', children=[], attrs={})
-    stack = [ (tree,root) ]
-    prev_node = root
+def ast_to_dictnode(ast):
+    """
+    Transform a ast structure into a dictnode, as defined by dictnode_to_lxml.
+    """
+    from _ast import AST
+    #from refactorlib.dictnode import DictNode
+    DictNode = dict
+    root_nodelist = []
+
+    stack = [(root_nodelist, [ast])]
 
     while stack:
-        node, parent = stack.pop()
-        node_type = code2name.get(node.type, node.type)
-        attrs = {}
+        nodelist, nodes = stack.pop()
+        for node in nodes:
+            if not isinstance(node, AST):
+                raise ValueError("%s: %r" % (type(node).__name__, node))
 
-        if hasattr(node, 'value'):
-            node_text = node.value
-        else:
-            node_text = ''
-
-        if hasattr(node, '_prefix') and node._prefix:
-            if prev_node is parent:
-                if parent is root:
-                    assert node_text == '', node_text
-                    node_text = node._prefix
+            dictnode = DictNode(name=type(node).__name__)
+            dictnode['children'] = children = []
+            dictnode['attrs'] = attrs = {}
+            for field, val in iter_fields(node):
+                if field in ('name', 'attrs', 'children'):
+                    raise ValueError("%s: %r" % (field, val))
+                if type(val) is list and all(isinstance(node, AST) for node in val):
+                    childlist = []
+                    children.append(
+                        DictNode(name=field, children=childlist)
+                    )
+                    stack.append((childlist, val))
+                elif isinstance(val, AST):
+                    childlist = []
+                    children.append(DictNode(name=field, children=childlist))
+                    stack.append((childlist, [val]))
+                elif type(val) in (int, str):
+                    attrs[field] = val
                 else:
-                    assert parent['text'] == '', parent
-                    prev_node['text'] = node._prefix
-            else:
-                prev_node['tail'] = node._prefix
+                    raise ValueError("%s: %r" % (field, val))
 
-        dictnode = dict(name=node_type, text=node_text, attrs=attrs, children=[], tail='')
-        parent['children'].append(dictnode)
-            
-        if hasattr(node, 'children'):
-            for child in reversed(node.children):
-                stack.append((child, dictnode))
+            if node._attributes:
+                for attr in node._attributes:
+                    val = getattr(node, attr)
+                    if type(val) in (int, str):
+                        attrs[attr] = val
+                    else:
+                        raise ValueError("%s: %r" % (attr, val))
 
-        # This node is previous to the next one.
-        prev_node = dictnode
-    prev_node['tail'] = '' # The tail of the last element is empty
+            for key in dictnode.keys():
+                if not dictnode[key]:
+                    del dictnode[key]
 
-    assert len( root['children'] ) == 1, root['children']
-    return root['children'][0]
+            nodelist.append(dictnode)
+
+    if not isinstance(ast, AST):
+        raise TypeError('expected AST, got %r' % type(ast).__name__)
+
+    assert len(root_nodelist) == 1, root_nodelist
+    return root_nodelist[0]
