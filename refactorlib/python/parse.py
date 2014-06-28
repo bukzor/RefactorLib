@@ -2,7 +2,7 @@
 import re
 
 
-pythonEncodingDirectiveRE = re.compile("^\s*#.*coding[:=]\s*([-\w.]+)")
+pythonEncodingDirectiveRE = re.compile(r"^\s*#.*coding[:=]\s*([-\w.]+)")
 
 
 def detect_encoding(source):

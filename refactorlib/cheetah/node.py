@@ -58,7 +58,6 @@ class CheetahNodeBase(RefactorLibNodeBase):
             parent.text = before
             parent.insert(0, comment)
             comment.tail = after
-            pass
         else:  # text.is_tail
             parent.addnext(comment)
             parent.tail, comment.tail = before, after
@@ -139,7 +138,7 @@ class CheetahVariable(CheetahNodeBase):
     """
     @property
     def args_body(self):
-        raise NotImplemented("args_body must be implemented by a subclass")
+        raise NotImplementedError("args_body must be implemented by a subclass")
 
     @property
     def name(self):

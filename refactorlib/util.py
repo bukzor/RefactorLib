@@ -49,14 +49,14 @@ class Popen(_Popen):
         super(Popen, self).__init__(args, *more_args, **kwargs)
         self.args = args
 
-    def check_output(self, input=None):
+    def check_output(self, stdin=None):
         r"""Run command with arguments and return its output as a byte string.
 
         If the exit code was non-zero it raises a CalledProcessError.  The
         CalledProcessError object will have the return code in the returncode
         attribute and output in the output attribute.
         """
-        output, _ = self.communicate(input)
+        output, _ = self.communicate(stdin)
         retcode = self.poll()
         if retcode:
             cmd = self.args

@@ -68,9 +68,9 @@ def parametrize(arg_finder):
         arglist = arg_finder(func)
         arglist = tuple(arglist)  # freeze any generators
 
-        from py.test import mark
+        import pytest
         from inspect import getargspec
-        return mark.parametrize(getargspec(func).args, arglist)(func)
+        return pytest.mark.parametrize(getargspec(func).args, arglist)(func)
     return decorator
 
 
