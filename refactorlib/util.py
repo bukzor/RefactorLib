@@ -4,7 +4,7 @@ Miscellany utilities for refactorlib.
 I reserve the right to move these to another namespace in the future.
 """
 from subprocess import Popen as _Popen, PIPE, CalledProcessError
-PIPE = PIPE  ## hush, lint.
+
 
 class LazyProperty(object):
     """
@@ -12,13 +12,14 @@ class LazyProperty(object):
     """
     def __init__(self, calculate_function):
         self._calculate = calculate_function
-    
+
     def __get__(self, obj, _=None):
         if obj is None:
             return self
         value = self._calculate(obj)
         setattr(obj, self._calculate.func_name, value)
         return value
+
 
 def which(cmd):
     """
@@ -33,12 +34,14 @@ def which(cmd):
     else:
         return None
 
+
 def static(**kwargs):
     def decorator(func):
         for attr, val in kwargs.items():
             setattr(func, attr, val)
         return func
     return decorator
+
 
 class Popen(_Popen):
     """Add a check_output method to Popen."""

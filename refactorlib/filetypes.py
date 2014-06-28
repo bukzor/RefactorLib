@@ -1,5 +1,6 @@
 from refactorlib.util import LazyProperty
 
+
 class FileType(object):
     def __init__(self, filetype, suffixes):
         self.name = filetype
@@ -15,7 +16,7 @@ class FileType(object):
                 return True
         else:
             return False
-    
+
     @LazyProperty
     def module(self):
         return __import__(self.name)
@@ -28,7 +29,7 @@ class FileType(object):
     @LazyProperty
     def encoding_detector(self):
         module = __import__('refactorlib.%s.parse' % self.name, fromlist=[None])
-        return getattr(module, 'detect_encoding', lambda filename:None)
+        return getattr(module, 'detect_encoding', lambda filename: None)
 
 
 class FileTypes(object):
@@ -59,7 +60,7 @@ class FileTypes(object):
             return self.filetypes[filetype]
         except KeyError:
             raise ValueError('Unsupported file type: %r' % filetype)
-    
+
 FILETYPES = FileTypes()
 FILETYPES.register('cheetah', 'tmpl')
 FILETYPES.register('python', 'py')

@@ -4,6 +4,7 @@ cheetah-specific additions to the lxml element node class.
 from lxml import etree
 from refactorlib.node import RefactorLibNodeBase, one
 
+
 class CheetahNodeBase(RefactorLibNodeBase):
     def find_calls(self, func_name):
         return self.xpath(
@@ -17,7 +18,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
         )
 
     def find_decorators(self, dec_name):
-        return self.xpath( './/Decorator[./Expression="%s"]' % dec_name )
+        return self.xpath('.//Decorator[./Expression="%s"]' % dec_name)
 
     def get_enclosing_blocks(self):
         """
@@ -25,17 +26,17 @@ class CheetahNodeBase(RefactorLibNodeBase):
         """
         # TODO: unit test, with decorators
         return self.xpath(
-                # Grab directives that are our direct ancestor.
-                './ancestor::Directive'
-                '|' # OR:
-                # Look at all ancestors.
-                './ancestor::*'
-                # Its last child element should be an EndDirective.
-                '[./*[last()][self::Directive]/*[1][self::EndDirective]]'
-                # Grab the first child. Require that it's a directive
-                '/*[1][self::Directive]'
-                # Use the first directive that's not a Decorator.
-                '/descendant-or-self::Directive[not(./Decorator)]'
+            # Grab directives that are our direct ancestor.
+            './ancestor::Directive'
+            '|'  # OR:
+            # Look at all ancestors.
+            './ancestor::*'
+            # Its last child element should be an EndDirective.
+            '[./*[last()][self::Directive]/*[1][self::EndDirective]]'
+            # Grab the first child. Require that it's a directive
+            '/*[1][self::Directive]'
+            # Use the first directive that's not a Decorator.
+            '/descendant-or-self::Directive[not(./Decorator)]'
         )
 
     def add_comment(self, comment_text):
@@ -58,10 +59,9 @@ class CheetahNodeBase(RefactorLibNodeBase):
             parent.insert(0, comment)
             comment.tail = after
             pass
-        else: # text.is_tail
+        else:  # text.is_tail
             parent.addnext(comment)
             parent.tail, comment.tail = before, after
-
 
     def make_comment(self, comment_text):
         comment = self.makeelement('Comment')
@@ -132,6 +132,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
         call.append(namechunks)
         return call
 
+
 class CheetahVariable(CheetahNodeBase):
     """
     This class represents a cheetah placeholder, such as: $FOO
@@ -157,7 +158,7 @@ class CheetahVariable(CheetahNodeBase):
         args_container = one(args_body.xpath('./CheetahVarNameChunks/CallArgString'))
         args = self.args
 
-        if not args: # no arguments.
+        if not args:  # no arguments.
             assert args_container.totext().strip('(\n\t )') == '', args_container.totext()
             self.remove_self()
             return
@@ -171,7 +172,7 @@ class CheetahVariable(CheetahNodeBase):
                     and args[0].text[0] in '"'"'"
                 )
         ):
-            #just one cheetah var / Python string
+            # just one cheetah var / Python string
             arg = args[0]
             self.replace_self(arg)
             # replace the right paren with whatever followed the `self` token
@@ -183,26 +184,29 @@ class CheetahVariable(CheetahNodeBase):
                 all(arg.tail == '' for arg in args[:-1]) and
                 args[-1].tail.strip() == ')'
         ):
-            #just one Python variable.
-            #replace the call with just the arg (keep the $)
+            # just one Python variable.
+            # replace the call with just the arg (keep the $)
             namechunks = one(args_body.xpath('./CheetahVarNameChunks'))
             namechunks.clear()
             namechunks.extend(args)
             args[-1].tail = ''
         else:
-            #there's something more complicated here.
-            #just remove the method name (keep the $())
+            # there's something more complicated here.
+            # just remove the method name (keep the $())
             self.name.remove_self()
+
 
 class CheetahPlaceholder(CheetahVariable):
     @property
     def args_body(self):
         return self
 
+
 class CheetahVar(CheetahVariable):
     @property
     def args_body(self):
         return one(self.xpath('./CheetahVarBody'))
+
 
 class CheetahDecorator(CheetahNodeBase):
     def remove_self(self):
@@ -219,6 +223,7 @@ class CheetahDecorator(CheetahNodeBase):
         # put some contents back, if necessary
         for child in children[-1:1:-1]:
             parent.insert(index, child)
+
 
 class CheetahDirective(CheetahNodeBase):
     def replace_directive(self, other):
@@ -287,6 +292,7 @@ class CheetahDirective(CheetahNodeBase):
         """
         # Look at sibling Directives after this node, take first one that is an EndDirective.
         return self.xpath_one('./following-sibling::Directive[./EndDirective][1]')
+
 
 class NodeLookup(etree.PythonElementClassLookup):
     """

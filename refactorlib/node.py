@@ -3,6 +3,7 @@ Some basic additions to the lxml element node class.
 """
 from lxml import etree
 
+
 class RefactorLibNodeBase(etree.ElementBase):
     @property
     def encoding(self):
@@ -19,7 +20,7 @@ class RefactorLibNodeBase(etree.ElementBase):
     def remove_self(self):
         parent = self.getparent()
         parent.remove(self)
-    
+
     def totext(self, encoding=None, with_tail=True, **kwargs):
         if encoding is None:
             encoding = self.encoding
@@ -29,7 +30,7 @@ class RefactorLibNodeBase(etree.ElementBase):
         if encoding is None:
             encoding = self.encoding
         return etree.tostring(self, encoding=encoding, method=method, with_tail=with_tail, **kwargs)
-    
+
     def following_text(self):
         """
         Get the first non-empty piece of text after this node.
@@ -52,7 +53,7 @@ class RefactorLibNodeBase(etree.ElementBase):
         attr = 'text' if indent.is_text else 'tail'
         indent_owner = indent.getparent()
         setattr(indent_owner, attr, indent.rstrip(' \t'))
-    
+
     def find_indent_textnode(self):
         """
         Find and return the raw text node that includes the indentation for
@@ -67,7 +68,7 @@ class RefactorLibNodeBase(etree.ElementBase):
                 text = prev
 
         return text
-    
+
     def xpath_one(self, xpath):
         return one(self.xpath(xpath))
 
@@ -78,7 +79,10 @@ class RefactorLibNodeBase(etree.ElementBase):
         """
         return True
 
-class ExactlyOneError(ValueError): pass
+
+class ExactlyOneError(ValueError):
+    pass
+
 
 def one(mylist):
     """
@@ -86,16 +90,15 @@ def one(mylist):
     """
     if len(mylist) != 1:
         raise ExactlyOneError(
-                'Expected exactly one item. Got %i: %r'
-                % (
-                    len(mylist),
-                    list(
-                        item.tostring() 
-                        if isinstance(item, etree.ElementBase)
-                        else item
-                        for item in mylist
-                    )
-                )
+            'Expected exactly one item. Got %i: %r' % (
+                len(mylist),
+                [
+                    item.tostring()
+                    if isinstance(item, etree.ElementBase)
+                    else item
+                    for item in mylist
+                ]
+            )
         )
 
     return mylist[0]

@@ -65,7 +65,7 @@ def test_get_enclosing_blocks(example, output):
     unique_contexts = {}
     for directive in lxmlnode.xpath('//Directive'):
         context = tuple(
-                tree.getpath(block) for block in directive.get_enclosing_blocks()
+            tree.getpath(block) for block in directive.get_enclosing_blocks()
         )
 
         if context and context not in unique_contexts:

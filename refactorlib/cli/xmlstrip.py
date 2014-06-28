@@ -11,15 +11,18 @@ def xmlstrip(filename):
     encoding = tree.docinfo.encoding
     return tostring(tree, method='text', encoding=encoding)
 
+
 def main(argv, stdout):
     # testability: this function should interact only with its arguments.
     # TODO: argparse. enable explicit filetype.
     stdout.write(xmlstrip(argv[1]))
 
+
 def cli():
     # testability: this function should be trivial.
     from sys import argv, stdout
     return main(argv, stdout)
+
 
 if __name__ == '__main__':
     exit(cli())

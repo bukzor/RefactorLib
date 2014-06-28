@@ -1,6 +1,8 @@
 from refactorlib.util import static
 
+
 DEBUG = False
+
 
 def parse(javascript_contents, encoding='ascii'):
     """
@@ -85,7 +87,7 @@ def reflectjs_to_dictnode(tree):
             elif isinstance(val, (bool, NoneType, str)):
                 # TODO: figure out what happens with non-ascii data.
                 attrs[attr] = unicode(val)
-            else: # Should never happen
+            else:  # Should never happen
                 assert False
 
         dictnode.update(dict(

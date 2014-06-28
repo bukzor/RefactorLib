@@ -3,14 +3,17 @@ A home for the 'yellow code' of testing.
 """
 from os.path import join
 
+
 FAILURE_SUFFIX = '.test_failure'
+
 
 def example_dir(func):
     from os.path import relpath
 
     modulefile = __import__(func.__module__, fromlist=True).__file__
-    dirname = modulefile.rsplit('_test',1)[0] + '_data'
+    dirname = modulefile.rsplit('_test', 1)[0] + '_data'
     return relpath(dirname)
+
 
 def get_examples(func):
 
@@ -32,9 +35,10 @@ def get_examples(func):
         if isfile(example):
             yield example,
             examples_found = True
-    
+
     if not examples_found:
         raise SystemError("No examples found in %r" % examples)
+
 
 def get_output(suffix=None, func=None):
     def _get_output(_func):
@@ -46,8 +50,8 @@ def get_output(suffix=None, func=None):
 
             dirname, filename = split(example)
             output = join(dirname, _func.__name__, filename)
-            if suffix: # Replace the suffix.
-                output = output.rsplit('.',1)[0] + '.' + suffix
+            if suffix:  # Replace the suffix.
+                output = output.rsplit('.', 1)[0] + '.' + suffix
 
             yield example, output
 
@@ -58,15 +62,17 @@ def get_output(suffix=None, func=None):
     else:
         return _get_output
 
+
 def parametrize(arg_finder):
     def decorator(func):
         arglist = arg_finder(func)
-        arglist = tuple(arglist) # freeze any generators
+        arglist = tuple(arglist)  # freeze any generators
 
         from py.test import mark
         from inspect import getargspec
         return mark.parametrize(getargspec(func).args, arglist)(func)
     return decorator
+
 
 def output_suffix(suffix):
     def decorator(func):
@@ -74,16 +80,17 @@ def output_suffix(suffix):
         return func
     return decorator
 
+
 def assert_same_content(old_file, new_content, extra_suffix=''):
     new_file = ''.join((old_file, extra_suffix, FAILURE_SUFFIX))
     try:
-        open(new_file,'w').write(new_content)
+        open(new_file, 'w').write(new_content)
     except IOError, e:
-        if e.errno == 2: # No such file.
+        if e.errno == 2:  # No such file.
             from os import makedirs
             from os.path import dirname
             makedirs(dirname(new_file))
-            open(new_file,'w').write(new_content)
+            open(new_file, 'w').write(new_content)
         else:
             raise
 
@@ -105,6 +112,7 @@ def assert_same_file_content(old_file, new_file):
         from os import unlink
         unlink(new_file)
 
+
 def diff(old_content, new_content, n=3):
     """similar to difflib.ndiff, but supports limited context lines"""
     from difflib import ndiff as diff
@@ -115,7 +123,7 @@ def diff(old_content, new_content, n=3):
             difflines.update(range(lineno-n, lineno+n+1))
 
     return '\n'.join(
-            line.rstrip('\n')
-            for lineno, line in enumerate(diffdata)
-            if lineno in difflines
+        line.rstrip('\n')
+        for lineno, line in enumerate(diffdata)
+        if lineno in difflines
     )

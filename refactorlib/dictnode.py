@@ -1,7 +1,9 @@
 """A few functions for dealing with the "dictnode" intermediate tree format."""
 
+
 class DictNode(dict):
     __slots__ = ()
+
     def __str__(self):
         return '%s(%s-%s)' % (self['name'], self['start'], self['end'])
 
@@ -23,7 +25,7 @@ def set_node_text(dictnode, src):
         # each child's tail is between their end and the next child's start
         for next_child in my['children'][1:]:
             child['tail'] = src[child['end']:next_child['start']]
-            child = next_child # The old next is the new current
+            child = next_child  # The old next is the new current
 
         # except the last child's tail is between its end and my end
         child = my['children'][-1]
