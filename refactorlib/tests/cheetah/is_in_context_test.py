@@ -1,7 +1,8 @@
 from refactorlib.tests.util import parametrize, get_output, assert_same_content
+from . import xfailif_no_cheetah
 
-from . import pytestmark
 
+@xfailif_no_cheetah
 @parametrize(get_output('txt'))
 def test_is_in_context(example, output):
     from refactorlib.parse import parse
@@ -32,4 +33,3 @@ def test_is_in_context(example, output):
 
     new_output = '\n'.join(new_output)
     assert_same_content(output, new_output)
-

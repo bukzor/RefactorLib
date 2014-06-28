@@ -41,11 +41,6 @@ def reflectjs_parse(javascript_contents):
     json = reflectjs.check_output(javascript_contents)
     tree = loads(json, object_pairs_hook=OrderedDict)
 
-    try:
-        last_newline = javascript_contents.rindex('\n')
-    except ValueError:
-        last_newline = 0
-
     # reflectjs is sometimes neglectful of leading/trailing whitespace.
     tree['range'] = [0, len(javascript_contents)]
 
@@ -91,7 +86,7 @@ def reflectjs_to_dictnode(tree):
                 # TODO: figure out what happens with non-ascii data.
                 attrs[attr] = unicode(val)
             else: # Should never happen
-                import pudb; pudb.set_trace()
+                assert False
 
         dictnode.update(dict(
             name=node['type'],

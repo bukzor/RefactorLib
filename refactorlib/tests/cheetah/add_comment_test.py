@@ -1,5 +1,7 @@
-from . import pytestmark
+from . import xfailif_no_cheetah
 
+
+@xfailif_no_cheetah
 def test_can_add_comments():
     """
     It's often useful to simply add comment to code, automatically.
@@ -20,7 +22,7 @@ def test_can_add_comments():
     calls[0].add_comment('1 _')
     calls[0].add_comment('2 _')
     calls[0].add_comment('3 _')
-    
+
     calls = example.find_calls('esc')
     assert len(calls) == 1, calls
 

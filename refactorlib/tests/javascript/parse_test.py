@@ -1,5 +1,9 @@
-from refactorlib.tests.util import parametrize, get_examples, get_output, assert_same_content
+import pytest
+
+from refactorlib.javascript.parse import find_nodejs
 from refactorlib.parse import parse
+from refactorlib.tests.util import parametrize, get_examples, get_output, assert_same_content
+
 
 def simplejson_missing():
     try:
@@ -10,29 +14,30 @@ def simplejson_missing():
     else:
         return False
 
-def check_missing():
-    from refactorlib.javascript.parse import find_nodejs
-    if find_nodejs() is None:
-        return pytest.mark.xfail(reason='nodejs not found')
-    elif simplejson_missing():
-        return pytest.mark.xfail(reason='simplejson not found')
-    else:
-        return pytest.mark.noop
+if find_nodejs() is None:
+    xfailif_no_js = pytest.mark.xfail(reason='nodejs not found')
+elif simplejson_missing():
+    xfailif_no_js = pytest.mark.xfail(reason='simplejson not found')
+else:
+    xfailif_no_js = pytest.mark.noop
 
-import pytest
-pytestmark = check_missing()
 
+@xfailif_no_js
 @parametrize(get_examples)
 def test_can_make_round_trip(example):
     text = open(example).read()
     example = parse(example)
     assert text == example.totext()
 
+
+@xfailif_no_js
 @parametrize(get_output('xml'))
 def test_matches_known_good_parsing(example, output):
     example = parse(example).tostring()
     assert_same_content(output, example)
 
+
+@xfailif_no_js
 @parametrize(get_output('xml', func=test_matches_known_good_parsing))
 def test_cli_output(example, output):
     from refactorlib.cli.xmlfrom import xmlfrom

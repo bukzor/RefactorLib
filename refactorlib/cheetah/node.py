@@ -37,7 +37,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
                 # Use the first directive that's not a Decorator.
                 '/descendant-or-self::Directive[not(./Decorator)]'
         )
-    
+
     def add_comment(self, comment_text):
         text = self.find_indent_textnode()
         try:
@@ -61,8 +61,8 @@ class CheetahNodeBase(RefactorLibNodeBase):
         else: # text.is_tail
             parent.addnext(comment)
             parent.tail, comment.tail = before, after
-        
-    
+
+
     def make_comment(self, comment_text):
         comment = self.makeelement('Comment')
         comment_start = self.makeelement('CommentStart')
@@ -233,10 +233,10 @@ class CheetahDirective(CheetahNodeBase):
             raise NotImplementedError("Patches Are Welcome!")
             directive = other.name
             var = other.xpath('.//CheetahVar')[0]
-        
+
         self.name = directive
         self.var = var
-        
+
         if self.is_multiline_directive:
             # Multi-line form: Need to update the end directive.
             end_expression = self.get_end_directive().xpath_one('./EndDirective/Expression')
@@ -244,7 +244,7 @@ class CheetahDirective(CheetahNodeBase):
             end_expression.clear()
             end_expression.text = directive
             end_expression.tail = tail
-    
+
     @property
     def is_multiline_directive(self):
         return not self.xpath('./EndDirective or ./SimpleExprDirective or .//text()=":"')
@@ -272,7 +272,7 @@ class CheetahDirective(CheetahNodeBase):
 
     def __set_var(self, var):
         old_var = self.var
-        
+
         if old_var is None:
             self.append(var)
         else:
@@ -307,5 +307,3 @@ class NodeLookup(etree.PythonElementClassLookup):
 
 node_lookup = NodeLookup()
 del NodeLookup  # This is a singleton class.
-
-__all__ = ('CheetahNode',)
