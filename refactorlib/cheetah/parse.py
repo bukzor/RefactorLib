@@ -1,5 +1,7 @@
 from refactorlib.dictnode import set_node_text
+from Cheetah.Parser import directiveRE
 from Cheetah.Parser import Parser
+from Cheetah.Parser import UnknownDirectiveError
 
 
 DEBUG = False
@@ -129,11 +131,6 @@ class InstrumentedParser(Parser):
     def _initDirectives(self):
         super(InstrumentedParser, self)._initDirectives()
 
-        # Cheetah supports #unicode directives, but doesn't implement it in the
-        # parser, so I have to...
-        self._directiveNamesAndParsers['unicode'] = None
-        self._simpleExprDirectives.append('unicode')
-        self._compiler.addUnicode = trivial
         # Multiple macros causes a indentation underflow error, eventually.
         # TODO: this isn't really the right way to fix this.
         self._compiler.dedent = trivial
@@ -147,6 +144,13 @@ class InstrumentedParser(Parser):
         self._directiveNamesAndParsers[AnyString()] = self.eatMacroCall
         self._directiveNamesAndParsers = AutoDict(lambda: self.eatMacroCall, self._directiveNamesAndParsers)
         self._closeableDirectives = set(self._closeableDirectives)
+
+    def matchDirectiveName(self):
+        try:
+            return super(InstrumentedParser, self).matchDirectiveName()
+        except UnknownDirectiveError:
+            # Accept all macros
+            return directiveRE.match(self.src(), self.pos()).group()
 
     def eatMacroCall(self):
         # Pay no attention to that man behind the curtain.
@@ -198,25 +202,23 @@ class InstrumentedParser(Parser):
 
 
 def detect_encoding(source):
-    from Cheetah.Parser import unicodeDirectiveRE, encodingDirectiveRE
-    unicodeMatch = unicodeDirectiveRE.search(source)
-    if unicodeMatch:
-        return unicodeMatch.group(1)
-    encodingMatch = encodingDirectiveRE.search(source)
-    if encodingMatch:
-        return encodingMatch.group(1)
-
-    # We didn't find anything.
-    return None
+    # Cheetah source is invariantly utf-8
+    return 'utf-8'
 
 
 def parse(cheetah_content, encoding=None):
-
-    from Cheetah.Compiler import Compiler
     # This is very screwy, but so is cheetah. Apologies.
-    compiler = Compiler()
-    compiler._parser = InstrumentedParser(cheetah_content, compiler=compiler)
-    compiler.compile()
+    from Cheetah.Compiler import Compiler
+
+    class InstrumentedCompiler(Compiler):
+        parserClass = InstrumentedParser
+
+    # yelp_cheetah requires unicode
+    if type(cheetah_content) is bytes:
+        cheetah_content = cheetah_content.decode('utf-8')
+
+    compiler = InstrumentedCompiler(cheetah_content, '__dummy__')
+    compiler.getModuleCode()
     data = compiler._parser.data
 
     if DEBUG:
