@@ -4,7 +4,7 @@ Miscellany utilities for refactorlib.
 I reserve the right to move these to another namespace in the future.
 """
 from subprocess import Popen as _Popen, PIPE, CalledProcessError
-PIPE = PIPE  ## hush, lint.
+
 
 class LazyProperty(object):
     """
@@ -12,13 +12,14 @@ class LazyProperty(object):
     """
     def __init__(self, calculate_function):
         self._calculate = calculate_function
-    
+
     def __get__(self, obj, _=None):
         if obj is None:
             return self
         value = self._calculate(obj)
         setattr(obj, self._calculate.func_name, value)
         return value
+
 
 def which(cmd):
     """
@@ -33,6 +34,7 @@ def which(cmd):
     else:
         return None
 
+
 def static(**kwargs):
     def decorator(func):
         for attr, val in kwargs.items():
@@ -40,20 +42,21 @@ def static(**kwargs):
         return func
     return decorator
 
+
 class Popen(_Popen):
     """Add a check_output method to Popen."""
     def __init__(self, args, *more_args, **kwargs):
         super(Popen, self).__init__(args, *more_args, **kwargs)
         self.args = args
 
-    def check_output(self, input=None):
+    def check_output(self, stdin=None):
         r"""Run command with arguments and return its output as a byte string.
 
         If the exit code was non-zero it raises a CalledProcessError.  The
         CalledProcessError object will have the return code in the returncode
         attribute and output in the output attribute.
         """
-        output, _ = self.communicate(input)
+        output, _ = self.communicate(stdin)
         retcode = self.poll()
         if retcode:
             cmd = self.args

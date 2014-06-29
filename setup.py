@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """The installer script."""
 
+
 def main():
     """Our entry point."""
     from refactorlib import __version__
@@ -19,7 +20,7 @@ def main():
         license='BSD',
 
         tests_require=['pytest'],
-        install_requires=['lxml>=2.2'], # We run with 2.2.4.0
+        install_requires=['lxml>=2.2'],  # We run with 2.2.4.0
         extras_require={
             'javascript': ['simplejson'],
             'cheetah': ['cheetah'],
@@ -28,10 +29,10 @@ def main():
         },
 
         entry_points={
-                'console_scripts': [
-                    'xmlfrom = refactorlib.cli.xmlfrom:cli',
-                    'xmlstrip = refactorlib.cli.xmlstrip:cli',
-                ],
+            'console_scripts': [
+                'xmlfrom = refactorlib.cli.xmlfrom:cli',
+                'xmlstrip = refactorlib.cli.xmlstrip:cli',
+            ],
         },
 
         # See http://pypi.python.org/pypi?%3Aaction==list_classifiers
@@ -42,16 +43,16 @@ def main():
             'Natural Language :: English',
             'Operating System :: OS Independent',
             'Programming Language :: Python',
-            #'Programming Language :: Python :: 2.4',
-            #'Programming Language :: Python :: 2.5',
             'Programming Language :: Python :: 2.6',
-            #'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 2.7',
             'Topic :: Software Development :: Libraries :: Python Modules',
         ],
     )
 
 
 from setuptools.command.test import test as TestCommand
+
+
 class PyTest(TestCommand):
     """
     Integrate `setup.py test` with py.test
@@ -62,8 +63,9 @@ class PyTest(TestCommand):
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
+
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.test_args)
         exit(errno)

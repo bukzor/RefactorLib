@@ -1,5 +1,5 @@
 def parse(filename, filetype=None, encoding=None):
-    from filetypes import FILETYPES
+    from refactorlib.filetypes import FILETYPES
     filetype = FILETYPES.detect_filetype(filename, filetype)
 
     source = open(filename).read()
@@ -17,6 +17,7 @@ def parse(filename, filetype=None, encoding=None):
 
     return filetype.parser(source, encoding)
 
+
 def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
     """
     Input: A dictionary-based representation of a node tree.
@@ -30,7 +31,7 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
         children -- An ordered list of more node-dictionaries.
     """
     if not node_lookup:
-        from node import node_lookup
+        from refactorlib.node import node_lookup
 
     from lxml.etree import XMLParser, fromstring
     lxml_parser_object = XMLParser(encoding=encoding)
@@ -38,7 +39,7 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
     Element = lxml_parser_object.makeelement
 
     root = None
-    stack = [ (tree,root) ]
+    stack = [(tree, root)]
 
     while stack:
         node, parent = stack.pop()

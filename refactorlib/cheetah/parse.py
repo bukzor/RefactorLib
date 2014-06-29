@@ -1,7 +1,9 @@
 from refactorlib.dictnode import set_node_text
 from Cheetah.Parser import Parser
 
+
 DEBUG = False
+
 
 class InstrumentedEnclosureList(list):
     def __init__(self, iterable=None, **kwargs):
@@ -12,11 +14,11 @@ class InstrumentedEnclosureList(list):
         for enclosure in iterable:
             self.notify_parent(enclosure)
         super(InstrumentedEnclosureList, self).__init__(iterable, **kwargs)
-    
+
     def append(self, enclosure):
         self.notify_parent(enclosure)
         return super(InstrumentedEnclosureList, self).append(enclosure)
-    
+
     def notify_parent(self, enclosure):
         name, start_pos = enclosure
         mydata = [start_pos, None, name]
@@ -58,37 +60,46 @@ class InstrumentedMethod(object):
 
         mydata = [start_pos, None, name]
         self.parent.data.append(mydata)
-        result = self.method(*args, **kwargs) # Call the wrapped method.
+        result = self.method(*args, **kwargs)  # Call the wrapped method.
         mydata[1] = self.parent.pos()
-            
+
         return result
 
+
 class AnyString(unicode):
-    'Represents "any string".'
+    """Represents "any string"."""
+
     def startswith(self, other):
         return True
+
     def __eq__(self, other):
         return True
 
 from collections import defaultdict
+
+
 class AutoDict(defaultdict):
     "Like defaultdict, but auto-populates for .get() as well."
     no_default = []
+
     def get(self, key, default=no_default):
         if default is self.no_default:
             return self[key]
         else:
             return super(AutoDict, self).get(key, default)
 
+
 def trivial(*args, **kwargs):
     """The function that does nothing"""
     pass
 
+
 class InstrumentedParser(Parser):
     dont_care_methods = (
-            'getc', 'getRowCol', 'getRowColLine', 'getLine',
-            'getSilentPlaceholderToken', 'getCacheToken', 
+        'getc', 'getRowCol', 'getRowColLine', 'getLine',
+        'getSilentPlaceholderToken', 'getCacheToken',
     )
+
     def __init__(self, *args, **kwargs):
         super(InstrumentedParser, self).__init__(*args, **kwargs)
 
@@ -101,7 +112,6 @@ class InstrumentedParser(Parser):
             method = self.instrument_method(val)
             if method is not None:
                 setattr(self, attr, method)
-
 
     def instrument_method(self, method):
         from types import MethodType
@@ -183,9 +193,9 @@ class InstrumentedParser(Parser):
 
         data = [mystart, myend, directiveName]
         self.data.insert(myindex, data)
-        
 
         return result
+
 
 def detect_encoding(source):
     from Cheetah.Parser import unicodeDirectiveRE, encodingDirectiveRE
@@ -195,9 +205,10 @@ def detect_encoding(source):
     encodingMatch = encodingDirectiveRE.search(source)
     if encodingMatch:
         return encodingMatch.group(1)
-    
+
     # We didn't find anything.
     return None
+
 
 def parse(cheetah_content, encoding=None):
 
@@ -221,11 +232,13 @@ def parse(cheetah_content, encoding=None):
     root = dictnode_to_lxml(dictnode, node_lookup, encoding)
     return root
 
+
 def remove_empty(data):
     for datum in data:
         start, end, method = datum
         if start != end:
             yield datum
+
 
 def show_data(data, src):
     for datum in data:
@@ -233,9 +246,11 @@ def show_data(data, src):
         print method, repr(src[start:end]), start, end
         yield datum
 
+
 def nice_names(data):
     for start, end, method in data:
         yield start, end, method_to_tag(method)
+
 
 def parser_data_to_dictnode(data, src):
     root = dict(name='cheetah', start=0, end=len(src)+1, text='', tail='', attrs={}, children=[])
@@ -245,10 +260,9 @@ def parser_data_to_dictnode(data, src):
         start, end, name = datum
         dictnode = dict(name=name, start=start, end=end, text='', tail='', attrs={}, children=[])
 
-
         parent = stack[-1]
         while parent['end'] < end:
-            if parent['end'] <= start: 
+            if parent['end'] <= start:
                 # That's proper
                 set_node_text(stack.pop(), src)
                 parent = stack[-1]
@@ -271,17 +285,18 @@ def parser_data_to_dictnode(data, src):
 
     return root
 
+
 def dedup(data):
     """
     Cheetah does a lot of backtracking.
     We can fix it!
     """
-    new_data = [] # Can't yield. We need to look behind.
+    new_data = []  # Can't yield. We need to look behind.
     file_pointer = 0
     for datum in data:
         start, end, name = datum
 
-        if start > file_pointer: 
+        if start > file_pointer:
             # New data.
             file_pointer = start
             new_data.append(datum)
@@ -309,6 +324,7 @@ def dedup(data):
                 print "Dropped:", datum
             pass
     return new_data
+
 
 def method_to_tag(methodname):
     if methodname == '[':

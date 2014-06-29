@@ -1,6 +1,9 @@
 # regex taken from inducer/pudb's detect_encoding
 import re
-pythonEncodingDirectiveRE = re.compile("^\s*#.*coding[:=]\s*([-\w.]+)")
+
+
+pythonEncodingDirectiveRE = re.compile(r"^\s*#.*coding[:=]\s*([-\w.]+)")
+
 
 def detect_encoding(source):
     """
@@ -17,6 +20,7 @@ def detect_encoding(source):
     # We didn't find anything.
     return None
 
+
 def parse(python_contents, encoding):
     """
     Given some python contents as a unicode string, return the lxml representation.
@@ -27,6 +31,7 @@ def parse(python_contents, encoding):
     from refactorlib.parse import dictnode_to_lxml
     return dictnode_to_lxml(dictnode_python, encoding=encoding)
 
+
 def lib2to3_parse(python_contents):
     from lib2to3 import pygram, pytree
     from lib2to3.pgen2 import driver
@@ -34,6 +39,7 @@ def lib2to3_parse(python_contents):
     drv = driver.Driver(pygram.python_grammar, pytree.convert)
     tree = drv.parse_string(python_contents, True)
     return tree
+
 
 def lib2to3_to_dictnode(tree):
     """
@@ -44,10 +50,10 @@ def lib2to3_to_dictnode(tree):
 
     code2name = tok_name.copy()
     del code2name[256]
-    code2name.update( python_grammar.number2symbol )
+    code2name.update(python_grammar.number2symbol)
 
-    root  = dict(name='ROOT', children=[], attrs={})
-    stack = [ (tree,root) ]
+    root = dict(name='ROOT', children=[], attrs={})
+    stack = [(tree, root)]
     prev_node = root
 
     while stack:
@@ -73,14 +79,14 @@ def lib2to3_to_dictnode(tree):
 
         dictnode = dict(name=node_type, text=node_text, attrs=attrs, children=[], tail='')
         parent['children'].append(dictnode)
-            
+
         if hasattr(node, 'children'):
             for child in reversed(node.children):
                 stack.append((child, dictnode))
 
         # This node is previous to the next one.
         prev_node = dictnode
-    prev_node['tail'] = '' # The tail of the last element is empty
+    prev_node['tail'] = ''  # The tail of the last element is empty
 
-    assert len( root['children'] ) == 1, root['children']
+    assert len(root['children']) == 1, root['children']
     return root['children'][0]
