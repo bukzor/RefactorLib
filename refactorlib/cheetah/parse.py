@@ -1,4 +1,5 @@
 from refactorlib.dictnode import set_node_text
+from Cheetah.Compiler import Compiler
 from Cheetah.Parser import directiveRE
 from Cheetah.Parser import Parser
 from Cheetah.Parser import UnknownDirectiveError
@@ -68,15 +69,6 @@ class InstrumentedMethod(object):
         return result
 
 
-class AnyString(unicode):
-    """Represents "any string"."""
-
-    def startswith(self, other):
-        return True
-
-    def __eq__(self, other):
-        return True
-
 from collections import defaultdict
 
 
@@ -131,17 +123,12 @@ class InstrumentedParser(Parser):
     def _initDirectives(self):
         super(InstrumentedParser, self)._initDirectives()
 
-        # Multiple macros causes a indentation underflow error, eventually.
-        # TODO: this isn't really the right way to fix this.
-        self._compiler.dedent = trivial
-
         for key, val in self._directiveNamesAndParsers.items():
             method = self.instrument_method(val)
             if method is not None:
                 self._directiveNamesAndParsers[key] = method
 
         # We need unrecognized directives to be seen as macros
-        self._directiveNamesAndParsers[AnyString()] = self.eatMacroCall
         self._directiveNamesAndParsers = AutoDict(lambda: self.eatMacroCall, self._directiveNamesAndParsers)
         self._closeableDirectives = set(self._closeableDirectives)
 
@@ -201,21 +188,20 @@ class InstrumentedParser(Parser):
         return result
 
 
+# This is very screwy, but so is cheetah. Apologies.
+class InstrumentedCompiler(Compiler):
+    parserClass = InstrumentedParser
+
+
 def detect_encoding(source):
     # Cheetah source is invariantly utf-8
-    return 'utf-8'
+    return 'UTF-8'
 
 
 def parse(cheetah_content, encoding=None):
-    # This is very screwy, but so is cheetah. Apologies.
-    from Cheetah.Compiler import Compiler
-
-    class InstrumentedCompiler(Compiler):
-        parserClass = InstrumentedParser
-
     # yelp_cheetah requires unicode
     if type(cheetah_content) is bytes:
-        cheetah_content = cheetah_content.decode('utf-8')
+        cheetah_content = cheetah_content.decode('UTF-8')
 
     compiler = InstrumentedCompiler(cheetah_content, '__dummy__')
     compiler.getModuleCode()
