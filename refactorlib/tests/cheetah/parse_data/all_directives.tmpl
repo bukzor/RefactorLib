@@ -1,0 +1,97 @@
+#encoding utf-8
+#compiler-settings
+useDottedNotation = True
+#end compiler-settings
+#extends testing.templates.extends_test_template
+#implements respond
+
+#import sys
+#from tests.SyntaxAndOutput_test import dummydecorator
+
+
+#attr attribute = "bar"
+
+
+#@dummydecorator
+#def foo_call_func(arg)
+    $arg
+#end def
+
+
+#def returning_function
+    #return 5
+#end def
+
+
+#def try_raise_finally_func
+    #try
+        #raise AssertionError("foo")
+    #except AssertionError
+        Caught AssertionError
+    #except ValueError
+        #pass
+    #finally
+        Finally
+    #end try
+#end def
+
+
+#def spacer
+   #super()
+   after
+#end def
+
+
+#def gen
+    #yield 1
+    #yield 2
+    #yield 3
+#end def
+
+
+#call $foo_call_func
+Hello world
+#end call
+
+
+#set foo = {"a": 1}
+#del foo['a']
+$foo
+
+
+#assert True
+
+
+$returning_function()
+$spacer()
+
+#if 15
+   15!
+#elif 16
+   16!
+#else
+   not 15 or 16
+#end if
+
+#set arr = [1, 2, 3]
+#silent arr.append(4)
+$arr
+
+#block infinite_loop_meybs
+    #while True
+        infinite loop?
+        #break ## nope lol
+    #end while
+#end block
+
+#filter None
+    Default filter?
+#end filter
+
+
+#for i in $gen()
+    #if $i == 2
+        #continue
+    #end if
+    $i#slurp
+#end for

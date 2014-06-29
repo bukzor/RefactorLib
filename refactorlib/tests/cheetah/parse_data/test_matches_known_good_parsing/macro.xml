@@ -1,5 +1,5 @@
 <cheetah><PlainText>
-</PlainText><inline_script><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart>inline_script
+</PlainText><inline_script><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>inline_script</Py></ExpressionParts></Expression>
 </SimpleIndentingDirective></Directive><PlainText>    var j = 'foobar';
 </PlainText><Directive><EndDirective><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>inline_script</Py></ExpressionParts></Expression>
 </EndDirective></Directive></inline_script><PlainText>
