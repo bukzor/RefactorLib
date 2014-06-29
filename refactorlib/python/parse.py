@@ -1,7 +1,8 @@
-# regex taken from inducer/pudb's detect_encoding
+# -*- coding: UTF-8 -*-
 import re
 
 
+# regex taken from inducer/pudb's detect_encoding
 pythonEncodingDirectiveRE = re.compile(r"^\s*#.*coding[:=]\s*([-\w.]+)")
 
 
