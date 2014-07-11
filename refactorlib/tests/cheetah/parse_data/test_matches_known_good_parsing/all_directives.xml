@@ -1,5 +1,4 @@
-<cheetah><Directive><Encoding>#encoding utf-8
-</Encoding></Directive><Directive><CompilerSettings><DirectiveStart>#</DirectiveStart>compiler-settings
+<cheetah><Directive><CompilerSettings><DirectiveStart>#</DirectiveStart>compiler-settings
 useDottedNotation = True
 <DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace>compiler-settings
 </CompilerSettings></Directive><Directive><Extends><DirectiveStart>#</DirectiveStart>extends<WhiteSpace> </WhiteSpace>testing.templates.extends_test_template
