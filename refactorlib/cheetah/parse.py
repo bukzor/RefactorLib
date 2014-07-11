@@ -1,8 +1,8 @@
 from refactorlib.dictnode import set_node_text
-from Cheetah.Compiler import Compiler
-from Cheetah.Parser import directiveRE
-from Cheetah.Parser import Parser
-from Cheetah.Parser import UnknownDirectiveError
+from Cheetah.legacy_compiler import LegacyCompiler
+from Cheetah.legacy_parser import directiveRE
+from Cheetah.legacy_parser import LegacyParser
+from Cheetah.legacy_parser import UnknownDirectiveError
 
 
 DEBUG = False
@@ -88,7 +88,7 @@ def trivial(*args, **kwargs):
     pass
 
 
-class InstrumentedParser(Parser):
+class InstrumentedParser(LegacyParser):
     dont_care_methods = (
         'getc', 'getRowCol', 'getRowColLine', 'getLine',
         'getSilentPlaceholderToken', 'getCacheToken',
@@ -189,7 +189,7 @@ class InstrumentedParser(Parser):
 
 
 # This is very screwy, but so is cheetah. Apologies.
-class InstrumentedCompiler(Compiler):
+class InstrumentedCompiler(LegacyCompiler):
     parserClass = InstrumentedParser
 
 
