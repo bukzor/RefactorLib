@@ -23,7 +23,7 @@ def main():
         install_requires=['lxml>=2.2'],  # We run with 2.2.4.0
         extras_require={
             'javascript': ['simplejson'],
-            'cheetah': ['yelp_cheetah==0.1.2'],
+            'cheetah': ['yelp_cheetah==0.2.0'],
             # Things I personally use to develop this package.
             'dev': ['pudb', 'pylint'],
         },
