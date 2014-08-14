@@ -17,12 +17,9 @@ def test_find_end_directive(example, output):
             'Directive: %s' % tree.getpath(directive),
         )
         if directive.is_multiline_directive:
-            try:
-                new_output.append(
-                    'End: %s' % tree.getpath(directive.get_end_directive()),
-                )
-            except Exception:
-                raise
+            new_output.append(
+                'End: %s' % tree.getpath(directive.get_end_directive()),
+            )
         else:
             new_output.append(
                 'Single-line: %s' % directive.totext()
