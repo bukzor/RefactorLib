@@ -20,7 +20,10 @@ def main():
         license='BSD',
 
         tests_require=['pytest'],
-        install_requires=['lxml>=2.2'],  # We run with 2.2.4.0
+        install_requires=[
+            'cached-property',
+            'lxml>=2.2',  # We run with 2.2.4.0
+        ],
         extras_require={
             'javascript': ['simplejson'],
             'cheetah': ['yelp_cheetah==0.2.0'],

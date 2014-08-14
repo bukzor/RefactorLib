@@ -74,13 +74,6 @@ def parametrize(arg_finder):
     return decorator
 
 
-def output_suffix(suffix):
-    def decorator(func):
-        func.output_suffix = suffix
-        return func
-    return decorator
-
-
 def assert_same_content(old_file, new_content, extra_suffix=''):
     new_file = ''.join((old_file, extra_suffix, FAILURE_SUFFIX))
     try:

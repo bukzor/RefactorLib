@@ -1,4 +1,4 @@
-from refactorlib.util import LazyProperty
+from cached_property import cached_property
 
 
 class FileType(object):
@@ -17,16 +17,12 @@ class FileType(object):
         else:
             return False
 
-    @LazyProperty
-    def module(self):
-        return __import__(self.name)
-
-    @LazyProperty
+    @cached_property
     def parser(self):
         module = __import__('refactorlib.%s.parse' % self.name, fromlist=[None])
         return getattr(module, 'parse')
 
-    @LazyProperty
+    @cached_property
     def encoding_detector(self):
         module = __import__('refactorlib.%s.parse' % self.name, fromlist=[None])
         return getattr(module, 'detect_encoding', lambda filename: None)
