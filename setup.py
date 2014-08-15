@@ -37,6 +37,11 @@ def main():
                 'xmlstrip = refactorlib.cli.xmlstrip:cli',
             ],
         },
+        package_data={
+            'refactorlib': [
+                'javascript/reflectjs.js',
+            ],
+        },
 
         # See http://pypi.python.org/pypi?%3Aaction==list_classifiers
         classifiers=[
