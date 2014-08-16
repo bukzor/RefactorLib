@@ -1,4 +1,4 @@
-from refactorlib.tests.util import parametrize, get_output, assert_same_content
+from testing.util import parametrize, get_output, assert_same_content
 from . import xfailif_no_cheetah
 
 
