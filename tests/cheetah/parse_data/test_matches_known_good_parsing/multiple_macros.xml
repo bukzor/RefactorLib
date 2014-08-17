@@ -1,0 +1,4 @@
+<cheetah><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>inline_script</Py></ExpressionParts></Expression><Py>:</Py><WhiteSpace> </WhiteSpace><PlainText>var bar;
+</PlainText></SimpleIndentingDirective></Directive><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>inline_script</Py></ExpressionParts></Expression><Py>:</Py><WhiteSpace> </WhiteSpace><PlainText>var bar;
+</PlainText></SimpleIndentingDirective></Directive><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>inline_script</Py></ExpressionParts></Expression><Py>:</Py><WhiteSpace> </WhiteSpace><PlainText>var bar;
+</PlainText></SimpleIndentingDirective></Directive></cheetah>

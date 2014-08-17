@@ -123,6 +123,9 @@ class InstrumentedParser(LegacyParser):
     def _initDirectives(self):
         super(InstrumentedParser, self)._initDirectives()
 
+        # TODO: multiple single-line macros causes an underflow :(
+        self._compiler.dedent = trivial
+
         for key, val in self._directiveNamesAndParsers.items():
             method = self.instrument_method(val)
             if method is not None:
