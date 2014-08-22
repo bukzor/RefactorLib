@@ -298,6 +298,7 @@ class NodeLookup(etree.PythonElementClassLookup):
     Specify how to assign Python classes to lxml objects.
     see: http://lxml.de/element_classes.html#tree-based-element-class-lookup-in-python
     """
+
     def lookup(self, document, element):
         if element.tag == 'Placeholder':
             return CheetahPlaceholder

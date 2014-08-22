@@ -113,7 +113,7 @@ def diff(old_content, new_content, n=3):
     difflines = set()
     for lineno, line in enumerate(diffdata):
         if not line.startswith('  '):  # Ignore the similar lines.
-            difflines.update(range(lineno-n, lineno+n+1))
+            difflines.update(range(lineno - n, lineno + n + 1))
 
     return '\n'.join(
         line.rstrip('\n')

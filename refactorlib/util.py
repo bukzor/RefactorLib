@@ -30,6 +30,7 @@ def static(**kwargs):
 
 class Popen(_Popen):
     """Add a check_output method to Popen."""
+
     def __init__(self, args, *more_args, **kwargs):
         super(Popen, self).__init__(args, *more_args, **kwargs)
         self.args = args

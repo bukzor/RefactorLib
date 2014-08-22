@@ -32,6 +32,7 @@ class FileTypes(object):
     """
     A collection of FileType's
     """
+
     def __init__(self):
         self.filetypes = {}
 

@@ -244,7 +244,7 @@ def nice_names(data):
 
 
 def parser_data_to_dictnode(data, src):
-    root = dict(name='cheetah', start=0, end=len(src)+1, text='', tail='', attrs={}, children=[])
+    root = dict(name='cheetah', start=0, end=len(src) + 1, text='', tail='', attrs={}, children=[])
     stack = [root]
 
     for datum in data:
