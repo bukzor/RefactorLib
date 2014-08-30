@@ -251,7 +251,7 @@ class CheetahDirective(CheetahNodeBase):
 
     @property
     def is_multiline_directive(self):
-        return not self.xpath('./EndDirective or ./SimpleExprDirective or .//text()=":"')
+        return not self.xpath('./EndDirective or ./SimpleExprDirective or .//text()="):"')
 
     @property
     def DirectiveStart(self):

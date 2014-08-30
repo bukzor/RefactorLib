@@ -90,8 +90,7 @@ def trivial(*args, **kwargs):
 
 class InstrumentedParser(LegacyParser):
     dont_care_methods = (
-        'getc', 'getRowCol', 'getRowColLine', 'getLine',
-        'getSilentPlaceholderToken', 'getCacheToken',
+        'getc', 'getRowCol', 'getRowColLine', 'get_python_expression',
     )
 
     def __init__(self, *args, **kwargs):

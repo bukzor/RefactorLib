@@ -1,5 +1,5 @@
 <cheetah><PlainText>
-</PlainText><Directive><Set><DirectiveStart>#</DirectiveStart>set<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>mylist</Identifier></DottedName></CheetahVarNameChunks></CheetahVarBody></CheetahVar><WhiteSpace> </WhiteSpace></ExpressionParts></Expression><Py><AssignmentOperator>=</AssignmentOperator></Py><Expression><ExpressionParts><WhiteSpace>  </WhiteSpace><SquareBracket>[
+</PlainText><Directive><Set><DirectiveStart>#</DirectiveStart>set<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>mylist</Py><WhiteSpace> </WhiteSpace></ExpressionParts></Expression><Py><AssignmentOperator>=</AssignmentOperator></Py><Expression><ExpressionParts><WhiteSpace>  </WhiteSpace><SquareBracket>[
 <WhiteSpace>        </WhiteSpace><Py>1</Py><Py>,</Py>
 <WhiteSpace>        </WhiteSpace><CurlyBrace>{
 <WhiteSpace>            </WhiteSpace><Py>2</Py><Py>:</Py><WhiteSpace> </WhiteSpace><Py>'two'</Py><Py>,</Py>

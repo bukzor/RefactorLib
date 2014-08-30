@@ -9,7 +9,7 @@ def test_can_add_comments():
     from refactorlib.cheetah.parse import parse
 
     example = parse('''
-        #def foo
+        #def foo()
             Escaped thing: $esc(
                 $_('My translated string.')
             )
@@ -31,7 +31,7 @@ def test_can_add_comments():
     calls[0].add_comment('3 esc')
 
     assert '''
-        #def foo
+        #def foo()
             ## 1 esc
             ## 2 esc
             ## 3 esc
