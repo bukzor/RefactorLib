@@ -22,7 +22,7 @@ setuptools.setup(
     ],
     extras_require={
         'javascript': ['simplejson'],
-        'cheetah': ['yelp_cheetah==0.2.0'],
+        'cheetah': ['yelp_cheetah>=0.3.0,<0.4.0'],
     },
 
     entry_points={
