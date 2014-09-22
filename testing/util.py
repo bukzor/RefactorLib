@@ -78,7 +78,7 @@ def assert_same_content(old_file, new_content, extra_suffix=''):
     new_file = ''.join((old_file, extra_suffix, FAILURE_SUFFIX))
     try:
         open(new_file, 'w').write(new_content)
-    except IOError, e:
+    except IOError as e:
         if e.errno == 2:  # No such file.
             from os import makedirs
             from os.path import dirname
