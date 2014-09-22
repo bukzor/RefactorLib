@@ -1,8 +1,6 @@
 from refactorlib.dictnode import set_node_text
 from Cheetah.legacy_compiler import LegacyCompiler
-from Cheetah.legacy_parser import directiveRE
 from Cheetah.legacy_parser import LegacyParser
-from Cheetah.legacy_parser import UnknownDirectiveError
 
 
 DEBUG = False
@@ -74,13 +72,17 @@ from collections import defaultdict
 
 class AutoDict(defaultdict):
     "Like defaultdict, but auto-populates for .get() as well."
-    no_default = []
+    no_default = object()
 
     def get(self, key, default=no_default):
         if default is self.no_default:
             return self[key]
         else:
             return super(AutoDict, self).get(key, default)
+
+    def __contains__(self, _):
+        # We contain all the things
+        return True
 
 
 def trivial(*args, **kwargs):
@@ -131,15 +133,11 @@ class InstrumentedParser(LegacyParser):
                 self._directiveNamesAndParsers[key] = method
 
         # We need unrecognized directives to be seen as macros
-        self._directiveNamesAndParsers = AutoDict(lambda: self.eatMacroCall, self._directiveNamesAndParsers)
+        self._directiveNamesAndParsers = AutoDict(
+            lambda: self.eatMacroCall,
+            self._directiveNamesAndParsers,
+        )
         self._closeableDirectives = set(self._closeableDirectives)
-
-    def matchDirectiveName(self):
-        try:
-            return super(InstrumentedParser, self).matchDirectiveName()
-        except UnknownDirectiveError:
-            # Accept all macros
-            return directiveRE.match(self.src(), self.pos()).group()
 
     def eatMacroCall(self):
         # Pay no attention to that man behind the curtain.
