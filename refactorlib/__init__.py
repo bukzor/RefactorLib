@@ -1,4 +1,4 @@
-__version__ = '0.4.a'
+__version__ = '0.4.0'
 
 
 def module_dir(modulefile):
