@@ -5,10 +5,10 @@
 )</CallArgString></ExpressionParts></Expression>
 </SimpleExprDirective></Directive><PlainText>
 </PlainText><Comment><CommentStart>##</CommentStart> Here are two decorators
-</Comment><def><Directive><Decorator><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>@</Py><Py>mydecorator1</Py></ExpressionParts></Expression>
-<Directive><Decorator><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>@</Py><Py>mydecorator2</Py></ExpressionParts></Expression>
-<Directive><Def><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>myfunc</Identifier><DefArgList>(<Identifier>myarg</Identifier>=<Py>"mystring"</Py></DefArgList>):
-</Def></Directive></Decorator></Directive></Decorator></Directive><PlainText>    </PlainText><Comment><CommentStart>##</CommentStart> "This is a docstring for myfunc"
+</Comment><Directive><Decorator><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>@</Py><Py>mydecorator1</Py></ExpressionParts></Expression>
+</Decorator></Directive><Directive><Decorator><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>@</Py><Py>mydecorator2</Py></ExpressionParts></Expression>
+</Decorator></Directive><def><Directive><Def><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>myfunc</Identifier><DefArgList>(<Identifier>myarg</Identifier>=<Py>"mystring"</Py></DefArgList>):
+</Def></Directive><PlainText>    </PlainText><Comment><CommentStart>##</CommentStart> "This is a docstring for myfunc"
 </Comment><PlainText>    </PlainText><Directive><Set><DirectiveStart>#</DirectiveStart>set<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>myvar</Py><WhiteSpace> </WhiteSpace></ExpressionParts></Expression><Py><AssignmentOperator>=</AssignmentOperator></Py><Expression><ExpressionParts><WhiteSpace> </WhiteSpace><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>myarg</Identifier>.<Identifier>upper</Identifier></DottedName><CallArgString>()</CallArgString></CheetahVarNameChunks></CheetahVarBody></CheetahVar></ExpressionParts></Expression>
 </Set></Directive><PlainText>    </PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>return</Py><WhiteSpace> </WhiteSpace><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>myvar</Identifier></DottedName></CheetahVarNameChunks></CheetahVarBody></CheetahVar></ExpressionParts></Expression>
 </SimpleExprDirective></Directive><Directive><EndDirective><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py></ExpressionParts></Expression>
