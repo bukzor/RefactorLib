@@ -6,5 +6,5 @@ RefactorLib
 
 A library to help write automated refactorings, based on lxml.
 
-Currently we support javascript, python (2.6 - 2.7), and yelp_cheetah (0.3.x).
+Currently we support javascript, python (2.6 - 2.7), and yelp_cheetah (0.6.x).
 

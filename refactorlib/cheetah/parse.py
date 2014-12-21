@@ -203,7 +203,7 @@ def parse(cheetah_content, encoding=None):
     if type(cheetah_content) is bytes:
         cheetah_content = cheetah_content.decode('UTF-8')
 
-    compiler = InstrumentedCompiler(cheetah_content, '__dummy__')
+    compiler = InstrumentedCompiler(cheetah_content)
     compiler.getModuleCode()
     data = compiler._parser.data
 
