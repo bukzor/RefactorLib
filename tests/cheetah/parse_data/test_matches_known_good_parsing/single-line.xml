@@ -1,6 +1,6 @@
 <cheetah><PlainText>
-</PlainText><Directive><Def><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgList>(</DefArgList>):<WhiteSpace> </WhiteSpace><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>return</Py><WhiteSpace> </WhiteSpace><Py>"foo1"</Py></ExpressionParts></Expression></SimpleExprDirective></Directive>
-</Def></Directive><PlainText>
-</PlainText><Directive><Def><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo2</Identifier><DefArgList>(</DefArgList>):<WhiteSpace> </WhiteSpace><PlainText>foo2</PlainText>
-</Def></Directive><PlainText>
+</PlainText><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgList>(</DefArgList>):<WhiteSpace> </WhiteSpace><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>return</Py><WhiteSpace> </WhiteSpace><Py>"foo1"</Py></ExpressionParts></Expression></SimpleExprDirective></Directive>
+</Directive><PlainText>
+</PlainText><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo2</Identifier><DefArgList>(</DefArgList>):<WhiteSpace> </WhiteSpace><PlainText>foo2</PlainText>
+</Directive><PlainText>
 </PlainText></cheetah>

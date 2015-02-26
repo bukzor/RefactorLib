@@ -1,2 +1,2 @@
-Directive: /cheetah/Directive[1]/Def/Directive
+Directive: /cheetah/Directive[1]/Directive
   /cheetah/Directive[1]

@@ -17,7 +17,8 @@ def test_is_in_context(example, output):
         for d in top_level_directives
     ]
 
-    # for each Placeholder, print if it's "in context" of each top-level directive
+    # for each Placeholder, print if it's "in context" of each top-level
+    # directive
 
     new_output = []
     for placeholder in lxmlnode.xpath('//Placeholder'):
