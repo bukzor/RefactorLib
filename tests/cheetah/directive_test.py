@@ -36,11 +36,7 @@ def test_replace_directive(example, output):
     from refactorlib.parse import parse
     lxmlnode = parse(example)
 
-    for directive in lxmlnode.xpath('//Directive'):
-        if directive.xpath('./EndDirective'):
-            # Don't mess with #end statements
-            continue
-
+    for directive in lxmlnode.xpath('//Directive[not(starts-with(., "#end"))]'):
         if directive.var is None:
             directive.replace_directive('#{{{%s}}}' % directive.name)
         else:

@@ -67,29 +67,6 @@ class InstrumentedMethod(object):
         return result
 
 
-from collections import defaultdict
-
-
-class AutoDict(defaultdict):
-    "Like defaultdict, but auto-populates for .get() as well."
-    no_default = object()
-
-    def get(self, key, default=no_default):
-        if default is self.no_default:
-            return self[key]
-        else:
-            return super(AutoDict, self).get(key, default)
-
-    def __contains__(self, _):
-        # We contain all the things
-        return True
-
-
-def trivial(*args, **kwargs):
-    """The function that does nothing"""
-    pass
-
-
 class InstrumentedParser(LegacyParser):
     dont_care_methods = (
         'getc', 'getRowCol', 'getRowColLine', 'get_python_expression',
@@ -124,37 +101,12 @@ class InstrumentedParser(LegacyParser):
     def _initDirectives(self):
         super(InstrumentedParser, self)._initDirectives()
 
-        # TODO: multiple single-line macros causes an underflow :(
-        self._compiler.dedent = trivial
-
         for key, val in self._directiveNamesAndParsers.items():
             method = self.instrument_method(val)
             if method is not None:
                 self._directiveNamesAndParsers[key] = method
 
-        # We need unrecognized directives to be seen as macros
-        self._directiveNamesAndParsers = AutoDict(
-            lambda: self.eatMacroCall,
-            self._directiveNamesAndParsers,
-        )
         self._closeableDirectives = set(self._closeableDirectives)
-
-    def eatMacroCall(self):
-        # Pay no attention to that man behind the curtain.
-        del self.data[-1]
-
-        # Get the macro name.
-        startPos = self.pos()
-        self.getDirectiveStartToken()
-        directiveName = self.matchDirectiveName()
-        self.setPos(startPos)
-
-        # Make this macro a fully valid directive.
-        self._closeableDirectives.add(directiveName)
-        self._endDirectiveNamesAndHandlers[directiveName] = trivial
-
-        # Go parse it!
-        self.eatSimpleIndentingDirective(directiveName, callback=trivial)
 
     def pushToOpenDirectivesStack(self, directiveName):
         result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directiveName)

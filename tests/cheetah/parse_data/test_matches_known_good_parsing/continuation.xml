@@ -1,5 +1,5 @@
 <cheetah><PlainText>
-</PlainText><Directive><Set><DirectiveStart>#</DirectiveStart>set<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>mylist</Py><WhiteSpace> </WhiteSpace></ExpressionParts></Expression><Py><AssignmentOperator>=</AssignmentOperator></Py><Expression><ExpressionParts><WhiteSpace>  </WhiteSpace><SquareBracket>[
+</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>set<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>mylist</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace>  </WhiteSpace><SquareBracket>[
 <WhiteSpace>        </WhiteSpace><Py>1</Py><Py>,</Py>
 <WhiteSpace>        </WhiteSpace><CurlyBrace>{
 <WhiteSpace>            </WhiteSpace><Py>2</Py><Py>:</Py><WhiteSpace> </WhiteSpace><Py>'two'</Py><Py>,</Py>
@@ -10,7 +10,7 @@
 <WhiteSpace>            </WhiteSpace><Py>"years ago"</Py>
 <WhiteSpace>        </WhiteSpace>)</Paren>
 ]</SquareBracket></ExpressionParts></Expression>
-</Set></Directive><PlainText>
+</SimpleExprDirective></Directive><PlainText>
 </PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><Paren>(<Expression><ExpressionParts><Py>"foo"</Py>)</ExpressionParts></Expression></Paren></Placeholder><PlainText>
 
 </PlainText></cheetah>

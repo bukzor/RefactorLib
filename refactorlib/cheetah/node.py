@@ -18,7 +18,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
         )
 
     def find_decorators(self, dec_name):
-        return self.xpath('.//Decorator[./Expression="%s"]' % dec_name)
+        return self.xpath('.//Directive[./Expression="%s"]' % dec_name)
 
     def get_enclosing_blocks(self):
         """
@@ -31,8 +31,8 @@ class CheetahNodeBase(RefactorLibNodeBase):
             '|'  # OR:
             # Look at all ancestors.
             './ancestor::*'
-            # Its last child element should be an EndDirective.
-            '[./*[last()][self::Directive]/*[1][self::EndDirective]]'
+            # Its last child element should be an #end Directive
+            '[./*[last()][self::Directive][starts-with(., "#end")]]'
             # Grab the first child. Require that it's a directive
             '/*[1][self::Directive]'
             # Use the first directive that's not a Decorator.
@@ -163,12 +163,11 @@ class CheetahVariable(CheetahNodeBase):
             return
 
         if len(args) == 1 and (
-                args[0].tag == 'CheetahVar'
-                or (
-                    args[0].tag == 'Py'
-                    and len(args[0].text) >= 2
-                    and args[0].text[0] == args[0].text[-1]
-                    and args[0].text[0] in '"'"'"
+                args[0].tag == 'CheetahVar' or (
+                    args[0].tag == 'Py' and
+                    len(args[0].text) >= 2 and
+                    args[0].text[0] == args[0].text[-1] and
+                    args[0].text[0] in '"'"'"
                 )
         ):
             # just one cheetah var / Python string
@@ -243,7 +242,7 @@ class CheetahDirective(CheetahNodeBase):
 
         if self.is_multiline_directive:
             # Multi-line form: Need to update the end directive.
-            end_expression = self.get_end_directive().xpath_one('./EndDirective/Expression')
+            end_expression = self.get_end_directive().xpath_one('./Expression')
             tail = end_expression.tail
             end_expression.clear()
             end_expression.text = directive
@@ -254,7 +253,7 @@ class CheetahDirective(CheetahNodeBase):
         return (
             self.totext().strip().endswith(':') or
             not self.xpath(
-                './EndDirective or '
+                './self::Directive[starts-with(., "#end")] or '
                 './SimpleExprDirective or '
                 './/text()="):" or '
                 './/text()=":"'
@@ -263,7 +262,9 @@ class CheetahDirective(CheetahNodeBase):
 
     @property
     def DirectiveStart(self):
-        return self.xpath_one('./*/*[1][self::DirectiveStart]')
+        return self.xpath_one(
+            './DirectiveStart[1] |  ./SimpleExprDirective/DirectiveStart[1]'
+        )
 
     def __get_name(self):
         "The name of the directive. The word just after the first # sign."
@@ -278,7 +279,7 @@ class CheetahDirective(CheetahNodeBase):
 
     def __get_var(self):
         try:
-            return self.xpath_one('./*/CheetahVar | ./*/Identifier')
+            return self.xpath_one('./*/CheetahVar | ./Identifier')
         except ValueError:
             return None
 
@@ -294,11 +295,12 @@ class CheetahDirective(CheetahNodeBase):
     var = property(__get_var, __set_var)
 
     def get_end_directive(self):
+        """Returns the #end Directive node that logically matches this
+        Directive.
         """
-        Returns the EndDirective node that logically matches this Directive.
-        """
-        # Look at sibling Directives after this node, take first one that is an EndDirective.
-        return self.xpath_one('./following-sibling::Directive[./EndDirective][1]')
+        # Look at sibling Directives after this node, take first one that is
+        # an #end Directive.
+        return self.xpath_one('./following-sibling::Directive[starts-with(., "#end")]')
 
 
 class NodeLookup(etree.PythonElementClassLookup):

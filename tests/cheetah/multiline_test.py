@@ -16,11 +16,7 @@ def test_not_multiline_directives():
 
         #for _ in range(3): not multiline
 
-        #inline_script: not multiline
-
         #call Foo: not multiline
-
-        #filter None: not multiline
     """))
 
     directives = xmldoc.xpath('//Directive')
@@ -62,14 +58,6 @@ def test_multiline_directives():
             multiline
         #end for
 
-        #inline_script
-            multiline
-        #end inline_script
-
-        #inline_script:
-            multiline
-        #end inline_script
-
         #call foo
             multiline
         #end call
@@ -77,16 +65,8 @@ def test_multiline_directives():
         #call foo:
             multiline
         #end call
-
-        #filter None
-            multiline
-        #end filter
-
-        #filter None:
-            multiline
-        #end filter
     """))
 
-    directives = xmldoc.xpath('//Directive[not(EndDirective)]')
+    directives = xmldoc.xpath('//Directive[not(starts-with(., "#end"))]')
     for directive in directives:
         assert directive.is_multiline_directive
