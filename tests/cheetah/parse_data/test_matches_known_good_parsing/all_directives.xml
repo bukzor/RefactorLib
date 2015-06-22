@@ -1,5 +1,5 @@
 <cheetah><compiler-settings><Directive><SimpleIndentingDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>compiler</Py><Py>-</Py><Py>settings</Py></ExpressionParts></Expression>
-</SimpleIndentingDirective></Directive><PlainText>useDottedNotation = True
+</SimpleIndentingDirective></Directive><PlainText>useLegacyImportMode = True
 </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>compiler</Py><Py>-</Py><Py>settings</Py></ExpressionParts></Expression>
 </Directive></compiler-settings><Directive><DirectiveStart>#</DirectiveStart>extends<WhiteSpace> </WhiteSpace>testing.templates.extends_test_template
 </Directive><Directive><DirectiveStart>#</DirectiveStart>implements<WhiteSpace> </WhiteSpace><Identifier>respond</Identifier>
