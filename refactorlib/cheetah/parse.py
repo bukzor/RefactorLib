@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from refactorlib.dictnode import set_node_text
 from Cheetah.legacy_compiler import LegacyCompiler
 from Cheetah.legacy_parser import LegacyParser
@@ -183,7 +185,7 @@ def remove_empty(data):
 def show_data(data, src):
     for datum in data:
         start, end, method = datum
-        print method, repr(src[start:end]), start, end
+        print(method, repr(src[start:end]), start, end)
         yield datum
 
 
@@ -214,7 +216,7 @@ def parser_data_to_dictnode(data, src):
                 parent = stack[-1]
                 parent['children'].remove(badguy)
                 if DEBUG:
-                    print 'Removed bad:', badguy
+                    print('Removed bad:', badguy)
 
         parent['children'].append(dictnode)
         stack.append(dictnode)
@@ -255,13 +257,13 @@ def dedup(data):
         elif file_pointer == start:
             # Dupe: This is a simple backtrack, take the latest parsing.
             if DEBUG:
-                print "Duped:", datum
+                print("Duped:", datum)
             del new_data[dup_index]
             new_data.append(datum)
         else:
             # Dupe: We've advanced beyond this data, drop it.
             if DEBUG:
-                print "Dropped:", datum
+                print("Dropped:", datum)
             pass
     return new_data
 
