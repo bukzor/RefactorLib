@@ -153,7 +153,7 @@ def detect_encoding(source):
 
 
 def parse(cheetah_content, encoding=None):
-    # yelp_cheetah requires unicode
+    # yelp_cheetah requires text
     if type(cheetah_content) is bytes:
         cheetah_content = cheetah_content.decode('UTF-8')
 

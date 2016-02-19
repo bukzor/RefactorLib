@@ -7,7 +7,7 @@ This is the inverse operation of `xmlfrom`.
 
 def xmlstrip(filename):
     from lxml.etree import XML, tostring
-    tree = XML(open(filename).read()).getroottree()
+    tree = XML(open(filename, 'rb').read()).getroottree()
     encoding = tree.docinfo.encoding
     return tostring(tree, method='text', encoding=encoding)
 

@@ -12,7 +12,7 @@ def test_can_find_calls():
 
     calls = example.find_calls('foo')
     assert len(calls) == 1
-    assert calls[0].totext() == '$foo()'
+    assert calls[0].totext() == b'$foo()'
 
 
 @xfailif_no_cheetah

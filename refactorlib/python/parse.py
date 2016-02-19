@@ -3,7 +3,7 @@ import re
 
 
 # regex taken from inducer/pudb's detect_encoding
-pythonEncodingDirectiveRE = re.compile(r"^\s*#.*coding[:=]\s*([-\w.]+)")
+encoding_re = re.compile(r"^\s*#.*coding[:=]\s*([-\w.]+)".encode('UTF-8'))
 
 
 def detect_encoding(source):
@@ -11,20 +11,19 @@ def detect_encoding(source):
     Given some python contents as a byte string, return the name of the encoding, or else None.
     """
     # According to the PEP0263, the encoding directive must appear on one of the first two lines of the file
-    top_lines = source.split('\n', 2)[:2]
+    top_lines = source.split(b'\n', 2)[:2]
 
     for line in top_lines:
-        encodingMatch = pythonEncodingDirectiveRE.search(line)
-        if encodingMatch:
-            return encodingMatch.group(1)
+        encoding_match = encoding_re.search(line)
+        if encoding_match:
+            return encoding_match.group(1).decode('UTF-8')
 
     # We didn't find anything.
     return None
 
 
 def parse(python_contents, encoding):
-    """
-    Given some python contents as a unicode string, return the lxml representation.
+    """Given some python contents as a text string, return the lxml representation.
     """
     lib2to3_python = lib2to3_parse(python_contents)
     dictnode_python = lib2to3_to_dictnode(lib2to3_python)

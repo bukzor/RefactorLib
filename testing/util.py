@@ -1,6 +1,8 @@
 """
 A home for the 'yellow code' of testing.
 """
+from __future__ import unicode_literals
+
 from os.path import join
 
 
@@ -16,7 +18,6 @@ def example_dir(func):
 
 
 def get_examples(func):
-
     from os import listdir
     from os.path import isfile
 
@@ -77,13 +78,13 @@ def parametrize(arg_finder):
 def assert_same_content(old_file, new_content, extra_suffix=''):
     new_file = ''.join((old_file, extra_suffix, FAILURE_SUFFIX))
     try:
-        open(new_file, 'w').write(new_content)
+        open(new_file, 'wb').write(new_content)
     except IOError as e:
         if e.errno == 2:  # No such file.
             from os import makedirs
             from os.path import dirname
             makedirs(dirname(new_file))
-            open(new_file, 'w').write(new_content)
+            open(new_file, 'wb').write(new_content)
         else:
             raise
 
@@ -91,15 +92,16 @@ def assert_same_content(old_file, new_content, extra_suffix=''):
 
 
 def assert_same_file_content(old_file, new_file):
-    old_content = open(old_file).readlines()
-    new_content = open(new_file).readlines()
+    old_content = open(old_file, 'rb').readlines()
+    new_content = open(new_file, 'rb').readlines()
 
     diffs = diff(old_content, new_content)
 
     if diffs:
         diffs = 'Results differ:\n--- %s\n+++ %s\n%s' % (old_file, new_file, diffs)
-        # py.test derps on non-utf8 bytes, so I force unicode like so:
-        diffs = diffs.decode('UTF-8', 'replace')
+        # py.test derps on non-utf8 bytes, so I force text like so:
+        if isinstance(diffs, bytes):
+            diffs = diffs.decode('UTF-8', 'replace')
         raise AssertionError(diffs)
     else:
         from os import unlink
@@ -112,7 +114,7 @@ def diff(old_content, new_content, n=3):
     diffdata = tuple(diff(old_content, new_content))
     difflines = set()
     for lineno, line in enumerate(diffdata):
-        if not line.startswith('  '):  # Ignore the similar lines.
+        if not line.startswith(str('  ')):  # Ignore the similar lines.
             difflines.update(range(lineno - n, lineno + n + 1))
 
     return '\n'.join(

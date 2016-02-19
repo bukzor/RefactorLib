@@ -19,6 +19,8 @@ setuptools.setup(
     install_requires=[
         'cached-property',
         'lxml>=2.2',  # We run with 2.2.4.0
+        'ordereddict',
+        'six',
     ],
     extras_require={
         'javascript': ['simplejson'],
@@ -48,6 +50,8 @@ setuptools.setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )

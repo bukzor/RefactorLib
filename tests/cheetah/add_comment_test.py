@@ -30,7 +30,7 @@ def test_can_add_comments():
     calls[0].add_comment('2 esc')
     calls[0].add_comment('3 esc')
 
-    assert '''
+    assert b'''
         #def foo()
             ## 1 esc
             ## 2 esc
