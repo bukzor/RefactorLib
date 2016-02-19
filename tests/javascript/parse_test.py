@@ -27,7 +27,7 @@ else:
 def test_can_make_round_trip(example):
     text = open(example).read()
     example = parse(example)
-    assert text == example.totext()
+    assert text == example.totext().decode('UTF-8')
 
 
 @xfailif_no_js

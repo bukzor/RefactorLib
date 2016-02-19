@@ -42,7 +42,7 @@ class Popen(_Popen):
         CalledProcessError object will have the return code in the returncode
         attribute and output in the output attribute.
         """
-        output, _ = self.communicate(stdin)
+        output, _ = self.communicate(stdin.encode('UTF-8'))
         retcode = self.poll()
         if retcode:
             cmd = self.args

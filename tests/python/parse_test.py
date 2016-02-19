@@ -4,7 +4,7 @@ from refactorlib.parse import parse
 
 @parametrize(get_examples)
 def test_can_make_round_trip(example):
-    text = open(example).read()
+    text = open(example, 'rb').read()
     example = parse(example)
     assert text == example.totext()
 
@@ -12,7 +12,7 @@ def test_can_make_round_trip(example):
 @parametrize(get_examples)
 def test_encoding_detection(example):
     from refactorlib.python.parse import detect_encoding
-    text = open(example).read()
+    text = open(example, 'rb').read()
     example = parse(example)
     detected_encoding = detect_encoding(text)
 

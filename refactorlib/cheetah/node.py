@@ -1,20 +1,28 @@
 """
 cheetah-specific additions to the lxml element node class.
 """
+import six
+
 from lxml import etree
 from refactorlib.node import RefactorLibNodeBase, one
 
 
 class CheetahNodeBase(RefactorLibNodeBase):
     def find_calls(self, func_name):
+        if isinstance(func_name, bytes):
+            func_name = func_name.decode('UTF-8')
         return self.xpath(
             './/Placeholder'
             '[./CheetahVarNameChunks/CallArgString]'
-            '[./CheetahVarNameChunks/DottedName="%s"]' % func_name
+            '[./CheetahVarNameChunks/DottedName="{0}"]'.format(
+                func_name,
+            )
         ) + self.xpath(
             './/CheetahVar'
             '[./CheetahVarBody/CheetahVarNameChunks/CallArgString]'
-            '[./CheetahVarBody/CheetahVarNameChunks/DottedName="%s"]' % func_name
+            '[./CheetahVarBody/CheetahVarNameChunks/DottedName="{0}"]'.format(
+                func_name,
+            )
         )
 
     def find_decorators(self, dec_name):
@@ -72,6 +80,8 @@ class CheetahNodeBase(RefactorLibNodeBase):
         return comment
 
     def is_in_context(self, directive_string):
+        if isinstance(directive_string, bytes):
+            directive_string = directive_string.decode('UTF-8')
         try:
             directive_name, var = directive_string.split(None, 1)
         except ValueError:
@@ -86,7 +96,7 @@ class CheetahNodeBase(RefactorLibNodeBase):
                     directive.name == directive_name and
                     (
                         directive.var is None and var is None or
-                        directive.var.totext(with_tail=False) == var
+                        directive.var.totext(with_tail=False).decode('UTF-8') == var
                     )
             ):
                 return True
@@ -158,7 +168,7 @@ class CheetahVariable(CheetahNodeBase):
         args = self.args
 
         if not args:  # no arguments.
-            assert args_container.totext().strip('(\n\t )') == '', args_container.totext()
+            assert args_container.totext().strip(b'(\n\t )') == b'', args_container.totext()
             self.remove_self()
             return
 
@@ -225,7 +235,7 @@ class CheetahDecorator(CheetahNodeBase):
 
 class CheetahDirective(CheetahNodeBase):
     def replace_directive(self, other):
-        if isinstance(other, basestring):
+        if isinstance(other, six.string_types):
             var = self.makeelement('CheetahVar')
             try:
                 directive, var.text = other.split(None, 1)
@@ -251,7 +261,7 @@ class CheetahDirective(CheetahNodeBase):
     @property
     def is_multiline_directive(self):
         return (
-            self.totext().strip().endswith(':') or
+            self.totext().strip().endswith(b':') or
             not self.xpath(
                 './self::Directive[starts-with(., "#end")] or '
                 './SimpleExprDirective or '

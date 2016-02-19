@@ -6,7 +6,7 @@ from . import xfailif_no_cheetah
 @xfailif_no_cheetah
 @parametrize(get_examples)
 def test_can_make_round_trip(example):
-    text = open(example).read()
+    text = open(example, 'rb').read()
     example = parse(example)
     assert text == example.totext()
 

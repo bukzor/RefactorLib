@@ -5,18 +5,15 @@ def parse(filename, filetype=None, encoding=None):
     from refactorlib.filetypes import FILETYPES
     filetype = FILETYPES.detect_filetype(filename, filetype)
 
-    source = open(filename).read()
+    source = open(filename, 'rb').read()
 
     # If no encoding was explicitly specified, see if we can parse
     # it out from the contents of the file.
     if encoding is None:
         encoding = filetype.encoding_detector(source)
 
-    if encoding:
-        source = unicode(source, encoding)
-    else:
-        # I don't see why encoding=None is different from not specifying the encoding.
-        source = unicode(source)
+    encoding = encoding if encoding else 'UTF-8'
+    source = source.decode(encoding)
 
     return filetype.parser(source, encoding)
 
@@ -36,10 +33,7 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
     if not node_lookup:
         from refactorlib.node import node_lookup
 
-    from lxml.etree import XMLParser, fromstring
-    lxml_parser_object = XMLParser(encoding=encoding)
-    lxml_parser_object.set_element_class_lookup(node_lookup)
-    Element = lxml_parser_object.makeelement
+    from lxml.etree import Element, XMLParser
 
     root = None
     stack = [(tree, root)]
@@ -50,7 +44,10 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
         if parent is None:
             # We use this roundabout method becuase the encoding is always set
             # to 'UTF8' if we use parser.makeelement()
-            lxmlnode = fromstring('<trash></trash>', parser=lxml_parser_object)
+            parser = XMLParser(encoding=encoding)
+            parser.set_element_class_lookup(node_lookup)
+            parser.feed(b'<trash></trash>')
+            lxmlnode = parser.close()
             lxmlnode.tag = node['name']
             lxmlnode.attrib.update(node.get('attrs', {}))
             root = lxmlnode

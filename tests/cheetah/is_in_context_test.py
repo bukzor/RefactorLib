@@ -1,3 +1,5 @@
+import six
+
 from testing.util import parametrize, get_output, assert_same_content
 from . import xfailif_no_cheetah
 
@@ -11,9 +13,9 @@ def test_is_in_context(example, output):
 
     top_level_directives = lxmlnode.xpath('/cheetah/*/*[1][self::Directive]')
     top_level_directives = [
-        "#%s %s" % (d.name, d.var.totext(with_tail=False))
-        if d.var else
-        "#%s" % d.name
+        b'#' + d.name.encode('UTF-8') + b' ' + d.var.totext(with_tail=False)
+        if d.var is not None else
+        b'#' + d.name.encode('UTF-8')
         for d in top_level_directives
     ]
 
@@ -23,13 +25,14 @@ def test_is_in_context(example, output):
     new_output = []
     for placeholder in lxmlnode.xpath('//Placeholder'):
         new_output.append(
-            'Placeholder: %s' % placeholder.totext(with_tail=False)
+            b'Placeholder: ' + placeholder.totext(with_tail=False)
         )
         for d in top_level_directives:
             new_output.append(
-                '    %s %s' % (d, placeholder.is_in_context(d))
+                b'    ' + d + b' ' +
+                six.text_type(placeholder.is_in_context(d)).encode('UTF-8')
             )
-        new_output.append('')
+        new_output.append(b'')
 
-    new_output = '\n'.join(new_output)
+    new_output = b'\n'.join(new_output)
     assert_same_content(output, new_output)

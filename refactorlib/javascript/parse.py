@@ -1,3 +1,5 @@
+import six
+
 from refactorlib.util import static
 
 
@@ -5,8 +7,7 @@ DEBUG = False
 
 
 def parse(javascript_contents, encoding='ascii'):
-    """
-    Given some javascript contents, as a unicode string, return the lxml representation.
+    """Given some javascript contents, as a text string, return the lxml representation.
     "reflectjs" below refers to the Mozilla Reflect protocol:
         * https://developer.mozilla.org/en-US/docs/SpiderMonkey/Parser_API
         * https://npmjs.org/package/reflect
@@ -36,7 +37,10 @@ def reflectjs_parse(javascript_contents):
     from refactorlib.util import Popen, PIPE
     from os.path import join
     from simplejson import loads
-    from simplejson.ordered_dict import OrderedDict
+    try:
+        from collections import OrderedDict
+    except ImportError:
+        from ordereddict import OrderedDict
     reflectjs_script = join(TOP, 'javascript/reflectjs.js')
 
     reflectjs = Popen([find_nodejs(), reflectjs_script], stdin=PIPE, stdout=PIPE)
@@ -56,7 +60,6 @@ def reflectjs_to_dictnode(tree):
     text or tail, and may have some overlap issues.
     """
     from refactorlib.dictnode import DictNode
-    from types import NoneType
 
     root_dictnode = DictNode(parent=None)
     stack = [(tree, root_dictnode)]
@@ -78,15 +81,17 @@ def reflectjs_to_dictnode(tree):
                 else:
                     attrs[val['type']] = val['name']
             elif attr == 'value':
-                attrs[attr] = unicode(val)
+                attrs[attr] = six.text_type(val)
                 # We would normally lose this type information, as lxml
                 # wants everything to be a string.
                 attrs['type'] = type(val).__name__
-            elif isinstance(val, unicode):
+            elif isinstance(val, six.text_type):
                 attrs[attr] = val
-            elif isinstance(val, (bool, NoneType, str)):
+            elif isinstance(val, bytes):
+                attrs[attr] = val.decode('UTF-8')
+            elif isinstance(val, (bool, type(None))):
                 # TODO: figure out what happens with non-ascii data.
-                attrs[attr] = unicode(val)
+                attrs[attr] = six.text_type(val)
             else:  # Should never happen
                 assert False
 
@@ -97,5 +102,5 @@ def reflectjs_to_dictnode(tree):
             children=[DictNode(parent=dictnode) for child in children],
             attrs=attrs,
         ))
-        stack.extend(reversed(zip(children, dictnode['children'])))
+        stack.extend(reversed(list(zip(children, dictnode['children']))))
     return root_dictnode
