@@ -53,7 +53,7 @@
 </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>call</Py></ExpressionParts></Expression>
 </Directive></call><PlainText>
 
-</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>set<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>foo</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace> </WhiteSpace><CurlyBrace>{<Py>"a"</Py><Py>:</Py><WhiteSpace> </WhiteSpace><Py>1</Py>}</CurlyBrace></ExpressionParts></Expression>
+</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>py<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>foo</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace> </WhiteSpace><CurlyBrace>{<Py>"a"</Py><Py>:</Py><WhiteSpace> </WhiteSpace><Py>1</Py>}</CurlyBrace></ExpressionParts></Expression>
 </SimpleExprDirective></Directive><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart><Expression><ExpressionParts><Py>del</Py><WhiteSpace> </WhiteSpace><Py>foo</Py><SquareBracket>[<Py>'a'</Py>]</SquareBracket></ExpressionParts></Expression>
 </SimpleExprDirective></Directive><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName></CheetahVarNameChunks></Placeholder><PlainText>
 
@@ -72,8 +72,8 @@
 </SimpleIndentingDirective></Directive><PlainText>   not 15 or 16
 </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>if</Py></ExpressionParts></Expression>
 </Directive></if><PlainText>
-</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>set<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>arr</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace> </WhiteSpace><SquareBracket>[<Py>1</Py><Py>,</Py><WhiteSpace> </WhiteSpace><Py>2</Py><Py>,</Py><WhiteSpace> </WhiteSpace><Py>3</Py>]</SquareBracket></ExpressionParts></Expression>
-</SimpleExprDirective></Directive><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>silent<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>arr</Py><Py>.</Py><Py>append</Py><CallArgString>(<Py>4</Py>)</CallArgString></ExpressionParts></Expression>
+</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>py<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>arr</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace> </WhiteSpace><SquareBracket>[<Py>1</Py><Py>,</Py><WhiteSpace> </WhiteSpace><Py>2</Py><Py>,</Py><WhiteSpace> </WhiteSpace><Py>3</Py>]</SquareBracket></ExpressionParts></Expression>
+</SimpleExprDirective></Directive><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>py<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>arr</Py><Py>.</Py><Py>append</Py><CallArgString>(<Py>4</Py>)</CallArgString></ExpressionParts></Expression>
 </SimpleExprDirective></Directive><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>arr</Identifier></DottedName></CheetahVarNameChunks></Placeholder><PlainText>
 
 </PlainText><block><Directive><DirectiveStart>#</DirectiveStart>block<WhiteSpace> </WhiteSpace><Identifier>infinite_loop_meybs</Identifier>

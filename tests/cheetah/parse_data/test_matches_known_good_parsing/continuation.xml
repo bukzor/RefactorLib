@@ -1,5 +1,5 @@
 <cheetah><PlainText>
-</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>set<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>mylist</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace>  </WhiteSpace><SquareBracket>[
+</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>py<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>mylist</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace>  </WhiteSpace><SquareBracket>[
 <WhiteSpace>        </WhiteSpace><Py>1</Py><Py>,</Py>
 <WhiteSpace>        </WhiteSpace><CurlyBrace>{
 <WhiteSpace>            </WhiteSpace><Py>2</Py><Py>:</Py><WhiteSpace> </WhiteSpace><Py>'two'</Py><Py>,</Py>
