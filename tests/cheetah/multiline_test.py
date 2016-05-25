@@ -15,8 +15,6 @@ def test_not_multiline_directives():
         #while False: not multiline
 
         #for _ in range(3): not multiline
-
-        #call Foo: not multiline
     """))
 
     directives = xmldoc.xpath('//Directive')
@@ -57,14 +55,6 @@ def test_multiline_directives():
         #for _ in range(3):
             multiline
         #end for
-
-        #call foo
-            multiline
-        #end call
-
-        #call foo:
-            multiline
-        #end call
     """))
 
     directives = xmldoc.xpath('//Directive[not(starts-with(., "#end"))]')

@@ -19,8 +19,8 @@ class CheetahNodeBase(RefactorLibNodeBase):
             )
         ) + self.xpath(
             './/CheetahVar'
-            '[./CheetahVarBody/CheetahVarNameChunks/CallArgString]'
-            '[./CheetahVarBody/CheetahVarNameChunks/DottedName="{0}"]'.format(
+            '[./CheetahVarNameChunks/CallArgString]'
+            '[./CheetahVarNameChunks/DottedName="{0}"]'.format(
                 func_name,
             )
         )
@@ -152,11 +152,11 @@ class CheetahVariable(CheetahNodeBase):
 
     @property
     def name(self):
-        return one(self.args_body.xpath('./CheetahVarNameChunks/DottedName[1]'))
+        return one(self.args_body.xpath('./DottedName[1]'))
 
     @property
     def args_container(self):
-        return one(self.args_body.xpath('./CheetahVarNameChunks/CallArgString'))
+        return one(self.args_body.xpath('./CallArgString'))
 
     @property
     def args(self):
@@ -164,7 +164,7 @@ class CheetahVariable(CheetahNodeBase):
 
     def remove_call(self):
         args_body = self.args_body
-        args_container = one(args_body.xpath('./CheetahVarNameChunks/CallArgString'))
+        args_container = one(args_body.xpath('./CallArgString'))
         args = self.args
 
         if not args:  # no arguments.
@@ -194,9 +194,8 @@ class CheetahVariable(CheetahNodeBase):
         ):
             # just one Python variable.
             # replace the call with just the arg (keep the $)
-            namechunks = one(args_body.xpath('./CheetahVarNameChunks'))
-            namechunks.clear()
-            namechunks.extend(args)
+            args_body.clear()
+            args_body.extend(args)
             args[-1].tail = ''
         else:
             # there's something more complicated here.
@@ -207,13 +206,13 @@ class CheetahVariable(CheetahNodeBase):
 class CheetahPlaceholder(CheetahVariable):
     @property
     def args_body(self):
-        return self
+        return one(self.xpath('./CheetahVarNameChunks'))
 
 
 class CheetahVar(CheetahVariable):
     @property
     def args_body(self):
-        return one(self.xpath('./CheetahVarBody'))
+        return one(self.xpath('./CheetahVarNameChunks'))
 
 
 class CheetahDecorator(CheetahNodeBase):

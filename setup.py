@@ -19,12 +19,11 @@ setuptools.setup(
     install_requires=[
         'cached-property',
         'lxml>=2.2',  # We run with 2.2.4.0
-        'ordereddict',
         'six',
     ],
     extras_require={
         'javascript': ['simplejson'],
-        'cheetah': ['yelp_cheetah>=0.10.0,<=0.13.999'],
+        'cheetah': ['yelp_cheetah>=0.15.0,<=0.15.999'],
     },
 
     entry_points={
@@ -48,7 +47,6 @@ setuptools.setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',

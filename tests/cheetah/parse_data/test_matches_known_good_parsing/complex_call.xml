@@ -1,6 +1,6 @@
 <cheetah><PlainText>
     X
-    </PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>MyFunc</Identifier></DottedName><CallArgString>(<Py>arg1</Py><Py>,</Py> <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarBody><CheetahVarNameChunks><DottedName><Identifier>arg2</Identifier></DottedName></CheetahVarNameChunks></CheetahVarBody></CheetahVar><Py>,</Py> <Py>"arg3"</Py><Py>,</Py> <Py>arg4</Py><Py>=</Py><Py>"ARG4"</Py><Py>,</Py> <Py>arg5</Py><Py>=</Py><Py>"ARG5"</Py>)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
+    </PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>MyFunc</Identifier></DottedName><CallArgString>(<Py>arg1</Py><Py>,</Py> <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>arg2</Identifier></DottedName></CheetahVarNameChunks></CheetahVar><Py>,</Py> <Py>"arg3"</Py><Py>,</Py> <Py>arg4</Py><Py>=</Py><Py>"ARG4"</Py><Py>,</Py> <Py>arg5</Py><Py>=</Py><Py>"ARG5"</Py>)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
     Y
 
 </PlainText></cheetah>
