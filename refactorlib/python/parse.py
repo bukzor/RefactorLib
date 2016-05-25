@@ -35,9 +35,22 @@ def parse(python_contents, encoding):
 def lib2to3_parse(python_contents):
     from lib2to3 import pygram, pytree
     from lib2to3.pgen2 import driver
+    from lib2to3.pgen2 import parse
 
-    drv = driver.Driver(pygram.python_grammar, pytree.convert)
-    tree = drv.parse_string(python_contents, True)
+    # Roughly stolen from:
+    # https://github.com/google/yapf/blob/729279/yapf/yapflib/pytree_utils.py#L70-L102
+    py3_grammar = pygram.python_grammar_no_print_statement.copy()
+    del py3_grammar.keywords['exec']
+    py2_grammar = pygram.python_grammar
+
+    py3_driver = driver.Driver(py3_grammar, pytree.convert)
+    py2_driver = driver.Driver(py2_grammar, pytree.convert)
+
+    # Try with the more permissive py3 grammar first
+    try:
+        tree = py3_driver.parse_string(python_contents, True)
+    except parse.ParseError:
+        tree = py2_driver.parse_string(python_contents, True)
     return tree
 
 
