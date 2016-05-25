@@ -46,7 +46,7 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
             # to 'UTF8' if we use parser.makeelement()
             parser = XMLParser(encoding=encoding)
             parser.set_element_class_lookup(node_lookup)
-            parser.feed(b'<trash></trash>')
+            parser.feed(b'<a/>')
             lxmlnode = parser.close()
             lxmlnode.tag = node['name']
             lxmlnode.attrib.update(node.get('attrs', {}))
