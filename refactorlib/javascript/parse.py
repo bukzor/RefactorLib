@@ -37,10 +37,7 @@ def reflectjs_parse(javascript_contents):
     from refactorlib.util import Popen, PIPE
     from os.path import join
     from simplejson import loads
-    try:
-        from collections import OrderedDict
-    except ImportError:
-        from ordereddict import OrderedDict
+    from collections import OrderedDict
     reflectjs_script = join(TOP, 'javascript/reflectjs.js')
 
     reflectjs = Popen([find_nodejs(), reflectjs_script], stdin=PIPE, stdout=PIPE)
