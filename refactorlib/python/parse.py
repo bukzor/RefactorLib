@@ -41,7 +41,8 @@ def lib2to3_parse(python_contents):
     # https://github.com/google/yapf/blob/729279/yapf/yapflib/pytree_utils.py#L70-L102
     py3_grammar = pygram.python_grammar_no_print_statement.copy()
     del py3_grammar.keywords['exec']
-    py2_grammar = pygram.python_grammar
+    py2_grammar = pygram.python_grammar.copy()
+    del py2_grammar.keywords['nonlocal']
 
     py3_driver = driver.Driver(py3_grammar, pytree.convert)
     py2_driver = driver.Driver(py2_grammar, pytree.convert)
