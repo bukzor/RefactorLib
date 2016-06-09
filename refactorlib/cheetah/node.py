@@ -12,21 +12,13 @@ class CheetahNodeBase(RefactorLibNodeBase):
         if isinstance(func_name, bytes):
             func_name = func_name.decode('UTF-8')
         return self.xpath(
-            './/Placeholder'
-            '[./CheetahVarNameChunks/CallArgString]'
-            '[./CheetahVarNameChunks/DottedName="{0}"]'.format(
-                func_name,
-            )
+            './/Placeholder[./Identifier="{}"]'.format(func_name),
         ) + self.xpath(
-            './/CheetahVar'
-            '[./CheetahVarNameChunks/CallArgString]'
-            '[./CheetahVarNameChunks/DottedName="{0}"]'.format(
-                func_name,
-            )
+            './/CheetahVar[./Identifier="{}"]'.format(func_name),
         )
 
     def find_decorators(self, dec_name):
-        return self.xpath('.//Directive[./Expression="%s"]' % dec_name)
+        return self.xpath('.//Directive[./UnbracedExpression="%s"]' % dec_name)
 
     def get_enclosing_blocks(self):
         """
@@ -121,24 +113,22 @@ class CheetahNodeBase(RefactorLibNodeBase):
         `arguments` is an lxml node
         """
         call = self.makeelement('Placeholder')
+        call.text = '$'
 
-        varstart = self.makeelement('CheetahVarStart')
-        varstart.text = '$'
-        call.append(varstart)
+        identifier = self.makeelement('Identifier')
+        identifier.text = method
+        call.append(identifier)
 
-        namechunks = self.makeelement('CheetahVarNameChunks')
+        call_expr = self.makeelement('BracedExpression')
+        start_py = self.makeelement('Py')
+        start_py.text = '('
+        call_expr.append(start_py)
+        call_expr.append(arguments)
+        end_py = self.makeelement('Py')
+        end_py.text = ')'
+        call_expr.append(end_py)
+        call.append(call_expr)
 
-        name = self.makeelement('DottedName')
-        name.text = method
-        namechunks.append(name)
-
-        argstring = self.makeelement('CallArgsString')
-        argstring.text = '('
-        argstring.append(arguments)
-        namechunks.append(argstring)
-        arguments.tail, namechunks.tail = ')', arguments.tail
-
-        call.append(namechunks)
         return call
 
 
@@ -146,90 +136,71 @@ class CheetahVariable(CheetahNodeBase):
     """
     This class represents a cheetah placeholder, such as: $FOO
     """
-    @property
-    def args_body(self):
-        raise NotImplementedError("args_body must be implemented by a subclass")
 
     @property
     def name(self):
-        return one(self.args_body.xpath('./DottedName[1]'))
+        return one(self.xpath('./Identifier'))
 
     @property
     def args_container(self):
-        return one(self.args_body.xpath('./CallArgString'))
+        return one(self.xpath('BracedExpression'))
 
     @property
     def args(self):
-        return self.args_container.getchildren()
+        args = self.args_container.getchildren()
+        assert args[0].tag == 'Py' and args[0].text == '('
+        assert args[-1].tag == 'Py' and args[-1].text == ')'
+        args = args[1:-1]
+        args = [arg for arg in args if arg.text.strip() or arg.tail.strip()]
+        return args
 
     def remove_call(self):
-        args_body = self.args_body
-        args_container = one(args_body.xpath('./CallArgString'))
         args = self.args
 
-        if not args:  # no arguments.
-            assert args_container.totext().strip(b'(\n\t )') == b'', args_container.totext()
+        if not args:
             self.remove_self()
-            return
-
-        if len(args) == 1 and (
-                args[0].tag == 'CheetahVar' or (
-                    args[0].tag == 'Py' and
-                    len(args[0].text) >= 2 and
-                    args[0].text[0] == args[0].text[-1] and
-                    args[0].text[0] in '"'"'"
-                )
-        ):
-            # just one cheetah var / Python string
-            arg = args[0]
-            self.replace_self(arg)
-            # replace the right paren with whatever followed the `self` token
-            assert arg.tail.strip() == ')', repr(arg.tostring())
-            arg.tail = self.tail
+        elif len(args) == 1 and args[0].tag == 'CheetahVar':
+            self.replace_self(args[0])
         elif (
-                # Python tokens without spaces
-                all(arg.tag == 'Py' for arg in args) and
-                all(arg.tail == '' for arg in args[:-1]) and
-                args[-1].tail.strip() == ')'
+                len(args) == 1 and
+                args[0].tag == 'Py' and
+                args[0].text.startswith(('"', "'"))
         ):
-            # just one Python variable.
-            # replace the call with just the arg (keep the $)
-            args_body.clear()
-            args_body.extend(args)
-            args[-1].tail = ''
+            # A single string argument
+            if self.is_top_level:
+                new_element = self.makeelement('PlainText')
+                new_element.text = args[0].text
+                if new_element.text.startswith(('"' * 3, "'" * 3)):
+                    new_element.text = new_element.text[3:-3]
+                else:
+                    new_element.text = new_element.text[1:-1]
+            else:
+                new_element = args[0]
+
+            new_element.tail = self.tail
+            self.replace_self(new_element)
+        elif self.is_top_level:
+            # Something else, wrap it in braces and call it good
+            new_element = self.makeelement('Placeholder')
+            new_element.text = '${'
+            args[-1].tail += '}'
+            new_element.extend(args)
+            new_element.tail = self.tail
+            self.replace_self(new_element)
         else:
-            # there's something more complicated here.
-            # just remove the method name (keep the $())
-            self.name.remove_self()
+            # Replace inline
+            new_element = self.makeelement('Unknown')
+            new_element.extend(args)
+            new_element.tail = self.tail
+            self.replace_self(new_element)
 
 
 class CheetahPlaceholder(CheetahVariable):
-    @property
-    def args_body(self):
-        return one(self.xpath('./CheetahVarNameChunks'))
+    is_top_level = True
 
 
 class CheetahVar(CheetahVariable):
-    @property
-    def args_body(self):
-        return one(self.xpath('./CheetahVarNameChunks'))
-
-
-class CheetahDecorator(CheetahNodeBase):
-    def remove_self(self):
-        children = self.getchildren()
-        assert children[0].tag == 'DirectiveStart', children[0]
-        assert children[1].tag == 'Expression', children[1]
-
-        parent = self.getparent()
-        index = parent.index(self)
-
-        self.clear_indent()
-        parent.remove(self)
-
-        # put some contents back, if necessary
-        for child in children[-1:1:-1]:
-            parent.insert(index, child)
+    is_top_level = False
 
 
 class CheetahDirective(CheetahNodeBase):
@@ -251,7 +222,7 @@ class CheetahDirective(CheetahNodeBase):
 
         if self.is_multiline_directive:
             # Multi-line form: Need to update the end directive.
-            end_expression = self.get_end_directive().xpath_one('./Expression')
+            end_expression = self.get_end_directive().xpath_one('./UnbracedExpression')
             tail = end_expression.tail
             end_expression.clear()
             end_expression.text = directive
@@ -325,8 +296,6 @@ class NodeLookup(etree.PythonElementClassLookup):
             return CheetahVar
         elif element.tag == 'Directive':
             return CheetahDirective
-        elif element.tag == 'Decorator':
-            return CheetahDecorator
         else:
             return CheetahNodeBase
 

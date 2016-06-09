@@ -1,14 +1,14 @@
 <cheetah><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>bar</Identifier></DottedName><CallArgString>(<CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(<Py>buz</Py>)</CallArgString></CheetahVarNameChunks></CheetahVar>)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>bar</Identifier></DottedName><CallArgString>(<CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(<CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>buz</Identifier></DottedName></CheetahVarNameChunks></CheetahVar>)</CallArgString></CheetahVarNameChunks></CheetahVar>)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>bar</Identifier></DottedName><CallArgString>(<CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
-    <Py>buz</Py>
-)</CallArgString></CheetahVarNameChunks></CheetahVar>)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>bar</Identifier></DottedName><CallArgString>(<CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
-    <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>buz</Identifier></DottedName></CheetahVarNameChunks></CheetahVar>
-)</CallArgString></CheetahVarNameChunks></CheetahVar>)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>bar</Identifier></DottedName><CallArgString>(
-    <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(<CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>buz</Identifier></DottedName></CheetahVarNameChunks></CheetahVar>)</CallArgString></CheetahVarNameChunks></CheetahVar>
-)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
+</PlainText><Placeholder>$<Identifier>bar</Identifier><BracedExpression><Py>(</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>buz</Py><Py>)</Py></BracedExpression></CheetahVar><Py>)</Py></BracedExpression></Placeholder><PlainText>
+</PlainText><Placeholder>$<Identifier>bar</Identifier><BracedExpression><Py>(</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><CheetahVar>$<Identifier>buz</Identifier></CheetahVar><Py>)</Py></BracedExpression></CheetahVar><Py>)</Py></BracedExpression></Placeholder><PlainText>
+</PlainText><Placeholder>$<Identifier>bar</Identifier><BracedExpression><Py>(</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>
+</Py>    <Py>buz</Py><Py>
+</Py><Py>)</Py></BracedExpression></CheetahVar><Py>)</Py></BracedExpression></Placeholder><PlainText>
+</PlainText><Placeholder>$<Identifier>bar</Identifier><BracedExpression><Py>(</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>
+</Py>    <CheetahVar>$<Identifier>buz</Identifier></CheetahVar><Py>
+</Py><Py>)</Py></BracedExpression></CheetahVar><Py>)</Py></BracedExpression></Placeholder><PlainText>
+</PlainText><Placeholder>$<Identifier>bar</Identifier><BracedExpression><Py>(</Py><Py>
+</Py>    <CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><CheetahVar>$<Identifier>buz</Identifier></CheetahVar><Py>)</Py></BracedExpression></CheetahVar><Py>
+</Py><Py>)</Py></BracedExpression></Placeholder><PlainText>
 
 </PlainText></cheetah>

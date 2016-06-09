@@ -8,60 +8,17 @@ from Cheetah.legacy_parser import LegacyParser
 DEBUG = False
 
 
-class InstrumentedEnclosureList(list):
-    def __init__(self, iterable=None, **kwargs):
-        self.parent = kwargs.pop('parent')
-        self.__data = {}
-        if iterable is None:
-            iterable = ()
-        for enclosure in iterable:
-            self.notify_parent(enclosure)
-        super(InstrumentedEnclosureList, self).__init__(iterable, **kwargs)
-
-    def append(self, enclosure):
-        self.notify_parent(enclosure)
-        return super(InstrumentedEnclosureList, self).append(enclosure)
-
-    def notify_parent(self, enclosure):
-        name, start_pos = enclosure
-        mydata = [start_pos, None, name]
-        self.__data[enclosure] = mydata
-
-        # Check for backtracking
-        index = -1
-        datalen = len(self.parent.data)
-        while datalen > -index and self.parent.data[index][0] > start_pos:
-            index -= 1
-        index += 1
-
-        if index == 0:
-            self.parent.data.append(mydata)
-        else:
-            self.parent.data.insert(index, mydata)
-
-    def pop(self):
-        enclosure = super(InstrumentedEnclosureList, self).pop()
-        mydata = self.__data[enclosure]
-        # Unfortunately, cheetah pops the enclosure *before* advancing its position
-        mydata[1] = self.parent.pos() + 1
-        return enclosure
-
-
 class InstrumentedMethod(object):
-    def __init__(self, method, parent, **args):
+    def __init__(self, method, parent, name=None):
         self.method = method
         self.parent = parent
-        self.args = args
+        self.name = name or method.__name__
 
     def __call__(self, *args, **kwargs):
         # I want the data to be arranged in *call* order
         start_pos = self.parent.pos()
-        name = self.method.__name__
 
-        for arg, cls in self.args.items():
-            kwargs[arg] = cls(kwargs.get(arg), parent=self.parent)
-
-        mydata = [start_pos, None, name]
+        mydata = [start_pos, None, self.name]
         self.parent.data.append(mydata)
         result = self.method(*args, **kwargs)  # Call the wrapped method.
         mydata[1] = self.parent.pos()
@@ -71,8 +28,14 @@ class InstrumentedMethod(object):
 
 class InstrumentedParser(LegacyParser):
     dont_care_methods = (
-        'getc', 'getRowCol', 'getRowColLine', 'get_python_expression',
+        'getc', 'getRowCol', 'getRowColLine', 'get_placeholder_expression',
     )
+    translate_method_names = {
+        '_read_cheetah_variable_with_dollarsign': 'CheetahVar',
+        '_read_braced_expression': 'BracedExpression',
+        'get_unbraced_expression': 'UnbracedExpression',
+        'get_def_argspec': 'DefArgspec',
+    }
 
     def __init__(self, *args, **kwargs):
         super(InstrumentedParser, self).__init__(*args, **kwargs)
@@ -94,21 +57,13 @@ class InstrumentedParser(LegacyParser):
         name = method.__name__
         if name in self.dont_care_methods:
             return
-        elif name == 'getExpressionParts':
-            # 'getExpression' also has an enclosure argument, but it doesn't seem to be important
-            return InstrumentedMethod(method, self, enclosures=InstrumentedEnclosureList)
+        elif name in self.translate_method_names:
+            return InstrumentedMethod(
+                method, self,
+                name=self.translate_method_names[name],
+            )
         elif name.startswith('eat') or name.startswith('get'):
             return InstrumentedMethod(method, self)
-
-    def _initDirectives(self):
-        super(InstrumentedParser, self)._initDirectives()
-
-        for key, val in self._directiveNamesAndParsers.items():
-            method = self.instrument_method(val)
-            if method is not None:
-                self._directiveNamesAndParsers[key] = method
-
-        self._closeableDirectives = set(self._closeableDirectives)
 
     def pushToOpenDirectivesStack(self, directiveName):
         result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directiveName)

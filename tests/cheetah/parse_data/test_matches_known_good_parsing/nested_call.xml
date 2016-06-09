@@ -1,13 +1,13 @@
 <cheetah><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>concat</Identifier></DottedName><CallArgString>(
-    <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>_</Identifier></DottedName><CallArgString>( <Py>"$BLERG $BAZ"</Py><Py>,</Py> <Py>BLERG</Py><Py>=</Py><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(<Py>'buz'</Py>)</CallArgString></CheetahVarNameChunks></CheetahVar><Py>,</Py> <Py>BAZ</Py><Py>=</Py><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(<Py>'quux'</Py>)</CallArgString></CheetahVarNameChunks></CheetahVar><WhiteSpace> </WhiteSpace>)</CallArgString></CheetahVarNameChunks></CheetahVar><Py>,</Py>
-    <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>_</Identifier></DottedName><CallArgString>( <Py>"$BLERG $BAZ"</Py><Py>,</Py> <Py>BLERG</Py><Py>=</Py><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
-                <Py>'buz'</Py>
-            )</CallArgString></CheetahVarNameChunks></CheetahVar><Py>,</Py> <Py>BAZ</Py><Py>=</Py><CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(
-                <Py>'quux'</Py>
-            )</CallArgString></CheetahVarNameChunks></CheetahVar><Py>,</Py>
-    )</CallArgString></CheetahVarNameChunks></CheetahVar><Py>,</Py>
-    <CheetahVar><CheetahVarStart>$</CheetahVarStart><CheetahVarNameChunks><DottedName><Identifier>foo</Identifier></DottedName><CallArgString>(<Py>bar</Py>)</CallArgString></CheetahVarNameChunks></CheetahVar><Py>,</Py>
-)</CallArgString></CheetahVarNameChunks></Placeholder><PlainText>
+</PlainText><Placeholder>$<Identifier>concat</Identifier><BracedExpression><Py>(</Py><Py>
+</Py>    <CheetahVar>$<Identifier>_</Identifier><BracedExpression><Py>(</Py> <Py>"$BLERG $BAZ"</Py><Py>,</Py> <Py>BLERG</Py><Py>=</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>'buz'</Py><Py>)</Py></BracedExpression></CheetahVar><Py>,</Py> <Py>BAZ</Py><Py>=</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>'quux'</Py><Py>)</Py></BracedExpression></CheetahVar> <Py>)</Py></BracedExpression></CheetahVar><Py>,</Py><Py>
+</Py>    <CheetahVar>$<Identifier>_</Identifier><BracedExpression><Py>(</Py> <Py>"$BLERG $BAZ"</Py><Py>,</Py> <Py>BLERG</Py><Py>=</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>
+</Py>                <Py>'buz'</Py><Py>
+</Py>            <Py>)</Py></BracedExpression></CheetahVar><Py>,</Py> <Py>BAZ</Py><Py>=</Py><CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>
+</Py>                <Py>'quux'</Py><Py>
+</Py>            <Py>)</Py></BracedExpression></CheetahVar><Py>,</Py><Py>
+</Py>    <Py>)</Py></BracedExpression></CheetahVar><Py>,</Py><Py>
+</Py>    <CheetahVar>$<Identifier>foo</Identifier><BracedExpression><Py>(</Py><Py>bar</Py><Py>)</Py></BracedExpression></CheetahVar><Py>,</Py><Py>
+</Py><Py>)</Py></BracedExpression></Placeholder><PlainText>
 
 </PlainText></cheetah>

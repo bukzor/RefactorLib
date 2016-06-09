@@ -1,16 +1,16 @@
 <cheetah><PlainText>
 before biggun
-</PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>biggun</Identifier><DefArgList>(</DefArgList>)
+</PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>biggun</Identifier><DefArgspec><BracedExpression><Py>(</Py><Py>)</Py></BracedExpression></DefArgspec>
 </Directive><PlainText>    before foo1
-    </PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgList>(</DefArgList>)
+    </PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgspec><BracedExpression><Py>(</Py><Py>)</Py></BracedExpression></DefArgspec>
 </Directive><PlainText>        foo1!
-    </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py><WhiteSpace> </WhiteSpace><Py>foo1</Py></ExpressionParts></Expression>
+    </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><UnbracedExpression><Py>def</Py> <Py>foo1</Py></UnbracedExpression>
 </Directive></def><PlainText>    between
-    </PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo2</Identifier><DefArgList>(</DefArgList>)
+    </PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo2</Identifier><DefArgspec><BracedExpression><Py>(</Py><Py>)</Py></BracedExpression></DefArgspec>
 </Directive><PlainText>        foo2!
-    </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py></ExpressionParts></Expression>
+    </PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><UnbracedExpression><Py>def</Py></UnbracedExpression>
 </Directive></def><PlainText>    after foo2
-</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py><WhiteSpace> </WhiteSpace><Py>biggun</Py></ExpressionParts></Expression>
+</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><UnbracedExpression><Py>def</Py> <Py>biggun</Py></UnbracedExpression>
 </Directive></def><PlainText>after biggun
 
 </PlainText></cheetah>

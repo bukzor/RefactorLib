@@ -1,17 +1,17 @@
 <cheetah><PlainText>
 
-</PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgList>(</DefArgList>)
+</PlainText><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgspec><BracedExpression><Py>(</Py><Py>)</Py></BracedExpression></DefArgspec>
 </Directive><PlainText>    foo1!
-</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py><WhiteSpace> </WhiteSpace><Py>foo1</Py></ExpressionParts></Expression>
+</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><UnbracedExpression><Py>def</Py> <Py>foo1</Py></UnbracedExpression>
 </Directive></def><PlainText>
 </PlainText><Comment><CommentStart>##</CommentStart> The specifier on the #end def is optional
-</Comment><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo2</Identifier><DefArgList>(</DefArgList>)
+</Comment><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo2</Identifier><DefArgspec><BracedExpression><Py>(</Py><Py>)</Py></BracedExpression></DefArgspec>
 </Directive><PlainText>    foo2!
-</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py></ExpressionParts></Expression>
+</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><UnbracedExpression><Py>def</Py></UnbracedExpression>
 </Directive></def><PlainText>
 </PlainText><Comment><CommentStart>##</CommentStart> You're also allowed to put extra crap on the #end
-</Comment><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgList>(</DefArgList>)
+</Comment><def><Directive><DirectiveStart>#</DirectiveStart>def<WhiteSpace> </WhiteSpace><Identifier>foo1</Identifier><DefArgspec><BracedExpression><Py>(</Py><Py>)</Py></BracedExpression></DefArgspec>
 </Directive><PlainText>    foo1!
-</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><Expression><ExpressionParts><Py>def</Py><WhiteSpace> </WhiteSpace><Py>foo1</Py><WhiteSpace> </WhiteSpace><Py>blah</Py><WhiteSpace> </WhiteSpace><Py>blah</Py><WhiteSpace> </WhiteSpace><Py>blah</Py></ExpressionParts></Expression>
+</PlainText><Directive><DirectiveStart>#</DirectiveStart>end<WhiteSpace> </WhiteSpace><UnbracedExpression><Py>def</Py> <Py>foo1</Py> <Py>blah</Py> <Py>blah</Py> <Py>blah</Py></UnbracedExpression>
 </Directive></def><PlainText>
 </PlainText></cheetah>
