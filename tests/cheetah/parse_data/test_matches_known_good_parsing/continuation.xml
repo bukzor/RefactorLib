@@ -1,16 +1,16 @@
 <cheetah><PlainText>
-</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>py<Expression><ExpressionParts><WhiteSpace> </WhiteSpace><Py>mylist</Py><WhiteSpace> </WhiteSpace><Py>=</Py><WhiteSpace>  </WhiteSpace><SquareBracket>[
-<WhiteSpace>        </WhiteSpace><Py>1</Py><Py>,</Py>
-<WhiteSpace>        </WhiteSpace><CurlyBrace>{
-<WhiteSpace>            </WhiteSpace><Py>2</Py><Py>:</Py><WhiteSpace> </WhiteSpace><Py>'two'</Py><Py>,</Py>
-<WhiteSpace>        </WhiteSpace>}</CurlyBrace><Py>,</Py>
-<WhiteSpace>        </WhiteSpace><Py>3</Py><Py>,</Py>
-<WhiteSpace>        </WhiteSpace><Paren>(
-<WhiteSpace>            </WhiteSpace><Py>"four score and seven"</Py>
-<WhiteSpace>            </WhiteSpace><Py>"years ago"</Py>
-<WhiteSpace>        </WhiteSpace>)</Paren>
-]</SquareBracket></ExpressionParts></Expression>
+</PlainText><Directive><SimpleExprDirective><DirectiveStart>#</DirectiveStart>py<UnbracedExpression> <Py>mylist</Py> <Py>=</Py>  <BracedExpression><Py>[</Py><Py>
+</Py>        <Py>1</Py><Py>,</Py><Py>
+</Py>        <Py>{</Py><Py>
+</Py>            <Py>2</Py><Py>:</Py> <Py>'two'</Py><Py>,</Py><Py>
+</Py>        <Py>}</Py><Py>,</Py><Py>
+</Py>        <Py>3</Py><Py>,</Py><Py>
+</Py>        <Py>(</Py><Py>
+</Py>            <Py>"four score and seven"</Py><Py>
+</Py>            <Py>"years ago"</Py><Py>
+</Py>        <Py>)</Py><Py>
+</Py><Py>]</Py></BracedExpression></UnbracedExpression>
 </SimpleExprDirective></Directive><PlainText>
-</PlainText><Placeholder><CheetahVarStart>$</CheetahVarStart><Paren>(<Expression><ExpressionParts><Py>"foo"</Py>)</ExpressionParts></Expression></Paren></Placeholder><PlainText>
+</PlainText><Placeholder>$<BracedExpression><Py>{</Py><Py>"foo"</Py><Py>}</Py></BracedExpression></Placeholder><PlainText>
 
 </PlainText></cheetah>

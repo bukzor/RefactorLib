@@ -61,11 +61,15 @@ class RefactorLibNodeBase(etree.ElementBase):
         """
         text = self.preceding_text()
         while '\n' not in text:
-            prev = text.getparent().preceding_text()
-            if prev.endswith('\n'):
+            prevnode = text.getparent()
+            prevnode_preceding = prevnode.preceding_text()
+            if (
+                    prevnode.text.endswith('\n') or
+                    prevnode_preceding.endswith('\n')
+            ):
                 break
             else:
-                text = prev
+                text = prevnode_preceding
 
         return text
 
