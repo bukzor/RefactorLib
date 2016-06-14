@@ -137,7 +137,7 @@ def remove_empty(data):
             yield datum
 
 
-def show_data(data, src):
+def show_data(data, src):  # pragma: no cover (debug)
     for datum in data:
         start, end, method = datum
         print(method, repr(src[start:end]), start, end)
@@ -184,9 +184,8 @@ def parser_data_to_dictnode(data, src):
 
 
 def dedup(data):
-    """
-    Cheetah does a lot of backtracking.
-    We can fix it!
+    """Cheetah occasionally backtracks and produces identical calls.
+    TODO: factor this out upstream: Yelp/yelp_cheetah#234
     """
     new_data = []  # Can't yield. We need to look behind.
     file_pointer = 0
@@ -224,13 +223,6 @@ def dedup(data):
 
 
 def method_to_tag(methodname):
-    if methodname == '[':
-        return 'SquareBracket'
-    elif methodname == '{':
-        return 'CurlyBrace'
-    elif methodname == '(':
-        return 'Paren'
-
     if methodname.startswith('eat') or methodname.startswith('get'):
         tagname = methodname[3:]
     else:
