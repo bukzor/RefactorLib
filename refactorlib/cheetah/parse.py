@@ -65,8 +65,8 @@ class InstrumentedParser(LegacyParser):
         elif name.startswith('eat') or name.startswith('get'):
             return InstrumentedMethod(method, self)
 
-    def pushToOpenDirectivesStack(self, directiveName):
-        result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directiveName)
+    def pushToOpenDirectivesStack(self, directive_name):
+        result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directive_name)
 
         # This properly goes just before the previous eatDirective
         for i, (start, end, name) in enumerate(reversed(self.data), 1):
@@ -78,8 +78,8 @@ class InstrumentedParser(LegacyParser):
 
         return result
 
-    def popFromOpenDirectivesStack(self, directiveName):
-        result = super(InstrumentedParser, self).popFromOpenDirectivesStack(directiveName)
+    def popFromOpenDirectivesStack(self, directive_name, **kwargs):
+        result = super(InstrumentedParser, self).popFromOpenDirectivesStack(directive_name, **kwargs)
 
         directive_index, mystart = self._openDirectivesDataStack.pop()
         myend = self.pos()
@@ -91,7 +91,7 @@ class InstrumentedParser(LegacyParser):
                 mystart = min(start, mystart)
                 myindex = directive_index - i
 
-        data = [mystart, myend, directiveName]
+        data = [mystart, myend, directive_name]
         self.data.insert(myindex, data)
 
         return result
