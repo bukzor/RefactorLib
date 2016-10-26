@@ -23,7 +23,7 @@ setuptools.setup(
     ],
     extras_require={
         'javascript': ['simplejson'],
-        'cheetah': ['yelp_cheetah>=0.17.0,<=0.17.999'],
+        'cheetah': ['yelp_cheetah>=0.18.0,<=0.18.999'],
     },
 
     entry_points={
@@ -50,6 +50,7 @@ setuptools.setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )
