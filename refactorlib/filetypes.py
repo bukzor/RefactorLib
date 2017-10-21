@@ -58,6 +58,7 @@ class FileTypes(object):
         except KeyError:
             raise ValueError('Unsupported file type: %r' % filetype)
 
+
 FILETYPES = FileTypes()
 FILETYPES.register('cheetah', 'tmpl')
 FILETYPES.register('python', 'py')
