@@ -14,6 +14,7 @@ def simplejson_missing():
     else:
         return False
 
+
 if find_nodejs() is None:
     xfailif_no_js = pytest.mark.xfail(reason='nodejs not found')  # pragma: no cover
 elif simplejson_missing():

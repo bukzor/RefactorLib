@@ -299,5 +299,6 @@ class NodeLookup(etree.PythonElementClassLookup):
         else:
             return CheetahNodeBase
 
+
 node_lookup = NodeLookup()
 del NodeLookup  # This is a singleton class.

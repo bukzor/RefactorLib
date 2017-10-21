@@ -107,6 +107,7 @@ def one(mylist):
 
     return mylist[0]
 
+
 node_lookup = etree.ElementDefaultClassLookup(element=RefactorLibNodeBase)
 
 __all__ = ('RefactorLibNodeBase',)
