@@ -1,9 +1,8 @@
-[![Build Status](https://travis-ci.org/bukzor/RefactorLib.svg?branch=master)](https://travis-ci.org/bukzor/RefactorLib)
-[![Coverage Status](https://img.shields.io/coveralls/bukzor/RefactorLib.svg?branch=master)](https://coveralls.io/r/bukzor/RefactorLib)
+[![Build Status](https://github.com/bukzor/RefactorLib/workflows/main/badge.svg)](https://github.com/bukzor/RefactorLib/actions)
 
 RefactorLib
 ===========
 
 A library to help write automated refactorings, based on lxml.
 
-Currently we support javascript, python (2.7 - 3+), and yelp_cheetah (0.18.x).
+Currently we support javascript, python (3+), and yelp_cheetah (0.19.x).

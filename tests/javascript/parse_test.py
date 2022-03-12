@@ -5,20 +5,8 @@ from refactorlib.parse import parse
 from testing.util import parametrize, get_examples, get_output, assert_same_content
 
 
-def simplejson_missing():
-    try:
-        import simplejson
-        simplejson = simplejson
-    except ImportError:  # pragma: no cover
-        return True
-    else:
-        return False
-
-
 if find_nodejs() is None:
     xfailif_no_js = pytest.mark.xfail(reason='nodejs not found')  # pragma: no cover
-elif simplejson_missing():
-    xfailif_no_js = pytest.mark.xfail(reason='simplejson not found')  # pragma: no cover
 else:
     xfailif_no_js = pytest.mark.noop
 

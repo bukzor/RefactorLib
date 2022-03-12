@@ -1,8 +1,5 @@
--e .[cheetah,javascript]
-
+covdefaults
 coverage
 flake8
-mock
 pre-commit
-pylint
 pytest

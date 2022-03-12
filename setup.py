@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import setuptools
 
 from refactorlib import __version__
@@ -16,14 +15,14 @@ setuptools.setup(
     platforms='any',
     license='BSD',
 
+    python_requires='>= 3.7',
     install_requires=[
         'cached-property',
         'lxml>=2.2',  # We run with 2.2.4.0
         'six',
     ],
     extras_require={
-        'javascript': ['simplejson'],
-        'cheetah': ['yelp_cheetah>=0.18.0,<=0.18.999'],
+        'cheetah': ['yelp_cheetah>=0.19.0,<=0.19.999'],
     },
 
     entry_points={
@@ -46,11 +45,8 @@ setuptools.setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3 :: Only',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )

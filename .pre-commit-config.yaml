@@ -1,16 +1,18 @@
--   repo: git@github.com:pre-commit/pre-commit-hooks
-    sha: 516cc9fa72ad09699f2c03ffbd0aa7f60d75b59a
+exclude: ^.*_data/.*$
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
     hooks:
     -   id: trailing-whitespace
-        exclude: ^.*_data/.*$
     -   id: end-of-file-fixer
-        exclude: ^.*_data/.*$
-    -   id: autopep8-wrapper
-        exclude: ^.*_data/.*$
-    -   id: check-json
     -   id: check-yaml
     -   id: debug-statements
     -   id: name-tests-test
-        exclude: ^.*_data/.*$
+-   repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v1.6.0
+    hooks:
+    -   id: autopep8
+-   repo: https://github.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
     -   id: flake8
-        exclude: ^.*_data/.*$
