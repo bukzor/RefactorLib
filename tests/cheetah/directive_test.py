@@ -38,9 +38,9 @@ def test_replace_directive(example, output):
 
     for directive in lxmlnode.xpath('//Directive[not(starts-with(., "#end"))]'):
         if directive.var is None:
-            directive.replace_directive('#{{{%s}}}' % directive.name)
+            directive.replace_directive(f'#[[[{directive.name}]]]')
         else:
-            directive.replace_directive('#{{{%s}}} [%s]' % (directive.name, directive.var.totext(with_tail=False).decode('UTF-8')))
+            directive.replace_directive(f'#[[[{directive.name}]]] [{directive.var.totext(with_tail=False).decode()}]')
 
     new_output = lxmlnode.totext()
     assert_same_content(output, new_output)

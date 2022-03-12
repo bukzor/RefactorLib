@@ -1,7 +1,5 @@
 from json import loads
 
-import six
-
 from refactorlib.util import static
 
 
@@ -79,17 +77,17 @@ def reflectjs_to_dictnode(tree):
                 else:
                     attrs[val['type']] = val['name']
             elif attr == 'value':
-                attrs[attr] = six.text_type(val)
+                attrs[attr] = str(val)
                 # We would normally lose this type information, as lxml
                 # wants everything to be a string.
                 attrs['type'] = type(val).__name__
-            elif isinstance(val, six.text_type):
+            elif isinstance(val, str):
                 attrs[attr] = val
             elif isinstance(val, bytes):
                 attrs[attr] = val.decode('UTF-8')
             elif isinstance(val, (bool, type(None))):
                 # TODO: figure out what happens with non-ascii data.
-                attrs[attr] = six.text_type(val)
+                attrs[attr] = str(val)
             else:  # Should never happen
                 assert False
 

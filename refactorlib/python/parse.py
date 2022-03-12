@@ -1,9 +1,8 @@
-# -*- coding: UTF-8 -*-
 import re
 
 
 # regex taken from inducer/pudb's detect_encoding
-encoding_re = re.compile(r"^\s*#.*coding[:=]\s*([-\w.]+)".encode('UTF-8'))
+encoding_re = re.compile(br"^\s*#.*coding[:=]\s*([-\w.]+)")
 
 
 def detect_encoding(source):

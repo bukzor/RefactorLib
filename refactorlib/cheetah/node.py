@@ -1,8 +1,6 @@
 """
 cheetah-specific additions to the lxml element node class.
 """
-import six
-
 from lxml import etree
 from refactorlib.node import RefactorLibNodeBase, one
 
@@ -12,9 +10,9 @@ class CheetahNodeBase(RefactorLibNodeBase):
         if isinstance(func_name, bytes):
             func_name = func_name.decode('UTF-8')
         return self.xpath(
-            './/Placeholder[./Identifier="{}"]'.format(func_name),
+            f'.//Placeholder[./Identifier="{func_name}"]',
         ) + self.xpath(
-            './/CheetahVar[./Identifier="{}"]'.format(func_name),
+            f'.//CheetahVar[./Identifier="{func_name}"]',
         )
 
     def find_decorators(self, dec_name):
@@ -205,7 +203,7 @@ class CheetahVar(CheetahVariable):
 
 class CheetahDirective(CheetahNodeBase):
     def replace_directive(self, other):
-        if isinstance(other, six.string_types):
+        if isinstance(other, str):
             var = self.makeelement('CheetahVar')
             try:
                 directive, var.text = other.split(None, 1)

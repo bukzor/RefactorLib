@@ -1,6 +1,3 @@
-# -*- coding: UTF-8 -*-
-
-
 def parse(filename, filetype=None, encoding=None):
     from refactorlib.filetypes import FILETYPES
     filetype = FILETYPES.detect_filetype(filename, filetype)
