@@ -1,3 +1,5 @@
+from json import loads
+
 import six
 
 from refactorlib.util import static
@@ -36,7 +38,6 @@ def reflectjs_parse(javascript_contents):
     from refactorlib import TOP
     from refactorlib.util import Popen, PIPE
     from os.path import join
-    from simplejson import loads
     from collections import OrderedDict
     reflectjs_script = join(TOP, 'javascript/reflectjs.js')
 

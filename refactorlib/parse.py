@@ -41,6 +41,10 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
     while stack:
         node, parent = stack.pop()
 
+        # sort attributes for determinism
+        attrs = node.get('attrs', {})
+        attrs = {k: attrs[k] for k in sorted(attrs)}
+
         if parent is None:
             # We use this roundabout method becuase the encoding is always set
             # to 'UTF8' if we use parser.makeelement()
@@ -49,10 +53,10 @@ def dictnode_to_lxml(tree, node_lookup=None, encoding=None):
             parser.feed(b'<a/>')
             lxmlnode = parser.close()
             lxmlnode.tag = node['name']
-            lxmlnode.attrib.update(node.get('attrs', {}))
+            lxmlnode.attrib.update(attrs)
             root = lxmlnode
         else:
-            lxmlnode = Element(node['name'], attrib=node.get('attrs', {}))
+            lxmlnode = Element(node['name'], attrib=attrs)
             parent.append(lxmlnode)
 
         lxmlnode.text = node['text']
