@@ -1,5 +1,3 @@
-import six
-
 from testing.util import parametrize, get_output, assert_same_content
 from . import xfailif_no_cheetah
 
@@ -30,7 +28,7 @@ def test_is_in_context(example, output):
         for d in top_level_directives:
             new_output.append(
                 b'    ' + d + b' ' +
-                six.text_type(placeholder.is_in_context(d)).encode('UTF-8')
+                str(placeholder.is_in_context(d)).encode('UTF-8')
             )
         new_output.append(b'')
 

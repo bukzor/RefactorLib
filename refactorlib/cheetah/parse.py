@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from refactorlib.dictnode import set_node_text
 from Cheetah.legacy_compiler import LegacyCompiler
 from Cheetah.legacy_parser import LegacyParser
@@ -8,7 +6,7 @@ from Cheetah.legacy_parser import LegacyParser
 DEBUG = False
 
 
-class InstrumentedMethod(object):
+class InstrumentedMethod:
     def __init__(self, method, parent, name=None):
         self.method = method
         self.parent = parent
@@ -38,7 +36,7 @@ class InstrumentedParser(LegacyParser):
     }
 
     def __init__(self, *args, **kwargs):
-        super(InstrumentedParser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.data = []
         self._openDirectivesDataStack = []
@@ -66,7 +64,7 @@ class InstrumentedParser(LegacyParser):
             return InstrumentedMethod(method, self)
 
     def pushToOpenDirectivesStack(self, directive_name):
-        result = super(InstrumentedParser, self).pushToOpenDirectivesStack(directive_name)
+        result = super().pushToOpenDirectivesStack(directive_name)
 
         # This properly goes just before the previous eatDirective
         for i, (start, end, name) in enumerate(reversed(self.data), 1):
@@ -79,7 +77,7 @@ class InstrumentedParser(LegacyParser):
         return result
 
     def popFromOpenDirectivesStack(self, directive_name, **kwargs):
-        result = super(InstrumentedParser, self).popFromOpenDirectivesStack(directive_name, **kwargs)
+        result = super().popFromOpenDirectivesStack(directive_name, **kwargs)
 
         directive_index, mystart = self._openDirectivesDataStack.pop()
         myend = self.pos()

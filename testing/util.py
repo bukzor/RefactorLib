@@ -1,7 +1,6 @@
 """
 A home for the 'yellow code' of testing.
 """
-from __future__ import unicode_literals
 
 from os.path import join
 
@@ -79,7 +78,7 @@ def assert_same_content(old_file, new_content, extra_suffix=''):
     new_file = ''.join((old_file, extra_suffix, FAILURE_SUFFIX))
     try:
         open(new_file, 'wb').write(new_content)
-    except IOError as e:
+    except OSError as e:
         if e.errno == 2:  # No such file.
             from os import makedirs
             from os.path import dirname
@@ -98,7 +97,7 @@ def assert_same_file_content(old_file, new_file):
     diffs = diff(old_content, new_content)
 
     if diffs:
-        diffs = 'Results differ:\n--- %s\n+++ %s\n%s' % (old_file, new_file, diffs)
+        diffs = f'Results differ:\n--- {old_file}\n+++ {new_file}\n{diffs}'
         # py.test derps on non-utf8 bytes, so I force text like so:
         if isinstance(diffs, bytes):
             diffs = diffs.decode('UTF-8', 'replace')
@@ -114,7 +113,7 @@ def diff(old_content, new_content, n=3):
     diffdata = tuple(diff(old_content, new_content))
     difflines = set()
     for lineno, line in enumerate(diffdata):
-        if not line.startswith(str('  ')):  # Ignore the similar lines.
+        if not line.startswith('  '):  # Ignore the similar lines.
             difflines.update(range(lineno - n, lineno + n + 1))
 
     return '\n'.join(

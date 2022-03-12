@@ -1,7 +1,7 @@
 from cached_property import cached_property
 
 
-class FileType(object):
+class FileType:
     def __init__(self, filetype, suffixes):
         self.name = filetype
         if hasattr('__iter__', suffixes):
@@ -28,7 +28,7 @@ class FileType(object):
         return getattr(module, 'detect_encoding', lambda filename: None)
 
 
-class FileTypes(object):
+class FileTypes:
     """
     A collection of FileType's
     """

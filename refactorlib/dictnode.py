@@ -5,7 +5,7 @@ class DictNode(dict):
     __slots__ = ()
 
     def __str__(self):
-        return '%s(%s-%s)' % (self['name'], self['start'], self['end'])
+        return '{}({}-{})'.format(self['name'], self['start'], self['end'])
 
 
 def set_node_text(dictnode, src):

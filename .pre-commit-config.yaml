@@ -16,6 +16,11 @@ repos:
     rev: v1.20.0
     hooks:
     -   id: setup-cfg-fmt
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.0
+    hooks:
+    -   id: pyupgrade
+        args: [--py37-plus]
 -   repo: https://github.com/pycqa/flake8
     rev: 4.0.1
     hooks:
